@@ -2,21 +2,19 @@ package com.calmeter.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 
-import com.calmeter.core.spring.ApplicationContextProvider;
-
-
+@ComponentScan
+@EnableAutoConfiguration
 public class Main {
 	
 	public static void main(String[] args) {
 			
 		logger.info("Starting application...");
-		ApplicationContext context = new ClassPathXmlApplicationContext("spring-configuration.xml");
-		ApplicationContextProvider.setAppilicationContext(context);
-	
 		
+        SpringApplication.run(Main.class, args);
 		
 	}
 
