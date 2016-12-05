@@ -1,4 +1,4 @@
-package com.calmeter.core.user;
+package com.calmeter.core.account.model;
 
 import org.springframework.stereotype.Component;
 

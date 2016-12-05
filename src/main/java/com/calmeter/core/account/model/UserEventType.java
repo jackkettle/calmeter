@@ -1,4 +1,4 @@
-package com.calmeter.core.user;
+package com.calmeter.core.account.model;
 
 public enum UserEventType {
 
