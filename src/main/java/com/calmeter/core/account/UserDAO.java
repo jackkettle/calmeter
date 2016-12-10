@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserDAO {
 
-	 @Autowired  
-	 SessionFactory sessionFactory;
+	 //@Autowired  
+	 //SessionFactory sessionFactory;
 	 
 	 //create
 	 
