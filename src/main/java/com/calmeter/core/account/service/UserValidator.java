@@ -14,12 +14,10 @@ public class UserValidator implements Validator {
 	@Autowired
     private IUserService userService;
 
-    @Override
     public boolean supports(Class<?> aClass) {
         return User.class.equals(aClass);
     }
 
-    @Override
     public void validate(Object o, Errors errors) {
         User user = (User) o;
 
