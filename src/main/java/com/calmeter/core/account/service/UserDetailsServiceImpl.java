@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.repository.UserRepository;
+import com.google.common.base.Strings;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		if (Strings.isNullOrEmpty (username))
+			return null;
+    	
         User user = userRepository.findByUsername(username);
+        
+		if (user == null)
+			return null;
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
         for (Role role : user.getRoles()){

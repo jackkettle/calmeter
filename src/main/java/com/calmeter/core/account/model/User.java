@@ -12,6 +12,7 @@ public class User {
     private String username;
     private String password;
     private String passwordConfirm;
+    private String email;
     private Set<Role> roles;
 
     @Id
@@ -49,6 +50,14 @@ public class User {
         this.passwordConfirm = passwordConfirm;
     }
 
+	public String getEmail () {
+		return email;
+	}
+
+	public void setEmail (String email) {
+		this.email = email;
+	}
+    
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     public Set<Role> getRoles() {
@@ -58,5 +67,6 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 }
 

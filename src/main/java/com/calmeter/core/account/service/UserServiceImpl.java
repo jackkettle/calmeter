@@ -8,11 +8,13 @@ import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.repository.RoleRepository;
 import com.calmeter.core.account.repository.UserRepository;
+import com.google.common.base.Strings;
 
 import java.util.HashSet;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl
+		implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -23,13 +25,17 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public void save(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setRoles(new HashSet<Role>(roleRepository.findAll()));
-		userRepository.save(user);
+	public void save (User user) {
+		user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
+		user.setRoles (new HashSet<Role> (roleRepository.findAll ()));
+		userRepository.save (user);
 	}
 
-	public User findByUsername(String username) {
-		return userRepository.findByUsername(username);
+	public User findByUsername (String username) {
+
+		if (Strings.isNullOrEmpty (username))
+			return null;
+
+		return userRepository.findByUsername (username);
 	}
 }
