@@ -26,7 +26,6 @@ public class SecurityServiceImpl implements ISecurityService{
         if (userDetails instanceof UserDetails) {
             return ((UserDetails)userDetails).getUsername();
         }
-
         return null;
     }
 

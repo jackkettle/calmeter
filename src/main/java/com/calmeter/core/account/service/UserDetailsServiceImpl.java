@@ -18,12 +18,13 @@ import com.google.common.base.Strings;
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService{
     
 	@Autowired
     private UserRepository userRepository;
 
+	@Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		if (Strings.isNullOrEmpty (username))
@@ -32,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         User user = userRepository.findByUsername(username);
         
 		if (user == null)
-			return null;
+			throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
         for (Role role : user.getRoles()){
