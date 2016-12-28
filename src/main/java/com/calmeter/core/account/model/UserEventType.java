@@ -5,6 +5,7 @@ public enum UserEventType {
 	CREATE,
 	READ,
 	UPDATE,
-	DELETE;
+	DELETE,
+	LOGIN;
 	
 }
