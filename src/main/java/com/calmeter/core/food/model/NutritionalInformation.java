@@ -7,20 +7,24 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.calmeter.core.food.MineralLabel;
+import com.calmeter.core.food.VitaminLabel;
+
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "nutritional_info")
 public class NutritionalInformation {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	protected Long id;
 
 	@Column(precision = 10, scale = 2)
 	private Double calories;
@@ -46,17 +50,11 @@ public class NutritionalInformation {
 	@Column(precision = 10, scale = 2)
 	private Double salt;
 
-	@ElementCollection
-	@MapKeyColumn(name = "name")
-	@Column(name = "value")
-	@CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "id"))
-	private Map<String, Double> vitaminMap;
+	private Map<VitaminLabel, Double> vitaminMap;
 
-	@ElementCollection
-	@MapKeyColumn(name = "name")
-	@Column(name = "value")
-	@CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "id"))
-	private Map<String, Double> mineralMap;
+	private Map<MineralLabel, Double> mineralMap;
+	
+	private FoodItem foodItem;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -132,6 +130,39 @@ public class NutritionalInformation {
 		this.salt = salt;
 	}
 
+    @ElementCollection
+    @CollectionTable(name="vitamin_values", joinColumns=@JoinColumn(name="nutritional_info_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name="value")
+	public Map<VitaminLabel, Double> getVitaminMap() {
+		return vitaminMap;
+	}
+
+	public void setVitaminMap(Map<VitaminLabel, Double> vitaminMap) {
+		this.vitaminMap = vitaminMap;
+	}
+
+    @ElementCollection
+    @CollectionTable(name="mineral_values", joinColumns=@JoinColumn(name="nutritional_info_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name="value")
+	public Map<MineralLabel, Double> getMineralMap() {
+		return mineralMap;
+	}
+
+	public void setMineralMap(Map<MineralLabel, Double> mineralMap) {
+		this.mineralMap = mineralMap;
+	}
+
+    @OneToOne(mappedBy="nutritionalInformation")
+	public FoodItem getFoodItem() {
+		return foodItem;
+	}
+
+	public void setFoodItem(FoodItem foodItem) {
+		this.foodItem = foodItem;
+	}
+
 	public NutritionalInformation() {
 		this.calories = 0.0;
 		this.saturatedFat = 0.0;
@@ -141,5 +172,7 @@ public class NutritionalInformation {
 		this.fibre = 0.0;
 		this.protein = 0.0;
 		this.salt = 0.0;
+		this.vitaminMap = new HashMap<VitaminLabel, Double>();
+		this.mineralMap = new HashMap<MineralLabel, Double>();
 	}
 }
