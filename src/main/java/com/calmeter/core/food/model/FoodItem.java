@@ -17,7 +17,6 @@ public class FoodItem {
 
 	protected Long id;
 
-	@Column(unique = true)
 	private String name;
 
 	private Integer weightInGrams;
@@ -34,6 +33,7 @@ public class FoodItem {
 		this.id = id;
 	}
 
+	@Column(name = "name", nullable = false, unique = true)
 	public String getName() {
 		return name;
 	}
@@ -50,7 +50,7 @@ public class FoodItem {
 		this.weightInGrams = weightInGrams;
 	}
 
-	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "nutritional_info_id")
 	public NutritionalInformation getNutritionalInformation() {
 		return nutritionalInformation;
