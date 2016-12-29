@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `calmeter`;
+CREATE DATABASE  IF NOT EXISTS `calmeter` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 USE `calmeter`;
 --
 -- Table structure for table `role`

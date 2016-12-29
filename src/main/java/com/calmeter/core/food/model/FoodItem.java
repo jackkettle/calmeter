@@ -1,5 +1,7 @@
 package com.calmeter.core.food.model;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,12 +10,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.calmeter.core.account.model.User;
+
 @Entity
 @Table(name = "food_item")
-public class FoodItem {
+public class FoodItem implements IFood {
 
 	protected Long id;
 
@@ -21,7 +27,13 @@ public class FoodItem {
 
 	private Integer weightInGrams;
 
+	private String description;
+
 	private NutritionalInformation nutritionalInformation;
+
+	private User creator;
+
+	private Set<Meal> meals;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,6 +54,15 @@ public class FoodItem {
 		this.name = name;
 	}
 
+	@Column(name = "description", nullable = true, length = 2000)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public int getWeightInGrams() {
 		return weightInGrams;
 	}
@@ -58,6 +79,24 @@ public class FoodItem {
 
 	public void setNutritionalInformation(NutritionalInformation nutritionalInformation) {
 		this.nutritionalInformation = nutritionalInformation;
+	}
+
+	@ManyToOne
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+
+	@ManyToMany(mappedBy = "ingredients")
+	public Set<Meal> getMeals() {
+		return meals;
+	}
+
+	public void setMeals(Set<Meal> meals) {
+		this.meals = meals;
 	}
 
 }

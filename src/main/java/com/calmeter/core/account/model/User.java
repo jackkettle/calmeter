@@ -50,6 +50,7 @@ public class User {
         this.passwordConfirm = passwordConfirm;
     }
 
+	@Column(name = "email", nullable = false, unique = true)
 	public String getEmail () {
 		return email;
 	}
