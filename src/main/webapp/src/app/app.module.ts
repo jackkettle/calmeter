@@ -9,6 +9,8 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 // App views
 import {MainViewModule} from "../views/main-view/main-view.module";
 import {MinorViewModule} from "../views/minor-view/minor-view.module";
+import {FoodMainViewModule} from "../views/food-view/food-main-view.module";
+
 
 // App modules/components
 import {NavigationModule} from "../views/common/navigation/navigation.module";
@@ -26,6 +28,7 @@ import {TopnavbarModule} from "../views/common/topnavbar/topnavbar.module";
         // Views
         MainViewModule,
         MinorViewModule,
+        FoodMainViewModule,
 
         // Modules
         NavigationModule,
