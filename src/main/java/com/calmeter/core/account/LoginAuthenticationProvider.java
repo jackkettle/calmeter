@@ -17,13 +17,13 @@ import com.calmeter.core.EventBusFactory;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.model.UserEvent;
 import com.calmeter.core.account.model.UserEventType;
-import com.calmeter.core.account.repository.UserRepository;
+import com.calmeter.core.account.repository.IUserRepository;
 
 @Component("authenticationProvider")
 public class LoginAuthenticationProvider extends DaoAuthenticationProvider {
 
 	@Autowired
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	@Autowired
 	EventBusFactory eventBusFactory;

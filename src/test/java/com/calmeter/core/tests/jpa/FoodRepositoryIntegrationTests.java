@@ -2,6 +2,8 @@ package com.calmeter.core.tests.jpa;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -17,45 +19,43 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.calmeter.core.account.model.User;
-import com.calmeter.core.account.repository.UserRepository;
+import com.calmeter.core.account.repository.IUserRepository;
 import com.calmeter.core.food.VitaminLabel;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.NutritionalInformation;
-import com.calmeter.core.food.repositroy.FoodItemRepository;
+import com.calmeter.core.food.repositroy.IFoodItemRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class FoodRepositoryTests {
+public class FoodRepositoryIntegrationTests {
 
 	@Autowired
-	FoodItemRepository foodItemRepository;
-	
+	IFoodItemRepository foodItemRepository;
+
 	@Autowired
-	UserRepository userRepository;
-	
+	IUserRepository userRepository;
+
 	@Autowired
 	EntityManager entityManager;
 
-	private static String EMAIL = "info@example.com";
-	
-	private static String USERNAME = "I.AM.A.TEST";
+	@Before
+	@Transactional
+	public void runBeforeTestMethod() {
 
-	private static String PASSWORD = "password";
-	
-    @Before
-    @Transactional
-    public void runBeforeTestMethod() {
-       
-    	User user = new User();
-    	user.setEmail(EMAIL);
-    	user.setPassword(PASSWORD);
-    	user.setUsername(USERNAME);
-    	
-    	userRepository.save(user);
-    	user = userRepository.findByUsername(USERNAME);
-    	
-    	NutritionalInformation nutritionalInformation = new NutritionalInformation();
+		User user = userRepository.findByUsername(Constants.USERNAME);
+
+		if (user == null) {
+			user = new User();
+			user.setEmail(Constants.EMAIL);
+			user.setPassword(Constants.PASSWORD);
+			user.setUsername(Constants.USERNAME);
+
+			entityManager.persist(user);
+			entityManager.flush();
+		}
+
+		NutritionalInformation nutritionalInformation = new NutritionalInformation();
 		nutritionalInformation.setCalories(1000);
 		nutritionalInformation.setCarbohydrate(500);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
@@ -67,10 +67,11 @@ public class FoodRepositoryTests {
 		foodItem.setNutritionalInformation(nutritionalInformation);
 		foodItem.setCreator(user);
 
-		foodItemRepository.save(foodItem);
-    	
-    }
-	
+		entityManager.persist(foodItem);
+		entityManager.flush();
+
+	}
+
 	@Test
 	@Transactional
 	public void foodItemTest() throws Exception {
@@ -81,20 +82,46 @@ public class FoodRepositoryTests {
 		assertEquals(1000, foundFoodItem.getWeightInGrams());
 		assertEquals(1000, foundFoodItem.getNutritionalInformation().getCalories(), 0.1);
 		assertEquals(500, foundFoodItem.getNutritionalInformation().getCarbohydrate(), 0.1);
-		assertEquals(USERNAME, foundFoodItem.getCreator().getUsername());
-		
+		assertEquals(Constants.USERNAME, foundFoodItem.getCreator().getUsername());
+
 		Double a = foundFoodItem.getNutritionalInformation().getVitaminMap().get(VitaminLabel.VITAMIN_B12);
 		Double b = foundFoodItem.getNutritionalInformation().getVitaminMap().get(VitaminLabel.VITAMIN_A);
-		
-		if(a == null || b == null)
+
+		if (a == null || b == null)
 			throw new Exception();
-		
+
 		assertEquals(5000, a, 0.1);
 		assertEquals(30.0, b, 0.1);
 
 	}
 
+	@Test
+	@Transactional
+	public void foodItemsByUserTest() throws Exception {
+
+		User user = userRepository.findByUsername(Constants.USERNAME);
+
+		NutritionalInformation nutritionalInformation = new NutritionalInformation();
+		nutritionalInformation.setCalories(1000);
+		nutritionalInformation.setCarbohydrate(500);
+		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
+		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
+
+		FoodItem foodItem = new FoodItem();
+		foodItem.setName("Apples");
+		foodItem.setWeightInGrams(1000);
+		foodItem.setNutritionalInformation(nutritionalInformation);
+		foodItem.setCreator(user);
+
+		foodItemRepository.save(foodItem);
+
+		List<FoodItem> userItems = foodItemRepository.findAllByCreator(user);
+
+		assertEquals(2, userItems.size());
+
+	}
+
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(FoodRepositoryTests.class);
+	private static Logger logger = LoggerFactory.getLogger(FoodRepositoryIntegrationTests.class);
 
 }

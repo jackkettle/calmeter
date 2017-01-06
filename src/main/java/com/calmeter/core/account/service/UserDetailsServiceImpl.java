@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
-import com.calmeter.core.account.repository.UserRepository;
+import com.calmeter.core.account.repository.IUserRepository;
 import com.google.common.base.Strings;
 
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService{
     
 	@Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
 	@Override
     @Transactional(readOnly = true)

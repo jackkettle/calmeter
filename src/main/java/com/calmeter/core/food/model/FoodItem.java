@@ -19,7 +19,7 @@ import com.calmeter.core.account.model.User;
 
 @Entity
 @Table(name = "food_item")
-public class FoodItem implements IFood {
+public class FoodItem implements IFood{
 
 	protected Long id;
 

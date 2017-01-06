@@ -19,8 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.calmeter.core.account.model.User;
-import com.calmeter.core.account.repository.UserRepository;
-
+import com.calmeter.core.account.repository.IUserRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -31,37 +30,32 @@ public class UserRepositoryIntegrationTests {
 	EntityManager entityManager;
 	
 	@Autowired
-	UserRepository userRepository;
-	
-	private static String EMAIL = "info@example.com";
-	
-	private static String USERNAME = "I.AM.A.TEST";
-
-	private static String PASSWORD = "password";
+	IUserRepository userRepository;
 
     @Before
     @Transactional
     public void runBeforeTestMethod() {
-       
     	User user = new User();
-    	user.setEmail(EMAIL);
-    	user.setPassword(PASSWORD);
-    	user.setUsername(USERNAME);
-    	entityManager.persist(user);    	
+    	user.setEmail(Constants.EMAIL);
+    	user.setPassword(Constants.PASSWORD);
+    	user.setUsername(Constants.USERNAME);
+	
+    	entityManager.persist(user);
+    	entityManager.flush();
     }
 	
 	@Test
 	@Transactional
 	public void findByUserNameTest() throws Exception {
 
-		User user = userRepository.findByUsername(USERNAME);
+		User user = userRepository.findByUsername(Constants.USERNAME);
 
 		if(user == null)
 			throw new Exception();
 		
-		assertEquals(EMAIL, user.getEmail());
-		assertEquals(USERNAME, user.getUsername());
-		assertEquals(PASSWORD, user.getPassword());
+		assertEquals(Constants.EMAIL, user.getEmail());
+		assertEquals(Constants.USERNAME, user.getUsername());
+		assertEquals(Constants.PASSWORD, user.getPassword());
 
 	}
 	
@@ -70,15 +64,15 @@ public class UserRepositoryIntegrationTests {
 	public void findaAllTest() throws Exception {
 
 		User user1 = new User();
-		user1.setEmail("user1" + EMAIL);
-		user1.setPassword(PASSWORD);
-		user1.setUsername("user1" + USERNAME);
+		user1.setEmail("user1" + Constants.EMAIL);
+		user1.setPassword(Constants.PASSWORD);
+		user1.setUsername("user1" + Constants.USERNAME);
     	entityManager.persist(user1);    	
     	
     	User user2 = new User();
-    	user2.setEmail("user2" + EMAIL);
-    	user2.setPassword(PASSWORD);
-    	user2.setUsername("user2" + USERNAME);
+    	user2.setEmail("user2" + Constants.EMAIL);
+    	user2.setPassword(Constants.PASSWORD);
+    	user2.setUsername("user2" + Constants.USERNAME);
     	entityManager.persist(user2);  
     	
     	List<User> users = userRepository.findAll();
@@ -93,7 +87,7 @@ public class UserRepositoryIntegrationTests {
 		
 		assertEquals(1, userRepository.findAll().size());
 		
-		User user = userRepository.findByUsername(USERNAME);
+		User user = userRepository.findByUsername(Constants.USERNAME);
 		userRepository.delete(user);
     	
 		assertEquals(0, userRepository.findAll().size());
