@@ -7,7 +7,7 @@ import {ROUTES} from "./app.routes";
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 
 // App views
-import {MainViewModule} from "../views/main-view/main-view.module";
+import {DashboardModule} from "../views/dashboard/dashboard.module";
 import {MinorViewModule} from "../views/minor-view/minor-view.module";
 import {FoodMainViewModule} from "../views/food-view/food-main-view.module";
 
@@ -26,7 +26,7 @@ import {TopnavbarModule} from "../views/common/topnavbar/topnavbar.module";
         HttpModule,
 
         // Views
-        MainViewModule,
+        DashboardModule,
         MinorViewModule,
         FoodMainViewModule,
 

@@ -1,5 +1,5 @@
 import {Routes} from "@angular/router";
-import {mainViewComponent} from "../views/main-view/main-view.component";
+import {DashboardComponent} from "../views/dashboard/dashboard.component";
 import {minorViewComponent} from "../views/minor-view/minor-view.component";
 import {foodMainViewComponent} from "../views/food-view/food-main-view.component";
 
@@ -8,10 +8,10 @@ export const ROUTES:Routes = [
     {path: '', redirectTo: 'mainView', pathMatch: 'full'},
 
     // App views
-    {path: 'mainView', component: mainViewComponent},
+    {path: 'dashboard', component: DashboardComponent},
     {path: 'minorView', component: minorViewComponent},
     {path: 'foodMainView', component: foodMainViewComponent},
 
     // Handle all other routes
-    {path: '**',    component: mainViewComponent }
+    {path: '**',    component: DashboardComponent }
 ];
