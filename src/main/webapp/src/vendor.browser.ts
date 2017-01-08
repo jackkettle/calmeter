@@ -3,6 +3,7 @@ require("expose?jQuery!jquery");
 
 import 'metismenu';
 import 'bootstrap';
+import 'flot';
 
 // Angular 2
 import '@angular/platform-browser';
