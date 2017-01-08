@@ -4,6 +4,7 @@ require("expose?jQuery!jquery");
 import 'metismenu';
 import 'bootstrap';
 import 'flot';
+import 'chart.js';
 
 // Angular 2
 import '@angular/platform-browser';
