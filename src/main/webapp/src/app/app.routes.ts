@@ -1,17 +1,24 @@
-import {Routes} from "@angular/router";
-import {DashboardComponent} from "../views/dashboard/dashboard.component";
-import {minorViewComponent} from "../views/minor-view/minor-view.component";
-import {foodMainViewComponent} from "../views/food-view/food-main-view.component";
+import { Routes } from "@angular/router";
+import { DashboardComponent } from "../views/dashboard/dashboard.component";
+import { minorViewComponent } from "../views/minor-view/minor-view.component";
+import { FoodComponent } from "../views/food/food.component";
+import { AddRecipeComponent } from "../views/food/add-recipe/add-recipe.component";
+import { AddFoodComponent } from "../views/food/add-food/add-food.component";
+import { DiaryComponent } from "../views/diary/diary.component";
 
-export const ROUTES:Routes = [
+
+export const ROUTES: Routes = [
     // Main redirect
-    {path: '', redirectTo: 'mainView', pathMatch: 'full'},
+    { path: '', redirectTo: 'mainView', pathMatch: 'full' },
 
     // App views
-    {path: 'dashboard', component: DashboardComponent},
-    {path: 'minorView', component: minorViewComponent},
-    {path: 'foodMainView', component: foodMainViewComponent},
+    { path: 'dashboard', component: DashboardComponent },
+    { path: 'minorView', component: minorViewComponent },
+    { path: 'food', component: FoodComponent },
+    { path: 'food/addRecipe', component: AddRecipeComponent },
+    { path: 'food/addFood', component: AddFoodComponent },
+    { path: 'diary', component: DiaryComponent },
 
     // Handle all other routes
-    {path: '**',    component: DashboardComponent }
+    { path: '**', component: DashboardComponent }
 ];
