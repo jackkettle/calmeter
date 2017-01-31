@@ -1,4 +1,4 @@
-package com.calmeter.core.food;
+package com.calmeter.core.food.model.nutrient.micro;
 
 public enum VitaminLabel{
 

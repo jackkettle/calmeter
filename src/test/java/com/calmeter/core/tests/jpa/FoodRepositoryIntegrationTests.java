@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.repository.IUserRepository;
-import com.calmeter.core.food.VitaminLabel;
 import com.calmeter.core.food.model.FoodItem;
-import com.calmeter.core.food.model.NutritionalInformation;
+import com.calmeter.core.food.model.nutrient.NutritionalInformation;
+import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 import com.calmeter.core.food.repositroy.IFoodItemRepository;
 
 @RunWith(SpringRunner.class)

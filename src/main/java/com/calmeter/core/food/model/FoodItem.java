@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.food.model.nutrient.NutritionalInformation;
 
 @Entity
 @Table(name = "food_item")

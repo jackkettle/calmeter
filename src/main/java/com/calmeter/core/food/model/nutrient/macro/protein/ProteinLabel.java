@@ -1,0 +1,26 @@
+package com.calmeter.core.food.model.nutrient.macro.protein;
+
+public enum ProteinLabel {
+
+	ALANINE,
+	ARGININE,
+	ASPARAGINE,
+	ASPARTIC_ACID,
+	CYSTEINE,
+	GLUTAMIC_ACID,
+	GLUTAMINE,
+	GLYCINE,
+	HISTIDINE,
+	ISOLEUCINE,
+	LEUCINE,
+	LYSINE,
+	METHIONINE,
+	PHENYLALANINE,
+	PROLINE,
+	SERINE,
+	THREONINE,
+	TRYPTOPHAN,
+	TYROSINE,
+	VALINE;
+	
+}

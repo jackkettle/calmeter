@@ -1,4 +1,4 @@
-package com.calmeter.core.food.model;
+package com.calmeter.core.food.model.nutrient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,9 @@ import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.calmeter.core.food.MineralLabel;
-import com.calmeter.core.food.VitaminLabel;
+import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
+import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 
 import javax.persistence.JoinColumn;
 

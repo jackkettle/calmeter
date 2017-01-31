@@ -22,9 +22,9 @@ import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.repository.IUserRepository;
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.diary.repository.IDiaryEntryRepository;
-import com.calmeter.core.food.VitaminLabel;
 import com.calmeter.core.food.model.FoodItem;
-import com.calmeter.core.food.model.NutritionalInformation;
+import com.calmeter.core.food.model.nutrient.NutritionalInformation;
+import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
