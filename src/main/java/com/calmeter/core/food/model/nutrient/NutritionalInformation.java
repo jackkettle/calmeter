@@ -3,11 +3,13 @@ package com.calmeter.core.food.model.nutrient;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.nutrient.macro.carb.ConsolidatedCarbs;
+import com.calmeter.core.food.model.nutrient.macro.fat.ConsolidatedFats;
+import com.calmeter.core.food.model.nutrient.macro.protein.ConsolidatedProteins;
 import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
 import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 
@@ -30,150 +35,105 @@ public class NutritionalInformation {
 	@Column(precision = 10, scale = 2)
 	private Double calories;
 
-	@Column(precision = 10, scale = 2)
-	private Double saturatedFat;
+	ConsolidatedCarbs consolidatedCarbs;
 
-	@Column(precision = 10, scale = 2)
-	private Double transFat;
+	ConsolidatedFats consolidatedFats;
 
-	@Column(precision = 10, scale = 2)
-	private Double carbohydrate;
-
-	@Column(precision = 10, scale = 2)
-	private Double sugars;
-
-	@Column(precision = 10, scale = 2)
-	private Double fibre;
-
-	@Column(precision = 10, scale = 2)
-	private Double protein;
-
-	@Column(precision = 10, scale = 2)
-	private Double salt;
+	ConsolidatedProteins consolidatedProteins;
 
 	private Map<VitaminLabel, Double> vitaminMap;
 
 	private Map<MineralLabel, Double> mineralMap;
-	
+
 	private FoodItem foodItem;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
+	public Long getId () {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId (Long id) {
 		this.id = id;
 	}
 
-	public double getCalories() {
+	public double getCalories () {
 		return calories;
 	}
 
-	public void setCalories(double calories) {
+	public void setCalories (Double calories) {
 		this.calories = calories;
 	}
 
-	public double getSaturatedFat() {
-		return saturatedFat;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "consolidated_carbs_id")
+	public ConsolidatedCarbs getConsolidatedCarbs () {
+		return consolidatedCarbs;
 	}
 
-	public void setSaturatedFat(double saturatedFat) {
-		this.saturatedFat = saturatedFat;
+	public void setConsolidatedCarbs (ConsolidatedCarbs consolidatedCarbs) {
+		this.consolidatedCarbs = consolidatedCarbs;
 	}
 
-	public double getTransFat() {
-		return transFat;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "consolidated_fats_id")
+	public ConsolidatedFats getConsolidatedFats () {
+		return consolidatedFats;
 	}
 
-	public void setTransFat(double transFat) {
-		this.transFat = transFat;
+	public void setConsolidatedFats (ConsolidatedFats consolidatedFats) {
+		this.consolidatedFats = consolidatedFats;
 	}
 
-	public double getCarbohydrate() {
-		return carbohydrate;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "consolidated_proteins_id")
+	public ConsolidatedProteins getConsolidatedProteins () {
+		return consolidatedProteins;
 	}
 
-	public void setCarbohydrate(double carbohydrate) {
-		this.carbohydrate = carbohydrate;
+	public void setConsolidatedProteins (ConsolidatedProteins consolidatedProteins) {
+		this.consolidatedProteins = consolidatedProteins;
 	}
 
-	public double getSugars() {
-		return sugars;
-	}
-
-	public void setSugars(double sugars) {
-		this.sugars = sugars;
-	}
-
-	public double getFibre() {
-		return fibre;
-	}
-
-	public void setFibre(double fibre) {
-		this.fibre = fibre;
-	}
-
-	public double getProtein() {
-		return protein;
-	}
-
-	public void setProtein(double protein) {
-		this.protein = protein;
-	}
-
-	public double getSalt() {
-		return salt;
-	}
-
-	public void setSalt(double salt) {
-		this.salt = salt;
-	}
-
-    @ElementCollection
-    @CollectionTable(name="vitamin_values", joinColumns=@JoinColumn(name="nutritional_info_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @Column(name="value")
-	public Map<VitaminLabel, Double> getVitaminMap() {
+	@ElementCollection
+	@CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
+	@MapKeyEnumerated(EnumType.STRING)
+	@Column(name = "value")
+	public Map<VitaminLabel, Double> getVitaminMap () {
 		return vitaminMap;
 	}
 
-	public void setVitaminMap(Map<VitaminLabel, Double> vitaminMap) {
+	public void setVitaminMap (Map<VitaminLabel, Double> vitaminMap) {
 		this.vitaminMap = vitaminMap;
 	}
 
-    @ElementCollection
-    @CollectionTable(name="mineral_values", joinColumns=@JoinColumn(name="nutritional_info_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @Column(name="value")
-	public Map<MineralLabel, Double> getMineralMap() {
+	@ElementCollection
+	@CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
+	@MapKeyEnumerated(EnumType.STRING)
+	@Column(name = "value")
+	public Map<MineralLabel, Double> getMineralMap () {
 		return mineralMap;
 	}
 
-	public void setMineralMap(Map<MineralLabel, Double> mineralMap) {
+	public void setMineralMap (Map<MineralLabel, Double> mineralMap) {
 		this.mineralMap = mineralMap;
 	}
 
-    @OneToOne(mappedBy="nutritionalInformation")
-	public FoodItem getFoodItem() {
+	@OneToOne(mappedBy = "nutritionalInformation")
+	public FoodItem getFoodItem () {
 		return foodItem;
 	}
 
-	public void setFoodItem(FoodItem foodItem) {
+	public void setFoodItem (FoodItem foodItem) {
 		this.foodItem = foodItem;
 	}
 
-	public NutritionalInformation() {
+	public NutritionalInformation () {
 		this.calories = 0.0;
-		this.saturatedFat = 0.0;
-		this.transFat = 0.0;
-		this.carbohydrate = 0.0;
-		this.sugars = 0.0;
-		this.fibre = 0.0;
-		this.protein = 0.0;
-		this.salt = 0.0;
-		this.vitaminMap = new HashMap<VitaminLabel, Double>();
-		this.mineralMap = new HashMap<MineralLabel, Double>();
+		this.consolidatedCarbs = new ConsolidatedCarbs ();
+		this.consolidatedFats = new ConsolidatedFats ();
+		this.consolidatedProteins = new ConsolidatedProteins ();
+		this.vitaminMap = new HashMap<VitaminLabel, Double> ();
+		this.mineralMap = new HashMap<MineralLabel, Double> ();
 	}
 }
