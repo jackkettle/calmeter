@@ -19,5 +19,7 @@ var data = {
 };
 var myPieChart = new Chart(ctx,{
     type: 'pie',
-    data: data
+    data: data,
+    responsive: true,
+    maintainAspectRatio: false
 });
