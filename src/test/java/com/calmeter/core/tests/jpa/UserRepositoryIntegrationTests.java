@@ -77,7 +77,7 @@ public class UserRepositoryIntegrationTests {
     	
     	List<User> users = userRepository.findAll();
     	
-    	assertEquals(3, users.size());
+    	assertEquals(4, users.size());
 
 	}
 	
@@ -85,7 +85,7 @@ public class UserRepositoryIntegrationTests {
 	@Transactional
 	public void deleteTest() throws Exception {
 		
-		assertEquals(1, userRepository.findAll().size());
+		assertEquals(2, userRepository.findAll().size());
 		
 		User user = userRepository.findByUsername(Constants.USERNAME);
 		userRepository.delete(user);

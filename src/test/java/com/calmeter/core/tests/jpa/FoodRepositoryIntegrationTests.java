@@ -56,8 +56,10 @@ public class FoodRepositoryIntegrationTests {
 		}
 
 		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000);
-		nutritionalInformation.setCarbohydrate(500);
+		nutritionalInformation.setCalories(1000.0);
+		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
+		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
+		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
 
@@ -81,7 +83,7 @@ public class FoodRepositoryIntegrationTests {
 		assertEquals("Banana", foundFoodItem.getName());
 		assertEquals(1000, foundFoodItem.getWeightInGrams());
 		assertEquals(1000, foundFoodItem.getNutritionalInformation().getCalories(), 0.1);
-		assertEquals(500, foundFoodItem.getNutritionalInformation().getCarbohydrate(), 0.1);
+		assertEquals(10.0, foundFoodItem.getNutritionalInformation().getConsolidatedCarbs ().getSugar (), 0.1);
 		assertEquals(Constants.USERNAME, foundFoodItem.getCreator().getUsername());
 
 		Double a = foundFoodItem.getNutritionalInformation().getVitaminMap().get(VitaminLabel.VITAMIN_B12);
@@ -102,8 +104,10 @@ public class FoodRepositoryIntegrationTests {
 		User user = userRepository.findByUsername(Constants.USERNAME);
 
 		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000);
-		nutritionalInformation.setCarbohydrate(500);
+		nutritionalInformation.setCalories(1000.0);
+		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
+		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
+		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
 

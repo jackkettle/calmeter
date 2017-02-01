@@ -59,8 +59,10 @@ public class DiaryEntryRepositoryIntegrationTests {
 		}
 
 		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000);
-		nutritionalInformation.setCarbohydrate(500);
+		nutritionalInformation.setCalories(1000.0);
+		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
+		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
+		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
 		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
 
