@@ -28,3 +28,9 @@
  * see https://github.com/typings/registry
  *
  */
+
+import * as touchspin from "@types/angular-touchspin";
+
+interface JQuery {
+    touchspin(options?: any): JQuery;
+}    

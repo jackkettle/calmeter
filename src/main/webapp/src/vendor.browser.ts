@@ -1,10 +1,11 @@
 // Vendors
-require("expose?jQuery!jquery");
+require("expose-loader?jQuery!jquery");
 
 import 'metismenu';
 import 'bootstrap';
 import 'flot';
 import 'chart.js';
+import 'bootstrap-touchspin';
 
 // Angular 2
 import '@angular/platform-browser';

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import * as $ from "jquery";
+
+
 @Component({
     selector: 'addFood',
     templateUrl: 'add-food.template.html'
@@ -7,5 +10,15 @@ import { Component, OnInit } from '@angular/core';
 export class AddFoodComponent implements OnInit {
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {
+
+        console.log("This bullshit is now working")
+
+        $(".touchspin1").TouchSpin({
+            verticalbuttons: true,
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+
+    }
 }

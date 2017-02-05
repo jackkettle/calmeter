@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-var path    = require('path');
+var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
@@ -7,19 +7,19 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var webpackConfig = {
     entry: {
         'polyfills': './src/polyfills.browser.ts',
-        'vendor'   : './src/vendor.browser.ts',
-        'main'     : './src/main.browser.ts'
+        'vendor': './src/vendor.browser.ts',
+        'main': './src/main.browser.ts'
     },
 
     output: {
-        path: './dist'
+        path: __dirname + '/dist'
     },
 
     plugins: [
         new ExtractTextPlugin("styles.css"),
-        new webpack.optimize.OccurenceOrderPlugin(true),
+        new(webpack.optimize.OccurenceOrderPlugin || webpack.optimize.OccurrenceOrderPlugin)(),
         new webpack.optimize.CommonsChunkPlugin({
-            name     : ['main', 'vendor', 'polyfills'],
+            name: ['main', 'vendor', 'polyfills'],
             minChunks: Infinity
         }),
         new webpack.DefinePlugin({
@@ -28,41 +28,47 @@ var webpackConfig = {
     ],
 
     module: {
-        loaders: [
-            {
-                test   : /\.ts$/,
-                loaders: ['awesome-typescript-loader', 'angular2-template-loader']
+        rules: [{
+                test: /\.ts$/,
+                use: [{
+                    loader: 'awesome-typescript-loader'
+                }, {
+                    loader: 'angular2-template-loader'
+                }]
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader'
+                })
             },
             {
                 test: /\.scss$/,
-                loaders: ["style", "css", "sass"]
+                use: ["style", "css", "sass"]
             },
             {
                 test: /\.json$/,
-                loader: 'json'
+                use: 'json'
             },
             {
                 test: /\.html$/,
-                loader: 'raw-loader'
+                use: 'raw-loader'
             },
             {
                 test: /\.(png|jpg|gif)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url-loader?limit=100000'
+                use: 'url-loader?limit=100000'
             },
             {
                 test: /\.(eot|com|json|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+                use: "url-loader?limit=10000&mimetype=application/octet-stream"
             },
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+                use: 'url-loader?limit=10000&mimetype=image/svg+xml'
             }
         ]
-    }
+    },
 
 };
 
@@ -70,33 +76,43 @@ var webpackConfig = {
 // Our Webpack Defaults
 var defaultConfig = {
     devtool: 'cheap-module-source-map',
-    cache  : true,
-    debug  : true,
-    output : {
-        filename         : '[name].bundle.js',
+    cache: true,
+    output: {
+        filename: '[name].bundle.js',
         sourceMapFilename: '[name].map',
-        chunkFilename    : '[id].chunk.js'
+        chunkFilename: '[id].chunk.js',
+        path: __dirname + '/dist'
     },
 
     resolve: {
-        root      : [path.join(__dirname, 'src')],
-        extensions: ['', '.ts', '.js']
+        modules: [
+            path.join(__dirname, "src"),
+            "node_modules"
+        ],
+        extensions: ['.ts', '.js']
     },
 
+
     devServer: {
-        historyApiFallback: true,
-        watchOptions      : {aggregateTimeout: 300, poll: 1000}
+        contentBase: path.join(__dirname, "src"),
+        compress: false,
+        host: "0.0.0.0",
+        port: 8081,
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll: 1000
+        }
     },
 
     node: {
-        global        : 1,
-        crypto        : 'empty',
-        module        : 0,
-        Buffer        : 0,
-        clearImmediate: 0,
-        setImmediate  : 0
+        global: true,
+        crypto: 'empty',
+        module: false,
+        Buffer: false,
+        clearImmediate: false,
+        setImmediate: false
     }
 };
 
 var webpackMerge = require('webpack-merge');
-module.exports   = webpackMerge(defaultConfig, webpackConfig);
+module.exports = webpackMerge(defaultConfig, webpackConfig);
