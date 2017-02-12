@@ -34,6 +34,9 @@ public class NutritionalInformation {
 
 	@Column(precision = 10, scale = 2)
 	private Double calories;
+	
+	@Column(precision = 10, scale = 2)
+	private Double servingSize;
 
 	ConsolidatedCarbs consolidatedCarbs;
 
@@ -44,6 +47,8 @@ public class NutritionalInformation {
 	private Map<VitaminLabel, Double> vitaminMap;
 
 	private Map<MineralLabel, Double> mineralMap;
+	
+	private Integer caffeine;
 
 	private FoodItem foodItem;
 
@@ -63,6 +68,14 @@ public class NutritionalInformation {
 
 	public void setCalories (Double calories) {
 		this.calories = calories;
+	}
+
+	public Double getServingSize() {
+		return servingSize;
+	}
+
+	public void setServingSize(Double servingSize) {
+		this.servingSize = servingSize;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -117,6 +130,14 @@ public class NutritionalInformation {
 
 	public void setMineralMap (Map<MineralLabel, Double> mineralMap) {
 		this.mineralMap = mineralMap;
+	}
+
+	public Integer getCaffeine() {
+		return caffeine;
+	}
+
+	public void setCaffeine(Integer caffeine) {
+		this.caffeine = caffeine;
 	}
 
 	@OneToOne(mappedBy = "nutritionalInformation")

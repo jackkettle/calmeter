@@ -1925,6 +1925,11 @@ div.dt-button-info {
   padding: 6px 12px;
   text-align: center;
 }
+
+.label-indented{
+  font-weight: 400;
+}
+
 .spinner-buttons.input-group-btn .btn-xs {
   line-height: 1.13;
 }

@@ -5,56 +5,166 @@
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <div class="col-md-8">
-            <Form class="form-horizontal">
+        <form novalidate class="form-horizontal">
+
+            <div class="col-md-8">
                 <div class="ibox">
                     <div class="ibox-title">
                         <h5>Add your own food</h5>
                     </div>
+
                     <div class="ibox-content">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="name"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <h5>Macro Nutriants</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Carbohydrates</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="name"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Protein</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="name"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Fats</label>
                             <div class="col-sm-10">
-                                <input class="touchspin3" type="text" value="" name="demo3">
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Calories per 100g</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="calsPer100">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Serving size</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>Micro Nutriants</h5>
+                        <h5>
+                            Macro Nutriants
+                            <small>carbs, protein, & fats</small>
+                        </h5>
                     </div>
                     <div class="ibox-content">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Vitamins</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="name"></div>
+                            <label class="col-sm-2 control-label">Total Fat</label>
+                            <div class="col-sm-10">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Minerals</label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="name"></div>
+                            <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Saturated</label>
+                            <div class="col-sm-8">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Polyunsaturated</label>
+                            <div class="col-sm-8">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Monounsaturated</label>
+                            <div class="col-sm-8">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Cholesterol</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Total Carbohydrates</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Dietary fiber</label>
+                            <div class="col-sm-8">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Sugar</label>
+                            <div class="col-sm-8">
+                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Protein</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Sodium</label>
+                            <div class="col-sm-10">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </Form>
-        </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>
+                            Micro Nutriants
+                            <small>vitamins & minerals</small>
+                        </h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Vitamin</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <!--<ng-select 
+                                            [options]="vitaminArray"
+                                            [multiple]="false">
+                                        </ng-select>-->
+                                    </td>
+                                    <td class="text-navy">
+                                        <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mineral</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td class="text-navy">
+                                        <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Add your own food</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <button type="button" class="btn btn-default">Cancel</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

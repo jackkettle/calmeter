@@ -6,6 +6,9 @@ import { HttpModule } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+// PLugins
+import {SelectModule} from 'angular2-select';
+
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
 import { MinorViewModule } from "../views/minor-view/minor-view.module";
@@ -26,6 +29,9 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         // Angular modules
         BrowserModule,
         HttpModule,
+
+        // Plugin modules
+        SelectModule,
 
         // Views
         DashboardModule,
