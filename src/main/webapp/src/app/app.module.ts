@@ -7,7 +7,7 @@ import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 // PLugins
-import {SelectModule} from 'angular2-select';
+import { SelectModule } from 'ng-select';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";

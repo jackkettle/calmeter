@@ -123,10 +123,10 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <!--<ng-select 
+                                        <ng-select 
                                             [options]="vitaminArray"
                                             [multiple]="false">
-                                        </ng-select>-->
+                                        </ng-select>
                                     </td>
                                     <td class="text-navy">
                                         <input class="touchspinWhole" type="text" value="" name="servingSize">
@@ -143,7 +143,12 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
+                                    <td>
+                                        <ng-select 
+                                            [options]="mineralArray"
+                                            [multiple]="false">
+                                        </ng-select>
+                                    </td>
                                     <td class="text-navy">
                                         <input class="touchspinWhole" type="text" value="" name="servingSize">
                                     </td>

@@ -12,13 +12,16 @@ import * as $ from "jquery";
 })
 export class AddFoodComponent implements OnInit {
 
-    vitaminArray: Array<any> = vitaminList;
+    form: FormGroup;
+
+    vitaminArray: Array<any> = [];
+    mineralArray: Array<any> = [];
 
     constructor() {
     }
 
     ngOnInit() {
-        console.log("This bullshit is now working")
+
         $(".touchspinWhole").TouchSpin(
             dataWhole
         );
@@ -26,6 +29,24 @@ export class AddFoodComponent implements OnInit {
         $(".touchspin2Decimal").TouchSpin(
             data2Decimal
         );
+
+        let opts = new Array(vitaminList.length);
+        for (let i = 0; i < vitaminList.length; i++) {
+            opts[i] = {
+                value: vitaminList[i],
+                label: vitaminList[i]
+            };
+        }
+        this.vitaminArray = opts.slice(0);
+
+        opts = new Array(mineralList.length);
+        for (let i = 0; i < mineralList.length; i++) {
+            opts[i] = {
+                value: mineralList[i],
+                label: mineralList[i]
+            };
+        }
+        this.mineralArray = opts.slice(0);
     }
 }
 
