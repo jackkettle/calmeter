@@ -5,7 +5,7 @@
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <form novalidate class="form-horizontal">
+        <form novalidate class="form-horizontal" [formGroup]="formGroup">
 
             <div class="col-md-8">
                 <div class="ibox">
@@ -113,7 +113,7 @@
                     </div>
                     <div class="ibox-content">
 
-                        <table class="table table-hover">
+                        <table class="table table-hover" formGroupName="vitaminFormArray">
                             <thead>
                                 <tr>
                                     <th>Vitamin</th>
@@ -121,7 +121,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let location of form.vitaminFormArray; let i=index">
                                     <td>
                                         <ng-select 
                                             [options]="vitaminArray"

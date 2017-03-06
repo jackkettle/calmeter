@@ -1,23 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
+
 
 import * as $ from "jquery";
 
 
 @Component({
     selector: 'addFood',
-    //templateUrl: 'views/food/add-food/add-food.template.html'
     templateUrl: 'add-food.template.html'
 
 })
 export class AddFoodComponent implements OnInit {
 
-    form: FormGroup;
+    formGroup: FormGroup;
 
-    vitaminArray: Array<any> = [];
-    mineralArray: Array<any> = [];
+    name: FormControl;
 
-    constructor() {
+    vitaminFormArray: FormArray;
+    mineralFormArray: FormArray;
+
+    vitaminSelectArray: Array<any> = [];
+    mineralSelectArray: Array<any> = [];
+
+    constructor( @Inject(FormBuilder) fb: FormBuilder) {
+
+        const row = new FormArray([
+            new FormControl(''),
+            new FormControl(''),
+        ]);
+        
+        this.vitaminFormArray.push(row);
+        this.mineralSelectArray.push(row);
+
+        this.formGroup = fb.group({
+            name: this.name,
+            vitaminFormArray: this.vitaminFormArray,
+            mineralFormArray: this.mineralFormArray
+        });
+
     }
 
     ngOnInit() {
@@ -37,7 +57,7 @@ export class AddFoodComponent implements OnInit {
                 label: vitaminList[i]
             };
         }
-        this.vitaminArray = opts.slice(0);
+        this.vitaminSelectArray = opts.slice(0);
 
         opts = new Array(mineralList.length);
         for (let i = 0; i < mineralList.length; i++) {
@@ -46,7 +66,7 @@ export class AddFoodComponent implements OnInit {
                 label: mineralList[i]
             };
         }
-        this.mineralArray = opts.slice(0);
+        this.mineralSelectArray = opts.slice(0);
     }
 }
 
