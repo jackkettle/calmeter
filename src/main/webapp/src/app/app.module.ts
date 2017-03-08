@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // PLugins
 import { SelectModule } from 'ng-select';
@@ -29,6 +30,8 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         // Angular modules
         BrowserModule,
         HttpModule,
+        FormsModule, 
+        ReactiveFormsModule,
 
         // Plugin modules
         SelectModule,

@@ -8394,3 +8394,12 @@ body.md-skin {
     margin: 0;
   }
 }
+
+td.half-cell{
+  width: 50%;
+}
+
+.micro-nutriant-input{
+  margin-top: 5px;
+  width: 100%;
+}

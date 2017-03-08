@@ -5,31 +5,29 @@
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <form novalidate class="form-horizontal" [formGroup]="formGroup">
-
+        <form novalidate class="form-horizontal" [formGroup]="formGroup" novalidate (ngSubmit)="save(formGroup)">
             <div class="col-md-8">
                 <div class="ibox">
                     <div class="ibox-title">
                         <h5>Add your own food</h5>
                     </div>
-
                     <div class="ibox-content">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="name" formControlName="name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Calories per 100g</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="calsPer100">
+                                <input class="touchspinWhole" type="text" value="" name="calsPer100" formControlName="calsPer100">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Serving size</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                <input class="touchspinWhole" type="text" value="" name="servingSize" formControlName="servingSize">
                             </div>
                         </div>
                     </div>
@@ -45,61 +43,61 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Total Fat</label>
                             <div class="col-sm-10">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="totalfat" formControlName="totalfat">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Saturated</label>
                             <div class="col-sm-8">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="saturatedFat" formControlName="saturatedFat">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Polyunsaturated</label>
                             <div class="col-sm-8">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="polyUnsaturatedFat" formControlName="polyUnsaturatedFat">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Monounsaturated</label>
                             <div class="col-sm-8">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="monoUnsaturatedFat" formControlName="monoUnsaturatedFat">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Cholesterol</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                <input class="touchspinWhole" type="text" value="" name="cholesterol" formControlName="cholesterol">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Total Carbohydrates</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                <input class="touchspinWhole" type="text" value="" name="totalCarbs" formControlName="totalCarbs">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Dietary fiber</label>
                             <div class="col-sm-8">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="fiber" formControlName="fiber">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-offset-1 col-sm-3 control-label label-indented">Sugar</label>
                             <div class="col-sm-8">
-                                <input class="touchspin2Decimal" type="text" value="" name="demo3">
+                                <input class="touchspin2Decimal" type="text" value="" name="sugar" formControlName="sugar">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Protein</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                <input class="touchspinWhole" type="text" value="" name="protein" formControlName="protein">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Sodium</label>
                             <div class="col-sm-10">
-                                <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                <input class="touchspinWhole" type="text" value="" name="sodium" formControlName="sodium">
                             </div>
                         </div>
                     </div>
@@ -112,8 +110,7 @@
                         </h5>
                     </div>
                     <div class="ibox-content">
-
-                        <table class="table table-hover" formGroupName="vitaminFormArray">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Vitamin</th>
@@ -121,15 +118,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let location of form.vitaminFormArray; let i=index">
-                                    <td>
+                                <tr *ngFor="let VitaminRow of formGroup.controls.vitaminFormArray.controls; let i=index">
+                                    <td class="col-xs-4">
                                         <ng-select 
-                                            [options]="vitaminArray"
-                                            [multiple]="false">
+                                        [options]="vitaminSelectArray" 
+                                        [multiple]="false" 
+                                        (selected)="onSelected($event)" 
+                                        (deselected)="onDeselected($event)">
                                         </ng-select>
                                     </td>
-                                    <td class="text-navy">
-                                        <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                    <td class="text-navy col-xs-8">
+                                        <input class="touchspinWhole form-control" type="text" value="">
                                     </td>
                                 </tr>
                             </tbody>
@@ -142,15 +141,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
+                                <tr *ngFor="let mineralRow of formGroup.controls.mineralFormArray.controls; let i=index">
+                                    <td class="col-xs-4">
                                         <ng-select 
-                                            [options]="mineralArray"
-                                            [multiple]="false">
+                                        [options]="mineralSelectArray" 
+                                        [multiple]="false" 
+                                        (selected)="onSelected($event)" 
+                                        (deselected)="onDeselected($event)">
                                         </ng-select>
                                     </td>
-                                    <td class="text-navy">
-                                        <input class="touchspinWhole" type="text" value="" name="servingSize">
+                                    <td class="text-navy col-xs-8">
+                                        <input class="touchspinWhole form-control" type="text" value="">
                                     </td>
                                 </tr>
                             </tbody>
@@ -158,16 +159,14 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
                 <div class="ibox">
                     <div class="ibox-title">
                         <h5>Add your own food</h5>
                     </div>
                     <div class="ibox-content">
-                        <button type="button" class="btn btn-default">Cancel</button>
-                        <button type="button" class="btn btn-primary">Save</button>
-                    </div>
+                        <button type="button" class="btn btn-primary" type="submit">Save</button>
+                        <button type="button" class="btn btn-default">Cancel</button> </div>
                 </div>
             </div>
         </form>
