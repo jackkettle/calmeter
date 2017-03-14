@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FoodItem } from '../food.interface';
+import { FoodService } from '../food.service';
 
 
 import * as $ from "jquery";
@@ -8,6 +9,7 @@ import * as $ from "jquery";
 
 @Component({
     selector: 'addFood',
+    providers: [FoodService],
     templateUrl: 'add-food.template.html'
 
 })
@@ -41,7 +43,7 @@ export class AddFoodComponent implements OnInit {
     vitaminSelectArray: Array<any> = [];
     mineralSelectArray: Array<any> = [];
 
-    constructor(private _fb: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder, private foodService: FoodService) { }
 
     ngOnInit() {
 
@@ -115,7 +117,7 @@ export class AddFoodComponent implements OnInit {
         }
         this.mineralSelectArray = opts.slice(0);
 
-        this.formGroup = this._fb.group({
+        this.formGroup = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(2)]],
             calsPer100: [''],
             servingSize: [''],
@@ -129,10 +131,10 @@ export class AddFoodComponent implements OnInit {
             sugar: [''],
             protein: [''],
             sodium: [''],
-            vitaminFormArray: this._fb.array([
+            vitaminFormArray: this.formBuilder.array([
                 this.initRow()
             ]),
-            mineralFormArray: this._fb.array([
+            mineralFormArray: this.formBuilder.array([
                 this.initRow()
             ])
         });
@@ -141,7 +143,7 @@ export class AddFoodComponent implements OnInit {
     }
 
     initRow() {
-        return this._fb.group({
+        return this.formBuilder.group({
             name: ['', Validators.required],
             value: ['', Validators.required]
         });
@@ -159,6 +161,16 @@ export class AddFoodComponent implements OnInit {
 
     save(model: FoodItem) {
         console.log(model);
+
+        this.foodService.addFood(model).subscribe(
+            res => {
+                console.log(res);
+            }, err => {
+                // Log errors if any
+                console.log(err);
+            }
+        );
+
     }
 
     onSelected(item) {
