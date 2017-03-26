@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import com.calmeter.core.custom.CustomTestDataInjector;
 
 @SpringBootApplication
 public class Main {
@@ -12,7 +15,8 @@ public class Main {
 	public static void main(String[] args) {
 			
 		logger.info("Starting application...");
-        SpringApplication.run(Main.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+		context.getBean(CustomTestDataInjector.class).fillWithTestData();
 		
 	}
 	

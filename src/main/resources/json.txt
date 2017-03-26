@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "Banana",
+    "weightInGrams": 1000,
+    "description": null,
+    "nutritionalInformation": {
+      "id": 1,
+      "calories": 1000,
+      "servingSize": null,
+      "consolidatedCarbs": {
+        "id": 1,
+        "fiber": null,
+        "starch": null,
+        "sugarAlcohol": null,
+        "sugar": 10,
+        "total": null,
+        "sugarMap": {}
+      },
+      "consolidatedFats": {
+        "id": 1,
+        "saturatedFat": null,
+        "monoUnsaturatedFat": null,
+        "polyUnsaturatedFat": null,
+        "transFat": null,
+        "cholesterol": 3,
+        "totalFat": null
+      },
+      "consolidatedProteins": {
+        "id": 1,
+        "protein": 20,
+        "proteinMap": {}
+      },
+      "vitaminMap": {
+        "VITAMIN_A": 30,
+        "VITAMIN_B12": 5000
+      },
+      "mineralMap": {},
+      "caffeine": null
+    },
+    "creator": {
+      "id": 1,
+      "username": "john.doe",
+      "password": "password",
+      "passwordConfirm": null,
+      "email": "john.doe@example.com",
+      "roles": []
+    },
+    "meals": []
+  }
+]

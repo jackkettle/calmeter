@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "food_item")
@@ -30,8 +31,9 @@ public class FoodItem implements IFood{
 
 	private String description;
 
+	@JsonManagedReference
 	private NutritionalInformation nutritionalInformation;
-
+	
 	private User creator;
 
 	private Set<Meal> meals;

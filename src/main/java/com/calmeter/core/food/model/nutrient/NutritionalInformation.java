@@ -23,6 +23,7 @@ import com.calmeter.core.food.model.nutrient.macro.fat.ConsolidatedFats;
 import com.calmeter.core.food.model.nutrient.macro.protein.ConsolidatedProteins;
 import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
 import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.JoinColumn;
 
@@ -50,6 +51,7 @@ public class NutritionalInformation {
 	
 	private Integer caffeine;
 
+	@JsonBackReference
 	private FoodItem foodItem;
 
 	@Id

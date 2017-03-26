@@ -23,8 +23,8 @@ import com.calmeter.core.food.repositroy.IFoodItemRepository;
 import com.calmeter.core.food.repositroy.IMealRepository;
 
 @RestController
-@RequestMapping("/api/food")
-public class FoodApiController {
+@RequestMapping("/api/food-item")
+public class FoodItemApiController {
 
 	@Autowired
 	IFoodItemRepository foodItemRepository;
@@ -67,13 +67,15 @@ public class FoodApiController {
 	@RequestMapping(value = "/createFoodItem", method = RequestMethod.POST)
 	ResponseEntity<?> createFoodItem(@RequestBody FoodItem foodItem, UriComponentsBuilder ucBuilder) {
 
-		logger.info("Creating food : {}", foodItem);
-
+		logger.info("Creating food : {}", foodItem);	
+		FoodItem createdFoodItem = foodItemRepository.save(foodItem);
+		logger.info("Food item created id: {}", createdFoodItem.getId());
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/user/{id}").buildAndExpand(foodItem.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
-	public static final Logger logger = LoggerFactory.getLogger(FoodApiController.class);
+	public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);
 
 }
