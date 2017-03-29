@@ -16,11 +16,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.food.controller.FoodItemDeserializer;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "food_item")
+@JsonDeserialize(using = FoodItemDeserializer.class)
 public class FoodItem implements IFood{
 
 	protected Long id;
