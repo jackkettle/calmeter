@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.calmeter.core.food.model.FoodItem;
@@ -44,22 +46,42 @@ public class FoodItemDeserializer
 
 		JsonNode consolidatedCarbsNode = rootNode.get ("nutritionalInformation");
 		ConsolidatedCarbs consolidatedCarbs = new ConsolidatedCarbs ();
-		consolidatedCarbs.setFiber (consolidatedCarbsNode.get ("fiber").asDouble ());
-		consolidatedCarbs.setStarch (consolidatedCarbsNode.get ("starch").asDouble ());
-		consolidatedCarbs.setSugarAlcohol (consolidatedCarbsNode.get ("sugarAlcohol").asDouble ());
-		consolidatedCarbs.setSugar (consolidatedCarbsNode.get ("sugar").asDouble ());
 
-		JsonNode consolidatedFatsNode = rootNode.get ("consolidatedFats");
+		if (consolidatedCarbsNode.get ("fiber") != null)
+			consolidatedCarbs.setFiber (consolidatedCarbsNode.get ("fiber").asDouble ());
+
+		if (consolidatedCarbsNode.get ("starch") != null)
+			consolidatedCarbs.setStarch (consolidatedCarbsNode.get ("starch").asDouble ());
+
+		if (consolidatedCarbsNode.get ("sugarAlcohol") != null)
+			consolidatedCarbs.setSugarAlcohol (consolidatedCarbsNode.get ("sugarAlcohol").asDouble ());
+
+		if (consolidatedCarbsNode.get ("sugar") != null)
+			consolidatedCarbs.setSugar (consolidatedCarbsNode.get ("sugar").asDouble ());
+
+		JsonNode consolidatedFatsNode = nutritionalInformationNode.get ("consolidatedFats");
 		ConsolidatedFats consolidatedFats = new ConsolidatedFats ();
-		consolidatedFats.setSaturatedFat (consolidatedFatsNode.get ("saturatedFat").asDouble ());
-		consolidatedFats.setMonoUnsaturatedFat (consolidatedFatsNode.get ("monoUnsaturatedFat").asDouble ());
-		consolidatedFats.setPolyUnsaturatedFat (consolidatedFatsNode.get ("polyUnsaturatedFat").asDouble ());
-		consolidatedFats.setTransFat (consolidatedFatsNode.get ("transFat").asDouble ());
-		consolidatedFats.setCholesterol (consolidatedFatsNode.get ("cholesterol").asDouble ());
 
-		JsonNode consolidatedProteinsNode = rootNode.get ("consolidatedProteins");
+		if (consolidatedFatsNode.get ("saturatedFat") != null)
+			consolidatedFats.setSaturatedFat (consolidatedFatsNode.get ("saturatedFat").asDouble ());
+
+		if (consolidatedFatsNode.get ("monoUnsaturatedFat") != null)
+			consolidatedFats.setMonoUnsaturatedFat (consolidatedFatsNode.get ("monoUnsaturatedFat").asDouble ());
+
+		if (consolidatedFatsNode.get ("polyUnsaturatedFat") != null)
+			consolidatedFats.setPolyUnsaturatedFat (consolidatedFatsNode.get ("polyUnsaturatedFat").asDouble ());
+
+		if (consolidatedFatsNode.get ("transFat") != null)
+			consolidatedFats.setTransFat (consolidatedFatsNode.get ("transFat").asDouble ());
+
+		if (consolidatedFatsNode.get ("cholesterol") != null)
+			consolidatedFats.setCholesterol (consolidatedFatsNode.get ("cholesterol").asDouble ());
+
+		JsonNode consolidatedProteinsNode = nutritionalInformationNode.get ("consolidatedProteins");
 		ConsolidatedProteins consolidatedProteins = new ConsolidatedProteins ();
-		consolidatedProteins.setProtein (consolidatedProteinsNode.get ("protein").asDouble ());
+
+		if (consolidatedProteinsNode.get ("protein") != null)
+			consolidatedProteins.setProtein (consolidatedProteinsNode.get ("protein").asDouble ());
 
 		Map<MineralLabel, Double> mineralMap = new HashMap<> ();
 		Iterator<Entry<String, JsonNode>> mineralIterator = nutritionalInformationNode.get ("mineralMap").fields ();
@@ -83,5 +105,7 @@ public class FoodItemDeserializer
 
 		return foodItem;
 	}
+
+	private static Logger logger = LoggerFactory.getLogger (FoodItemDeserializer.class);
 
 }

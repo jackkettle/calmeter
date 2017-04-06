@@ -21,6 +21,8 @@ public class WebSecurityConfig
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+	        .csrf()
+	        	.disable()
 	        .authorizeRequests()
 	            .antMatchers("/registration", "/resources/**", "api/**", "/api/**", "/api").permitAll()
 	            .anyRequest().authenticated()
