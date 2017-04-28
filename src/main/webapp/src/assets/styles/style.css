@@ -8403,3 +8403,28 @@ td.half-cell{
   margin-top: 5px;
   width: 100%;
 }
+
+.contact-box.center-version > .contact-box-inner {
+  display: block;
+  background-color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+.contact-box.center-version > .contact-box-inner img {
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.food-pie-chart{
+  display: block;
+  margin: 0 auto;
+  padding-top: 10px;
+  width: 60%;
+}
+
+.modal-icon-danger {
+  font-size: 84px;
+  color: #ed5565;
+}

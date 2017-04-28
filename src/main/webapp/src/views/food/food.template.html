@@ -8,4 +8,75 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-3" *ngFor="let foodItem of foodItems; let i = index">
+            <!-- Index: {{ index }} -->
+            <div class="contact-box center-version">
+                <div class="contact-box-inner">
+                    <h3 class="m-b-xs"><strong>{{foodItem.name}}</strong></h3>
+                    <div class="font-bold">{{foodItem.description}}</div>
+                    <div class="m-t-md food-info-blurb">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Serving size</td>
+                                    <td>{{foodItem.nutritionalInformation.servingSize}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kcal</td>
+                                    <td>{{foodItem.nutritionalInformation.calories}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Fat</td>
+                                    <td>{{foodItem.nutritionalInformation.consolidatedFats.totalFat}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Saturates</td>
+                                    <td>{{foodItem.nutritionalInformation.consolidatedFats.saturatedFat}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sugars</td>
+                                    <td>{{foodItem.nutritionalInformation.consolidatedCarbs.sugar}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Salt</td>
+                                    <td>{{foodItem.nutritionalInformation.mineralMap.SODIUM}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="food-pie-chart" style="display: block">
+                        <canvas baseChart [data]="chartMap.get(foodItem.id)" [labels]="pieChartLabels" [chartType]="pieChartType" [legend]="pieChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+                <div class="contact-box-footer">
+                    <div class="m-t-xs btn-group">
+                        <a class="btn btn-xs btn-white"><i class="fa fa-eye"></i> View</a>
+                        <a class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Edit</a>
+                        <a (click)="toDeleteID=foodItem.id" data-toggle="modal" data-target="#deleteModal" class="btn btn-xs btn-white"><i class="fa fa-trash"></i> Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-trash modal-icon-danger"></i>
+                <h4 class="modal-title">Are you sure?</h4>
+                <small>Once this food item has been deleted there is no way to recover it.</small>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to delete Food Item ID: {{toDeleteID}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="delete(toDeleteID)" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>

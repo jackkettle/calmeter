@@ -2,13 +2,15 @@ package com.calmeter.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
-public class MvcConfig extends WebMvcConfigurerAdapter {
-    
+public class MvcConfig
+		extends WebMvcConfigurerAdapter {
+
 	@Bean
 	public InternalResourceViewResolver viewResolver () {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver ();
@@ -16,6 +18,12 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		viewResolver.setPrefix ("/");
 		viewResolver.setSuffix (".jsp");
 		return viewResolver;
+	}
+
+	@Override
+	public void addCorsMappings (CorsRegistry registry) {
+		registry.addMapping ("/**")
+			.allowedMethods("PUT", "DELETE", "GET", "POST");
 	}
 
 }

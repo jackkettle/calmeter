@@ -117,18 +117,18 @@
                                     <th>Value</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let VitaminRow of formGroup.controls.vitaminFormArray.controls; let i=index">
+                            <tbody formArrayName="vitaminFormArray">
+                                <tr *ngFor="let VitaminRow of formGroup.controls.vitaminFormArray.controls; let i=index" [formGroupName]="i">
                                     <td class="col-xs-4">
                                         <ng-select 
                                         [options]="vitaminSelectArray" 
                                         [multiple]="false" 
-                                        (selected)="onSelected($event)" 
-                                        (deselected)="onDeselected($event)">
+                                        (selected)="onSelected($event)"
+                                        formControlName="name">
                                         </ng-select>
                                     </td>
                                     <td class="text-navy col-xs-8">
-                                        <input class="touchspinWhole form-control" type="text" value="">
+                                        <input class="touchspinWhole form-control" type="text" value="" formControlName="value">
                                     </td>
                                 </tr>
                             </tbody>
@@ -140,18 +140,18 @@
                                     <th>Value</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let mineralRow of formGroup.controls.mineralFormArray.controls; let i=index">
+                            <tbody formArrayName="mineralFormArray">
+                                <tr *ngFor="let mineralRow of formGroup.controls.mineralFormArray.controls; let i=index" [formGroupName]="i">
                                     <td class="col-xs-4">
                                         <ng-select 
                                         [options]="mineralSelectArray" 
                                         [multiple]="false" 
-                                        (selected)="onSelected($event)" 
-                                        (deselected)="onDeselected($event)">
+                                        (selected)="onSelected($event)"
+                                        formControlName="name">
                                         </ng-select>
                                     </td>
                                     <td class="text-navy col-xs-8">
-                                        <input class="touchspinWhole form-control" type="text" value="">
+                                        <input class="touchspinWhole form-control" type="text" value="" formControlName="value">
                                     </td>
                                 </tr>
                             </tbody>

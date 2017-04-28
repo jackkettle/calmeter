@@ -166,7 +166,6 @@ export class AddFoodComponent implements OnInit {
             res => {
                 console.log(res);
             }, err => {
-                // Log errors if any
                 console.log(err);
             }
         );
