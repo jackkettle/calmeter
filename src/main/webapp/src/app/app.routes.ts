@@ -5,6 +5,8 @@ import { FoodComponent } from "../views/food/food.component";
 import { AddRecipeComponent } from "../views/food/add-recipe/add-recipe.component";
 import { AddFoodComponent } from "../views/food/add-food/add-food.component";
 import { DiaryComponent } from "../views/diary/diary.component";
+import { AddDiaryEntryComponent } from "../views/diary/add-diary-entry/add-diary-entry.component";
+
 
 
 export const ROUTES: Routes = [
@@ -18,6 +20,7 @@ export const ROUTES: Routes = [
     { path: 'food/addRecipe', component: AddRecipeComponent },
     { path: 'food/addFood', component: AddFoodComponent },
     { path: 'diary', component: DiaryComponent },
+    { path: 'diary/addEntry', component: AddDiaryEntryComponent },
 
     // Handle all other routes
     { path: '**', component: DashboardComponent }

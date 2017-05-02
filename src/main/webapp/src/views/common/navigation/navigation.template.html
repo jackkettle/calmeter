@@ -22,7 +22,16 @@
                 <a [routerLink]="['./minorView']"><i class="fa fa-desktop"></i> <span class="nav-label">Minor view</span> </a>
             </li>
             <li [ngClass]="{active: activeRoute('diary')}">
-                <a [routerLink]="['./diary']"><i class="fa fa-calendar"></i> <span class="nav-label">Diary</span> </a>
+                <a href="#"><i class="fa fa-apple"></i> <span class="nav-label">Diary</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li [ngClass]="{active: activeRoute('diary')}">
+                        <a [routerLink]="['./diary']"><i class="fa fa-calendar"></i> <span class="nav-label">Diary Overview</span></a>
+                    </li>
+
+                    <li [ngClass]="{active: activeRoute('diary/addEntry')}">
+                        <a [routerLink]="['./diary/addEntry']"><i class="fa fa-list-alt"></i> <span class="nav-label">Add Diary Entry</span>  </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="#"><i class="fa fa-apple"></i> <span class="nav-label">My Food</span><span class="fa arrow"></span></a>

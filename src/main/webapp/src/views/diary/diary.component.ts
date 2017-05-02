@@ -12,26 +12,10 @@ export class DiaryComponent implements OnInit {
     public barChartType: string = 'bar';
     public barChartLegend: boolean = false;
 
-    public successChartColor: object = {
-        backgroundColor: 'rgb(28, 132, 198)',
-        borderColor: 'rgb(28, 132, 198)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-
-    public warningChartColor: object = {
-        backgroundColor: 'rgb(248, 172, 89) ',
-        borderColor: 'rgb(248, 172, 89)',
-        pointBackgroundColor: 'rgb(248, 172, 89)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-
     public barChartColors: Array<any> = [
         {
+            // Success color: 'rgb(248, 172, 89) '
+            // Warning color: 'rgb(248, 172, 89)'
             backgroundColor: [
                 'rgba(255, 99, 132, 0.4)',
                 'rgba(54, 162, 235, 0.4)',
@@ -43,21 +27,27 @@ export class DiaryComponent implements OnInit {
         }
     ];
 
+    public barChartData: any[] = [
+        { data: [65, 59, 80, 81, 56, 55, 56] },
+        { data: [69, 79, 84, 55, 56, 55, 56] }
+    ];
+
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
         responsive: true,
         scales: {
+            xAxes: [{
+                stacked: true,
+                gridLines: { display: false },
+            }],
             yAxes: [{
+                stacked: true,
                 ticks: {
                     beginAtZero: true
                 }
             }]
         }
     };
-
-    public barChartData: any[] = [
-        { data: [65, 59, 80, 81, 56, 55, 56] }
-    ];
 
     ngOnInit() {
         this.currentDate = new Date();

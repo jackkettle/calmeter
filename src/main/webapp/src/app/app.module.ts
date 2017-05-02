@@ -14,9 +14,10 @@ import { SelectModule } from 'ng-select';
 import { DashboardModule } from "../views/dashboard/dashboard.module";
 import { MinorViewModule } from "../views/minor-view/minor-view.module";
 import { FoodModule } from "../views/food/food.module";
-import { DiaryModule } from "../views/diary/diary.module";
 import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
 import { AddFoodModule } from "../views/food/add-food/add-food.module";
+import { DiaryModule } from "../views/diary/diary.module";
+import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
 
 // App modules/components
 import { NavigationModule } from "../views/common/navigation/navigation.module";
@@ -41,8 +42,9 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         MinorViewModule,
         FoodModule,
         AddRecipeModule,
-        DiaryModule,
         AddFoodModule,
+        DiaryModule,
+        AddDiaryEntryModule,
 
         // Modules
         NavigationModule,
