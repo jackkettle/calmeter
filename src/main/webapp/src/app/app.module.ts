@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // PLugins
 import { SelectModule } from 'ng-select';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
@@ -36,6 +37,7 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
 
         // Plugin modules
         SelectModule,
+        NgxDatatableModule,
 
         // Views
         DashboardModule,
