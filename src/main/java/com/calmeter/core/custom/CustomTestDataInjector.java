@@ -47,11 +47,33 @@ public class CustomTestDataInjector {
 
 		FoodItem foodItem = new FoodItem();
 		foodItem.setName("Banana");
-		foodItem.setWeightInGrams(1000);
+		foodItem.setWeightInGrams(118);
 		foodItem.setNutritionalInformation(nutritionalInformation);
 		foodItem.setCreator(user);
 
 		foodItemRepository.save(foodItem);
+
+		nutritionalInformation = new NutritionalInformation();
+		nutritionalInformation.setServingSize (46.0);
+		nutritionalInformation.setCalories(90.0);
+		nutritionalInformation.getConsolidatedCarbs().setSugar(0.2);
+		nutritionalInformation.getConsolidatedCarbs().setTotal (0.4);
+		nutritionalInformation.getConsolidatedFats().setCholesterol(184.5);
+		nutritionalInformation.getConsolidatedFats().setSaturatedFat (2.0);
+		nutritionalInformation.getConsolidatedFats().setTotalFat (7.0);
+		
+		nutritionalInformation.getConsolidatedProteins().setProtein(6.0);
+		nutritionalInformation.getMineralMap ().put(MineralLabel.SODIUM, 95.2);
+
+		foodItem = new FoodItem();
+		foodItem.setName("Egg, fried");
+		foodItem.setWeightInGrams(46);
+		foodItem.setNutritionalInformation(nutritionalInformation);
+		foodItem.setCreator(user);
+
+		foodItemRepository.save(foodItem);
+		
+		
 	}
 
 }

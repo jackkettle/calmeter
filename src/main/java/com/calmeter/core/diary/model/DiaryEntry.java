@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,8 +36,6 @@ public class DiaryEntry {
 	
 	private boolean eatan;
 	
-	private DiaryEntryFoodType diaryEntryFoodType;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {
@@ -66,7 +62,6 @@ public class DiaryEntry {
 	}
 
 	public void setMeals(List<Meal> meal) {
-		this.diaryEntryFoodType = DiaryEntryFoodType.MEAL;
 		this.meal = meal;
 	}
 	
@@ -78,7 +73,6 @@ public class DiaryEntry {
 	}
 
 	public void setFoodItems(List<FoodItem> foodItem) {
-		this.diaryEntryFoodType = DiaryEntryFoodType.FOODITEM;
 		this.foodItem = foodItem;
 	}
 
@@ -97,15 +91,6 @@ public class DiaryEntry {
 
 	public void setEatan(boolean eatan) {
 		this.eatan = eatan;
-	}
-
-	@Enumerated(EnumType.STRING)
-	public DiaryEntryFoodType getDiaryEntryFoodType() {
-		return diaryEntryFoodType;
-	}
-
-	public void setDiaryEntryFoodType(DiaryEntryFoodType diaryEntryFoodType) {
-		this.diaryEntryFoodType = diaryEntryFoodType;
 	}
 	
 }

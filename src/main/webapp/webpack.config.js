@@ -8,7 +8,8 @@ var webpackConfig = {
     entry: {
         'polyfills': './src/polyfills.browser.ts',
         'vendor': './src/vendor.browser.ts',
-        'main': './src/main.browser.ts'
+        'main': './src/main.browser.ts',
+        'bootstrap-datepicker': './src/assets/styles/vendor/bootstrap-datepicker.css'
     },
 
     output: {
@@ -16,7 +17,7 @@ var webpackConfig = {
     },
 
     plugins: [
-        new ExtractTextPlugin("styles.css"),
+        new ExtractTextPlugin("[name].css"),
         new(webpack.optimize.OccurenceOrderPlugin || webpack.optimize.OccurrenceOrderPlugin)(),
         new webpack.optimize.CommonsChunkPlugin({
             name: ['main', 'vendor', 'polyfills'],
@@ -41,7 +42,8 @@ var webpackConfig = {
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader'
-                })
+                }),
+                exclude: '/node_modules/'
             },
             {
                 test: /\.scss$/,
@@ -89,7 +91,7 @@ var defaultConfig = {
             path.join(__dirname, "src"),
             "node_modules"
         ],
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.css']
     },
 
 

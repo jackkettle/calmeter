@@ -6,6 +6,8 @@ import 'bootstrap';
 import 'flot';
 import 'chart.js';
 import 'bootstrap-touchspin';
+import 'bootstrap-datepicker';
+import 'bootstrap-timepicker';
 
 // Angular 2
 import '@angular/platform-browser';
@@ -19,3 +21,4 @@ import '@angular/router';
 // RxJS
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
+

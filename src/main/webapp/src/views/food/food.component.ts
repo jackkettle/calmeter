@@ -30,7 +30,6 @@ export class FoodComponent implements OnInit {
     }
 
     delete(id: number) {
-        console.log('deleting id: ' + id);
         this.foodService.delete(id)
             .subscribe(
             () => { this.router.navigate(['/food']); this.loadFoodValues(); },

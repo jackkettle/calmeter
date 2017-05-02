@@ -10,5 +10,5 @@ import com.calmeter.core.food.model.FoodItem;
 public interface IFoodItemRepository extends JpaRepository<FoodItem, Long> {
 	FoodItem findByName(String name);
 	
-	List<FoodItem> findAllByCreator(User user);
+	List<FoodItem> findAllByCreator(User creator);
 }
