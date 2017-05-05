@@ -19,5 +19,6 @@
   "buildOnSave": false,
   "atom": {
     "rewriteTsconfig": false
-  }
+  },
+  "lib": ["es2015", "dom"]
 }

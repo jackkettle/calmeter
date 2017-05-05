@@ -17,11 +17,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.diary.controller.DiaryEntryDeserializer;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.Meal;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "diary_entry")
+@JsonDeserialize(using = DiaryEntryDeserializer.class)
 public class DiaryEntry {
 
 	private Long id;
@@ -35,6 +38,8 @@ public class DiaryEntry {
 	private LocalDateTime time;
 	
 	private boolean eatan;
+	
+	private String description;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -91,6 +96,14 @@ public class DiaryEntry {
 
 	public void setEatan(boolean eatan) {
 		this.eatan = eatan;
+	}
+
+	public String getDescription () {
+		return description;
+	}
+
+	public void setDescription (String description) {
+		this.description = description;
 	}
 	
 }

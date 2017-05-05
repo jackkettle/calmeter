@@ -4,67 +4,115 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Add your own food</h5>
-                </div>
-                <div class="ibox-content">
-                    <div class="form-group row">
-                        <label class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="name" formControlName="name">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 control-label">Date</label>
-                        <div class="date col-sm-10">
-                            <div class="input-group date">
-                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                <input type="text" class="form-control datepicker" value="{{currentDate | date:'dd/MM/yyyy'  }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 control-label">Time</label>
-                        <div class="date col-sm-10 bootstrap-timepicker">
-                            <div class="input-group timepicker">
-                                <input type="text" class="form-control input-small timepicker-input">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <form [formGroup]="formGroup" novalidate (ngSubmit)="save(formGroup)">
         <div class="row">
             <div class="col-md-8">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>Add your own food</h5>
+                        <h5>Diary details</h5>
                     </div>
                     <div class="ibox-content">
-                        <div class="form-group">
-                            <div class="btn-group">
-                                <button 
-                                    *ngFor="let option of searchOptions;" 
-                                    [ngClass]="{active: searchOption===option.name}" 
-                                    (click)="assignSearchOption(option.name)" 
-                                    class="btn btn-white" 
-                                    type="button">{{option.label}}</button>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Date</label>
+                            <div class="date col-sm-10">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control datepicker" formControlName="date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Time</label>
+                            <div class="date col-sm-10 bootstrap-timepicker">
+                                <div class="input-group timepicker">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                    <input type="text" class="form-control input-small timepicker-input" formControlName="time">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">Description</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" formControlName="description">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Choosen food</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let selectedFoodItem of selected">
+                                    <td><span class="col-sm-10">{{ selectedFoodItem.name }}</span><span class="label label-info col-sm-2">ID: {{ selectedFoodItem.id }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="pull-right">
+                            <button class="btn btn-white" type="submit">Cancel</button>
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Select your food</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="form-group col-sm-8">
+                                <div class="btn-group">
+                                    <button *ngFor="let option of searchOptions;" [ngClass]="{active: searchOption===option.name}" (click)="assignSearchOption(option.name)"
+                                        class="btn btn-white" type="button">{{option.label}}</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <h4 class="text-primary">{{ searchOption }}</h4>
                             </div>
                         </div>
                         <div class="form-group">
-                            <p class="text-muted">{{ searchOption }}</p>
-                        </div>
-                        <div class="form-group">
-                            <ngx-datatable [rows]="rows" [columns]="columns">
-                            </ngx-datatable>
+                            <ngx-datatable 
+                                [rows]="rows" 
+                                [columnMode]="'force'" 
+                                [rowHeight]="'auto'" 
+                                [externalPaging]="true" 
+                                [headerHeight]="45" 
+                                [count]="page.totalElements"
+                                [offset]="page.pageNumber" 
+                                [limit]="page.size" 
+                                [cssClasses]="cssClasses" 
+                                [selected]="selected"
+                                [selectionType]="'checkbox'" 
+                                (page)='setPage($event)'>
+                                <ngx-datatable-column name="ID" [width]="30">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                                <ngx-datatable-column 
+                                    [sortable]="false" 
+                                    [canAutoResize]="false" 
+                                    [draggable]="false" 
+                                    [resizeable]="false" 
+                                    [headerCheckboxable]="false"
+                                    [checkboxable]="true">
+                                    </ngx-datatable-column>
+                                    </ngx-datatable>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>

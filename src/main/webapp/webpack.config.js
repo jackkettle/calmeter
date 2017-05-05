@@ -9,7 +9,8 @@ var webpackConfig = {
         'polyfills': './src/polyfills.browser.ts',
         'vendor': './src/vendor.browser.ts',
         'main': './src/main.browser.ts',
-        'bootstrap-datepicker': './src/assets/styles/vendor/bootstrap-datepicker.css'
+        'bootstrap-datepicker': './src/assets/styles/vendor/bootstrap-datepicker.css',
+        'ngx-datatable': './src/assets/styles/vendor/ngx-datatable.css'
     },
 
     output: {

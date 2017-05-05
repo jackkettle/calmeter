@@ -19,7 +19,7 @@
     "@angular/router": "~4.0.0",
     "@swimlane/ngx-datatable": "^9.0.0",
     "@types/bootstrap-datepicker": "0.0.6",
-    "@types/node": "7.0.7",
+    "@types/node": "7.0.07",
     "angular-in-memory-web-api": "~0.3.0",
     "animate.css": "3.1.1",
     "bootstrap": "^3.3.7",
