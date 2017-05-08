@@ -16,7 +16,6 @@ export class FoodComponent implements OnInit {
     public pieChartType: string = 'pie';
     public pieChartLegend: boolean = false;
     public pieChartLabels: string[] = ['Carbs', 'Fat', 'Protein'];
-    public pieChartData: number[] = [300, 500, 100];
     public chartMap: Map<number, number[]>;
 
     public toDeleteID: number;

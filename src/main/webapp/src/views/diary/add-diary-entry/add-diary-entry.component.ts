@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@ang
 import { Observable } from 'rxjs/Rx';
 import { FoodService } from '../../food/food.service';
 import { DiaryService } from '../diary.service';
-import  {DiaryEntry} from '../diary.interface';
+import { DiaryEntry } from '../diary.interface';
 
 
 
@@ -146,8 +146,9 @@ export class AddDiaryEntryComponent implements OnInit {
 
     getDateFormat(date: Date) {
 
-        var days = date.getDay() < 10 ? '0' + date.getDay() : date.getDay();
-        var month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
+
+        var days = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+        var month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
 
         var dateFormat = days + "/" + month + "/" + date.getFullYear();
         return dateFormat

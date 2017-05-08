@@ -20,7 +20,9 @@ import com.calmeter.core.account.model.User;
 import com.calmeter.core.diary.controller.DiaryEntryDeserializer;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.Meal;
+import com.calmeter.core.json.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "diary_entry")
@@ -35,6 +37,7 @@ public class DiaryEntry {
 		
 	private List<FoodItem> foodItem;
 	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime time;
 	
 	private boolean eatan;

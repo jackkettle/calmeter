@@ -32,7 +32,9 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 		
 		String fullDateTimeString = date + " " + time;
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm a");
+		logger.info("Time: {}", fullDateTimeString);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a");
 		LocalDateTime dateTime = LocalDateTime.parse(fullDateTimeString, formatter);
 		
 		diaryEnty.setTime (dateTime);
