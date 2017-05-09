@@ -5,8 +5,6 @@ import { FoodService } from '../../food/food.service';
 import { DiaryService } from '../diary.service';
 import { DiaryEntry } from '../diary.interface';
 
-
-
 import * as $ from "jquery";
 
 @Component({
@@ -77,7 +75,8 @@ export class AddDiaryEntryComponent implements OnInit {
         this.formGroup = this.formBuilder.group({
             date: [this.getDateFormat(dateObject)],
             time: [this.getTimeFormat(dateObject)],
-            description: ['']
+            description: [''],
+            foodItemFormArray: this.formBuilder.array([]),
         });
 
     }
@@ -97,7 +96,8 @@ export class AddDiaryEntryComponent implements OnInit {
             let rowData = {
                 'id': entry.id,
                 'name': entry.name,
-                'label': entry.name
+                'label': entry.name,
+                'source': this.searchOption
             }
             dataRows.push(rowData);
         }
@@ -114,16 +114,34 @@ export class AddDiaryEntryComponent implements OnInit {
 
     onSelect({ selected }) {
         console.log('Select Event', selected);
+        console.log('1', this.selected); 
         this.selected.splice(0, this.selected.length);
         this.selected.push(...selected);
+
+        const control = <FormArray>this.formGroup.controls['foodItemFormArray'];
+
+        while (control.length) {
+            control.removeAt(control.length - 1);
+        }
+
+        for(let entry of selected){
+            let row = this.formBuilder.group({
+                name: [entry.name, Validators.required],
+                id: [entry.id, Validators.required],
+                source: [entry.source, Validators.required],
+                servings: ['', Validators.required],
+                weight: ['', Validators.required]
+            });
+            control.push(row);
+        }
+
+        console.log(control);
+
     }
 
     save(model) {
-
         console.log("Saving!");
-
         console.log(model.value);
-
         this.diaryService.addEntry(model.value).subscribe(
             res => {
                 console.log(res);
@@ -145,11 +163,8 @@ export class AddDiaryEntryComponent implements OnInit {
     }
 
     getDateFormat(date: Date) {
-
-
         var days = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
         var month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-
         var dateFormat = days + "/" + month + "/" + date.getFullYear();
         return dateFormat
     }

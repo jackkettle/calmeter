@@ -22,16 +22,21 @@ public class DiaryApiController {
 
 	@Autowired
 	IDiaryEntryRepository diaryEntryRepository;
-	
+
 	@RequestMapping(value = "/allEntries", method = RequestMethod.GET)
 	ResponseEntity<Collection<DiaryEntry>> getAllEntries () {
 		List<DiaryEntry> entries = diaryEntryRepository.findAll ();
+
+		for (int i = 0; i < entries.size (); i++) {
+			entries.get (i).computeNutritionalInformation ();
+		}
+
 		if (entries.size () < 1) {
 			return new ResponseEntity<Collection<DiaryEntry>> (HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<Collection<DiaryEntry>> (entries, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/createEntry", method = RequestMethod.POST)
 	ResponseEntity<?> createFoodItem (@RequestBody DiaryEntry diaryEntry) {
 
@@ -39,9 +44,9 @@ public class DiaryApiController {
 		DiaryEntry createdEntry = diaryEntryRepository.save (diaryEntry);
 		logger.info ("Diary entry created id: {}", createdEntry.getId ());
 		return new ResponseEntity<String> (HttpStatus.CREATED);
-		
+
 	}
-	
+
 	public static final Logger logger = LoggerFactory.getLogger (DiaryApiController.class);
 
 }

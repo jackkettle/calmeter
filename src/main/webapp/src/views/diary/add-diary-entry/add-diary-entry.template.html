@@ -51,9 +51,9 @@
                                     <th>Name</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let selectedFoodItem of selected">
-                                    <td><span class="col-sm-10">{{ selectedFoodItem.name }}</span><span class="label label-info col-sm-2">ID: {{ selectedFoodItem.id }}</span></td>
+                            <tbody formArrayName="foodItemFormArray">
+                                <tr *ngFor="let row of formGroup.controls.foodItemFormArray.controls; let i=index" [formGroupName]="i">
+                                    <td><span class="col-sm-10">{{row.controls.name.value}}</span><span class="label label-info col-sm-2">ID: {{row.controls.id.value}}</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -96,7 +96,8 @@
                                 [cssClasses]="cssClasses" 
                                 [selected]="selected"
                                 [selectionType]="'checkbox'" 
-                                (page)='setPage($event)'>
+                                (page)='setPage($event)'
+                                (select)='onSelect($event)'>
                                 <ngx-datatable-column name="ID" [width]="30">
                                 </ngx-datatable-column>
                                 <ngx-datatable-column name="Name"></ngx-datatable-column>

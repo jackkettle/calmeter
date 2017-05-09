@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.calmeter.core.custom.CustomTestDataInjector;
+import com.calmeter.core.spring.ApplicationContextProvider;
 
 @SpringBootApplication
 public class Main {
@@ -18,6 +19,7 @@ public class Main {
 		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
 		context.getBean(CustomTestDataInjector.class).fillWithTestData();
 		
+		ApplicationContextProvider.resetApplicationContext (context);
 	}
 	
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
