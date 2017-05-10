@@ -83,20 +83,20 @@ public class DiaryEntryHelper {
 				Map<Object, Double> totalMap = (Map<Object, Double>)totalValue;
 				for (Map.Entry<?, Double> entry : individualMap.entrySet ()) {
 
-					if(entry.getValue () == null)
+					if (entry.getValue () == null)
 						continue;
 
 					Double rowTotalValue = totalMap.get (entry.getKey ());
-					
+
 					Double sumValue = 0.0;
-					if(rowTotalValue == null)
+					if (rowTotalValue == null)
 						sumValue = entry.getValue ();
 					else
 						sumValue = entry.getValue () + rowTotalValue;
 
 					totalMap.put (entry.getKey (), sumValue);
 				}
-
+				totalAccessor.setPropertyValue (propertyDescriptor.getName (), totalMap);
 				continue;
 
 			}
