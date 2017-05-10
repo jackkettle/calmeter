@@ -17,13 +17,11 @@ import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.nutrient.macro.carb.ConsolidatedCarbs;
 import com.calmeter.core.food.model.nutrient.macro.fat.ConsolidatedFats;
 import com.calmeter.core.food.model.nutrient.macro.protein.ConsolidatedProteins;
 import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
 import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.JoinColumn;
 
@@ -50,9 +48,6 @@ public class NutritionalInformation {
 	private Map<MineralLabel, Double> mineralMap;
 	
 	private Integer caffeine;
-
-	@JsonBackReference
-	private FoodItem foodItem;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -140,15 +135,6 @@ public class NutritionalInformation {
 
 	public void setCaffeine(Integer caffeine) {
 		this.caffeine = caffeine;
-	}
-
-	@OneToOne(mappedBy = "nutritionalInformation")
-	public FoodItem getFoodItem () {
-		return foodItem;
-	}
-
-	public void setFoodItem (FoodItem foodItem) {
-		this.foodItem = foodItem;
 	}
 
 	public NutritionalInformation () {

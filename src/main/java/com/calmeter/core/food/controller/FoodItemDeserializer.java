@@ -106,6 +106,7 @@ public class FoodItemDeserializer
 		return foodItem;
 	}
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger (FoodItemDeserializer.class);
 
 }
