@@ -161,7 +161,6 @@ export class AddFoodComponent implements OnInit {
 
     save(model: FoodItem) {
         console.log(model);
-
         this.foodService.addFood(model).subscribe(
             res => {
                 console.log(res);
@@ -173,44 +172,25 @@ export class AddFoodComponent implements OnInit {
     }
 
     onSelected(item) {
-        console.log('onSelected - selected (value:' + item.value + ', label:' +
-            item.label + ')');
-
 
         if (this.vitaminArray.includes(item.value)) {
-            console.log("vitamin!");
-
             var index = this.getIndexToRemove(item.value, this.vitaminSelectArray);
             if (index < 0)
                 return;
 
-
-            console.log(this.vitaminSelectArray.length);
-
             this.vitaminSelectArrayRemoved.push(this.vitaminSelectArray[index]);
             this.vitaminSelectArray.splice(index, 1);
-
-            console.log(this.vitaminSelectArray.length);
-
             this.addVitaminRow();
 
         }
 
         if (this.mineralArray.includes(item.value)) {
-            console.log("minieral!");
-
             var index = this.getIndexToRemove(item.value, this.mineralSelectArray);
             if (index < 0)
                 return;
 
-            console.log(this.mineralSelectArray.length);
-
-
             this.mineralSelectArrayRemoved.push(this.mineralSelectArray[index]);
             this.mineralSelectArray.splice(index, 1);
-
-            console.log(this.mineralSelectArray.length);
-
             this.addMineralRow();
         }
 

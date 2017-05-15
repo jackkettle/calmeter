@@ -60,21 +60,20 @@ export class DiaryComponent implements OnInit {
         }
     };
 
-                    constructor(private diaryService: DiaryService) {}
+    constructor(private diaryService: DiaryService) { }
 
     ngOnInit() {
         this.currentDate = new Date();
-
         this.loadDiaryEntries();
     };
-                                                    
+
     loadDiaryEntries() {
         console.log("loading entries");
         this.diaryService.getEntries()
-             .subscribe(data => { this.diaryEntries = data;console.log(data);});
+            .subscribe(data => { this.diaryEntries = data; console.log(data); });
     }
 
-        populateChartMap(data: any) {
+    populateChartMap(data: any) {
         if (data === null)
             return;
 

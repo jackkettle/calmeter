@@ -16,8 +16,7 @@ export class DiaryService {
         let options = new RequestOptions({ headers: headers });
 
         return this.http.get(`${this.diaryApiUrl}/allEntries`, options)
-            .map((res: Response) => res.json())
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+            .map((res: Response) => res.json());
     }
 
     addEntry(body: Object): Observable<Response[]> {
@@ -27,8 +26,7 @@ export class DiaryService {
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post(`${this.diaryApiUrl}/createEntry`, body, options)
-            .map((res: Response) => res.json())
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+            .catch((error: any) => Observable.throw(error || 'Server error'));
     }
 
 }

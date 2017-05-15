@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.diary.controller.DiaryEntryDeserializer;
+import com.calmeter.core.diary.controller.FoodItemListLiteSerializer;
 import com.calmeter.core.diary.utils.DiaryEntryHelper;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.Meal;
@@ -79,6 +80,7 @@ public class DiaryEntry {
 		this.meals = meal;
 	}
 
+	@JsonSerialize(using = FoodItemListLiteSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "diary_food_item_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_id"))
 	public List<FoodItem> getFoodItems () {

@@ -40,7 +40,7 @@
 
                     <div class="ibox-content inspinia-timeline">
 
-                        <div class="timeline-item" *ngFor="let diaryEntry of diaryEntries; let i = index">
+                        <div class="timeline-item" *ngFor="let diaryEntry of diaryEntries">
                             <div class="row">
                                 <div class="col-xs-3 date">
                                     <i class="fa fa-cutlery"></i> {{ diaryEntry.time | date:'HH:mm' }}
@@ -49,44 +49,21 @@
                                 </div>
                                 <div class="col-xs-9 content">
                                     <div class="col-xs-7">
-                                        <h4 class="m-b-xs"><strong>Srambled eggs with bacon and chorizo</strong></h4>
                                         <p>
-                                            Description...
+                                            {{diaryEntry.description}}
                                         </p>
                                         <h5><strong>Ingredients</strong></h5>
                                         <table class="table table-stripped small m-t-md">
                                             <tbody>
-                                                <tr>
+                                                <tr *ngFor="let foodItem of diaryEntry.foodItems">
                                                     <td class="no-borders">
                                                         <i class="fa fa-circle text-navy"></i>
                                                     </td>
                                                     <td class="no-borders">
-                                                        Eggs
+                                                        {{ foodItem.name }}
                                                     </td>
                                                     <td class="no-borders">
-                                                        3
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <i class="fa fa-circle text-navy"></i>
-                                                    </td>
-                                                    <td>
-                                                        Chirizo
-                                                    </td>
-                                                    <td>
-                                                        50g
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <i class="fa fa-circle text-navy"></i>
-                                                    </td>
-                                                    <td>
-                                                        Bacon
-                                                    </td>
-                                                    <td>
-                                                        65g
+                                                        {{foodItem.weightInGrams}}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -142,12 +119,12 @@
                                             </table>
                                         </div>
                     <div class="food-pie-chart p-m" style="display: block">
-                        <canvas baseChart 
+                        <!--<canvas baseChart 
                             [data]="chartMap.get(foodItem.id)" 
                             [labels]="pieChartLabels" 
                             [chartType]="pieChartType" 
                             [legend]="pieChartLegend">
-                        </canvas>
+                        </canvas>-->
                     </div>
                                     </div>
                                 </div>
