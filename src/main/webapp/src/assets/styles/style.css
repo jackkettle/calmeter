@@ -4669,6 +4669,7 @@ ul.clear-list:first-child {
   width: 110px;
   position: relative;
   padding-top: 30px;
+  padding-right: 5px;
 }
 .timeline-item .content {
   border-left: 1px solid #e7eaec;
@@ -8429,5 +8430,10 @@ td.half-cell{
   font-size: 84px;
   color: #ed5565;
 } 
+
+.text-smaller {
+  font-size: smaller;
+} 
+
 
 

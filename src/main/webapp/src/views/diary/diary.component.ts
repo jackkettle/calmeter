@@ -19,7 +19,6 @@ export class DiaryComponent implements OnInit {
     public pieChartType: string = 'pie';
     public pieChartLegend: boolean = false;
     public pieChartLabels: string[] = ['Carbs', 'Fat', 'Protein'];
-    public pieChartData: number[] = [300, 500, 100];
     public chartMap: Map<number, number[]>;
 
 
@@ -60,7 +59,9 @@ export class DiaryComponent implements OnInit {
         }
     };
 
-    constructor(private diaryService: DiaryService) { }
+    constructor(private diaryService: DiaryService) {
+        this.chartMap = new Map<number, number[]>();
+    }
 
     ngOnInit() {
         this.currentDate = new Date();
@@ -70,7 +71,7 @@ export class DiaryComponent implements OnInit {
     loadDiaryEntries() {
         console.log("loading entries");
         this.diaryService.getEntries()
-            .subscribe(data => { this.diaryEntries = data; console.log(data); });
+            .subscribe(data => { this.diaryEntries = data; this.populateChartMap(data); });
     }
 
     populateChartMap(data: any) {
@@ -78,9 +79,9 @@ export class DiaryComponent implements OnInit {
             return;
 
         for (let entry of data) {
-            let carbs: number = entry.nutritionalInformation.consolidatedCarbs.total;
-            let fats: number = entry.nutritionalInformation.consolidatedFats.totalFat;
-            let protein: number = entry.nutritionalInformation.consolidatedProteins.protein;
+            let carbs: number = entry.totalNutrionalnformation.consolidatedCarbs.total;
+            let fats: number = entry.totalNutrionalnformation.consolidatedFats.totalFat;
+            let protein: number = entry.totalNutrionalnformation.consolidatedProteins.protein;
             let chartData: number[] = [carbs, fats, protein];
             this.chartMap.set(entry.id, chartData);
         }
