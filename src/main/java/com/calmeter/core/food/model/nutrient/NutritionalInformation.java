@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,6 +49,8 @@ public class NutritionalInformation {
 	private Map<MineralLabel, Double> mineralMap;
 	
 	private Integer caffeine;
+	
+	private NutrionalInfoType type;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -135,6 +138,15 @@ public class NutritionalInformation {
 
 	public void setCaffeine(Integer caffeine) {
 		this.caffeine = caffeine;
+	}
+
+	@Enumerated(EnumType.STRING)
+	public NutrionalInfoType getType() {
+		return type;
+	}
+
+	public void setType(NutrionalInfoType type) {
+		this.type = type;
 	}
 
 	public NutritionalInformation () {
