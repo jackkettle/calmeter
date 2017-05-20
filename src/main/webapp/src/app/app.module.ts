@@ -19,6 +19,9 @@ import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
 import { AddFoodModule } from "../views/food/add-food/add-food.module";
 import { DiaryModule } from "../views/diary/diary.module";
 import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
+import { UserModule } from "../views/user/user.module";
+import { EditUserModule } from "../views/user/edit-user/edit-user.module";
+
 
 // App modules/components
 import { NavigationModule } from "../views/common/navigation/navigation.module";
@@ -47,6 +50,8 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         AddFoodModule,
         DiaryModule,
         AddDiaryEntryModule,
+        UserModule,
+        EditUserModule,
 
         // Modules
         NavigationModule,

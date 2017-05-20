@@ -35,7 +35,7 @@ public class FoodItemApiController {
 	ResponseEntity<Collection<FoodItem>> getAllFoodItems () {
 		List<FoodItem> foodItems = foodItemRepository.findAll ();
 		if (foodItems.size () < 1) {
-			return new ResponseEntity<Collection<FoodItem>> (HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Collection<FoodItem>> (HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<FoodItem>> (foodItems, HttpStatus.OK);
 	}
@@ -44,7 +44,7 @@ public class FoodItemApiController {
 	ResponseEntity<Collection<Meal>> getAllMeals () {
 		List<Meal> meals = mealRepository.findAll ();
 		if (meals.size () < 1) {
-			return new ResponseEntity<Collection<Meal>> (HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Collection<Meal>> (HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<Meal>> (meals, HttpStatus.OK);
 	}
@@ -57,7 +57,7 @@ public class FoodItemApiController {
 		allFood.addAll (foodItems);
 		allFood.addAll (meals);
 		if (allFood.size () < 1) {
-			return new ResponseEntity<Collection<IFood>> (HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Collection<IFood>> (HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<IFood>> (allFood, HttpStatus.OK);
 	}
@@ -72,11 +72,11 @@ public class FoodItemApiController {
 	}
 
 	@RequestMapping(value = "/updateFoodItem", method = RequestMethod.PUT)
-	ResponseEntity<?> updateFoodItem(@PathVariable( "id" ) Long id, @RequestBody FoodItem foodItem) {		
-		logger.info("Updating food item: {}", id);	
+	ResponseEntity<?> updateFoodItem (@PathVariable("id") Long id, @RequestBody FoodItem foodItem) {
+		logger.info ("Updating food item: {}", id);
 		foodItem = foodItemRepository.save (foodItem);
 		logger.info ("Food item updated id: {}", foodItem.getId ());
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<String> (HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/deleteFoodItem/{id}", method = RequestMethod.DELETE)

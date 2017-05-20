@@ -15,6 +15,7 @@ public class User {
     private String passwordConfirm;
     private String email;
     private Set<Role> roles;
+    private UserProfile UserProfile;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -69,6 +70,16 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_profile_id")
+	public UserProfile getUserProfile () {
+		return UserProfile;
+	}
+
+	public void setUserProfile (UserProfile userProfile) {
+		UserProfile = userProfile;
+	}
 
 }
 

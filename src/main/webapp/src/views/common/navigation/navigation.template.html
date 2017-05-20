@@ -50,6 +50,17 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="#"><i class="fa  fa-user"></i> <span class="nav-label">User Settings</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li [ngClass]="{active: activeRoute('user')}">
+                        <a [routerLink]="['./user']"><i class="fa fa-id-card"></i> <span class="nav-label">User View</span>  </a>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('user/edit')}">
+                        <a [routerLink]="['./user/edit']"><i class="fa fa-pencil"></i> <span class="nav-label">Edit User</span> </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>

@@ -157,4 +157,9 @@ public class NutritionalInformation {
 		this.vitaminMap = new HashMap<VitaminLabel, Double> ();
 		this.mineralMap = new HashMap<MineralLabel, Double> ();
 	}
+
+	public NutritionalInformation (NutrionalInfoType nutrionalProfile) {
+		super();
+		this.setType (nutrionalProfile);
+	}
 }

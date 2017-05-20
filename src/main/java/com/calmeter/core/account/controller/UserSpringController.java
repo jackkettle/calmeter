@@ -1,4 +1,4 @@
-package com.calmeter.core.account.rs;
+package com.calmeter.core.account.controller;
 
 import javax.validation.Valid;
 
@@ -23,7 +23,7 @@ import com.calmeter.core.account.service.UserValidator;
 
 @Controller
 @SessionAttributes
-public class UserController {
+public class UserSpringController {
 
 	@Autowired
 	EventBusFactory eventBusFactory;
@@ -87,6 +87,6 @@ public class UserController {
 		return "welcome";
 	}
 
-	private static Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static Logger logger = LoggerFactory.getLogger(UserSpringController.class);
 
 }
