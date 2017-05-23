@@ -3,6 +3,7 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
+
 // Webpack Config
 var webpackConfig = {
     entry: {
@@ -10,7 +11,8 @@ var webpackConfig = {
         'vendor': './src/vendor.browser.ts',
         'main': './src/main.browser.ts',
         'bootstrap-datepicker': './src/assets/styles/vendor/bootstrap-datepicker.css',
-        'ngx-datatable': './src/assets/styles/vendor/ngx-datatable.css'
+        'ngx-datatable': './src/assets/styles/vendor/ngx-datatable.css',
+        'ion-rangeslider': ['./node_modules/ion-rangeslider/css/ion.rangeSlider.css', './node_modules/ion-rangeslider/css/ion.rangeSlider.skinFlat.css']
     },
 
     output: {

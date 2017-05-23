@@ -8,6 +8,7 @@ import 'chart.js';
 import 'bootstrap-touchspin';
 import 'bootstrap-datepicker';
 import 'bootstrap-timepicker';
+import 'ion-rangeslider';
 
 // Angular 2
 import '@angular/platform-browser';
