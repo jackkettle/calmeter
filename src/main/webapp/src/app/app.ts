@@ -8,6 +8,7 @@ import '../../node_modules/animate.css/animate.min.css'
 
 // Main Inspinia CSS files
 import '../../src/assets/styles/style.css'
+import '../../src/assets/styles/user-style.css'
 
 declare var jQuery:any;
 

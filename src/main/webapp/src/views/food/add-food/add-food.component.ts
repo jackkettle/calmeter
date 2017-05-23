@@ -138,8 +138,6 @@ export class AddFoodComponent implements OnInit {
                 this.initRow()
             ])
         });
-
-
     }
 
     initRow() {

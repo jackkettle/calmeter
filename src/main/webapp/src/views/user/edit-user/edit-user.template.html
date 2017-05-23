@@ -33,14 +33,24 @@
                             </div>
 
                             <div class="form-group row">
-                            <label class="col-sm-4 control-label">Date of birth</label>
-                            <div class="date col-sm-8">
-                                <div class="input-group date">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control datepicker">
+                                <label class="col-sm-4 control-label">Date of birth</label>
+                                <div class="date col-sm-8">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        <input type="text" class="form-control datepicker">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Sex</label>
+                                <div class="col-sm-8">
+                                    <div class="custom-well">
+                                        <label class="radio-inline"><input type="radio" name="sex">Male</label>
+                                        <label class="radio-inline"><input type="radio" name="sex">Female</label>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -53,44 +63,24 @@
                     <h5>User profile</h5>
                 </div>
                 <div class="ibox-content">
-
-                    <div class="row">
-                        <div class="col-sm-6 b-r">
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Weight</label>
-                                <div class="col-sm-6">
-                                    <input class="touchspin2Decimal" type="text" value="" name="totalCarbs">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="radio-inline"><input type="radio" name="weight_unit">kgs</label>
-                                    <label class="radio-inline"><input type="radio" name="weight_unit">lbs</label>
-                                </div>
+                    <div class="custom-slider-well">
+                        <div class="row p-sm">
+                            <label class="col-sm-12 control-label m-b-sm text-center"><span class="text-cenetered">Height</span></label>
+                           <div class="col-sm-2">
+                                <input type="text" class="form-control">
                             </div>
-
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Sex</label>
-                                <div class="col-sm-10">
-                                    <label class="radio-inline"><input type="radio" name="sex">Male</label>
-                                    <label class="radio-inline"><input type="radio" name="sex">Female</label>
-                                </div>
+                            <div class="col-sm-10">
+                                <input type="text" class="height-slider" value="" />
                             </div>
                         </div>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h5>User profile</h5>
-                </div>
-                <div class="ibox-content">
-
-                    <div class="range-slider">
-                        <input type="text" class="js-range-slider" value="" />
+                    <div class="custom-slider-well">
+                        <div class="row p-sm">
+                            <label class="col-sm-12 control-label m-b-sm text-center">Weight</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="weight-slider" value="" />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
