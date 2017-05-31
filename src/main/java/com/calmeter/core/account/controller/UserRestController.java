@@ -1,5 +1,7 @@
 package com.calmeter.core.account.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,18 +12,26 @@ import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.repository.IUserRepository;
 
 @RestController
-@RequestMapping("/api/food-item")
+@RequestMapping("/api/user")
 public class UserRestController {
 
 	@Autowired
 	private IUserRepository userRepository;
 
-	ResponseEntity<User> getUser (Long id) {
+	ResponseEntity<User> get (Long id) {
 		User user = userRepository.findById (id);
 		if (user == null) {
 			return new ResponseEntity<User> (HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<User> (user, HttpStatus.OK);
 	}
+
+	ResponseEntity<String> update (User user) {
+		User updatedUser = userRepository.save (user);
+		logger.info ("Updated user: {}", updatedUser.getId ());
+		return new ResponseEntity<String> (HttpStatus.OK);
+	}
+
+	public static final Logger logger = LoggerFactory.getLogger (UserRestController.class);
 
 }
