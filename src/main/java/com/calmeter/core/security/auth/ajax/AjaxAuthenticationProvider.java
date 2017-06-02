@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.calmeter.core.account.model.User;
@@ -32,6 +33,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
         this.encoder = encoder;
     }
 
+    @Transactional
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
@@ -48,7 +50,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
         if (user.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
         
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.authority()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getRole ().authority()))
                 .collect(Collectors.toList());
         
         UserContext userContext = UserContext.create(user.getUsername(), authorities);

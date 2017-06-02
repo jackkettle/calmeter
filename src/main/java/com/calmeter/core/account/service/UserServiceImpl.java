@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.account.model.UserRole;
 import com.calmeter.core.account.repository.IRoleRepository;
 import com.calmeter.core.account.repository.IUserRepository;
 import com.google.common.base.Strings;
@@ -27,7 +27,7 @@ public class UserServiceImpl
 
 	public void save (User user) {
 		user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
-		user.setRoles (new HashSet<Role> (roleRepository.findAll ()));
+		user.setRoles (new HashSet<UserRole> (roleRepository.findAll ()));
 		userRepository.save (user);
 	}
 
@@ -36,6 +36,6 @@ public class UserServiceImpl
 		if (Strings.isNullOrEmpty (username))
 			return null;
 
-		return userRepository.findByUsername (username);
+		return userRepository.findByUsername (username).get ();
 	}
 }

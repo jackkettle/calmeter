@@ -24,7 +24,7 @@ import com.calmeter.core.common.WebUtil;
 import com.calmeter.core.security.exceptions.AuthMethodNotSupportedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class AjaxLoginProcessingFilter
+public class AjaxLoginProcessingFilter
 		extends AbstractAuthenticationProcessingFilter {
 
 	private static Logger logger = LoggerFactory.getLogger (AjaxLoginProcessingFilter.class);

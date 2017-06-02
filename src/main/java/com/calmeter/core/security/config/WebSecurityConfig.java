@@ -12,11 +12,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.calmeter.core.security.auth.ajax.AjaxLoginProcessingFilter;
+import com.calmeter.core.security.RestAuthenticationEntryPoint;
 import com.calmeter.core.security.auth.ajax.AjaxAuthenticationProvider;
 import com.calmeter.core.security.auth.jwt.JwtAuthenticationProvider;
 import com.calmeter.core.security.auth.jwt.JwtTokenAuthenticationProcessingFilter;
@@ -77,11 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable() // We don't need CSRF for JWT based authentication
         .exceptionHandling()
         .authenticationEntryPoint(this.authenticationEntryPoint)
-        
         .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
         .and()
             .authorizeRequests()
                 .antMatchers(FORM_BASED_LOGIN_ENTRY_POINT).permitAll() // Login end-point

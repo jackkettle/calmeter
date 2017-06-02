@@ -17,15 +17,7 @@ public class UserRestController {
 
 	@Autowired
 	private IUserRepository userRepository;
-
-	ResponseEntity<User> get (Long id) {
-		User user = userRepository.findById (id);
-		if (user == null) {
-			return new ResponseEntity<User> (HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<User> (user, HttpStatus.OK);
-	}
-
+	
 	ResponseEntity<String> update (User user) {
 		User updatedUser = userRepository.save (user);
 		logger.info ("Updated user: {}", updatedUser.getId ());
