@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.model.UserRole;
 import com.calmeter.core.account.repository.IUserRepository;

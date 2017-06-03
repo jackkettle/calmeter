@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.model.UserRole;
-import com.calmeter.core.account.repository.IRoleRepository;
+import com.calmeter.core.account.repository.IUserRoleRepository;
 import com.calmeter.core.account.repository.IUserRepository;
 import com.google.common.base.Strings;
 
@@ -20,7 +20,7 @@ public class UserServiceImpl
 	private IUserRepository userRepository;
 
 	@Autowired
-	private IRoleRepository roleRepository;
+	private IUserRoleRepository roleRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;

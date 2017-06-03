@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -29,16 +31,21 @@ public class JwtTokenFactory {
     }
 
     public AccessJwtToken createAccessJwtToken(UserContext userContext) {
+    	
         if (StringUtils.isEmpty (userContext.getUsername())) 
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
         if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty()) 
             throw new IllegalArgumentException("User doesn't have any privileges");
+        
+    	logger.info("createAccessJwtToken for user: {}", userContext.getUsername());
 
         Claims claims = Jwts.claims().setSubject(userContext.getUsername());
         claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 
         LocalDateTime currentTime = LocalDateTime.now();
+        
+        logger.info("settings.getTokenExpirationTime(): {}", settings.getTokenExpirationTime());
         
         String token = Jwts.builder()
           .setClaims(claims)
@@ -57,6 +64,8 @@ public class JwtTokenFactory {
         if (StringUtils.isEmpty (userContext.getUsername())) {
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
+        
+    	logger.info("createRefreshToken for user: {}", userContext.getUsername());
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -76,4 +85,7 @@ public class JwtTokenFactory {
 
         return new AccessJwtToken(token, claims);
     }
+    
+	private static Logger logger = LoggerFactory.getLogger(JwtTokenFactory.class);
+
 }

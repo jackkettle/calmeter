@@ -10,78 +10,94 @@ import java.util.Set;
 public class User {
 
 	private Long id;
+
 	private String username;
+
 	private String password;
+
 	private String passwordConfirm;
+
 	private String email;
+
+	private Boolean enabled;
+
 	private Set<UserRole> roles;
+
 	private UserProfile UserProfile;
 
-	public User () {
-		roles = new HashSet<> ();
+	public User() {
+		roles = new HashSet<>();
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId () {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId (Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getUsername () {
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername (String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public String getPassword () {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword (String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	@Transient
-	public String getPasswordConfirm () {
+	public String getPasswordConfirm() {
 		return passwordConfirm;
 	}
 
-	public void setPasswordConfirm (String passwordConfirm) {
+	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
 
 	@Column(name = "email", nullable = false, unique = true)
-	public String getEmail () {
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail (String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	@OneToMany
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	public Set<UserRole> getRoles () {
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@ManyToMany
+	@JoinTable(name = "user_role_map", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "role_id") )
+	public Set<UserRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles (Set<UserRole> roles) {
+	public void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_profile_id")
-	public UserProfile getUserProfile () {
+	public UserProfile getUserProfile() {
 		return UserProfile;
 	}
 
-	public void setUserProfile (UserProfile userProfile) {
+	public void setUserProfile(UserProfile userProfile) {
 		UserProfile = userProfile;
 	}
 
