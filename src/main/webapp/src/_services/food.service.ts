@@ -1,21 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
+import { APP_CONFIG, IAppConfig } from '../_app/app.config';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class FoodService {
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, @Inject(APP_CONFIG) private config: IAppConfig) { }
 
-    private foodApiUrl = 'http://localhost:8080/api/food-item';
+    private apiUrl = this.config.apiEndpoint + 'food';
 
     getAllFood(): Observable<Response[]> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${this.foodApiUrl}/allFoodItems`, options)
+        return this.http.get(this.apiUrl, options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
@@ -24,28 +26,23 @@ export class FoodService {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${this.foodApiUrl}/${body['id']}`, options)
+        return this.http.get(`${this.apiUrl}/${body['id']}`, options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
     addFood(body: Object): Observable<Response[]> {
 
+        console.log("yay!");
+
         let bodyString = JSON.stringify(body);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(`${this.foodApiUrl}/createFoodItem`, body, options)
+        console.log(body);
+
+        return this.http.post(this.apiUrl, body, options)
             .map((res: Response) => res.json())
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
-
-    delete(id: number): Observable<Response[]> {
-
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.delete(`${this.foodApiUrl}/deleteFoodItem/${id}`, options)
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 

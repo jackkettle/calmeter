@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { FoodService } from '../../food/food.service';
-import { DiaryService } from '../diary.service';
+import { FoodService } from '../../../_services/food.service';
+import { DiaryService }  from '../../../_services/diary.service';
 import { DiaryEntry } from '../diary.interface';
 
 import * as $ from "jquery";

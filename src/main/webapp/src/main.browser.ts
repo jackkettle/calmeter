@@ -1,5 +1,5 @@
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import {AppModule} from "./app/app.module";
+import {AppModule} from "./_app/app.module";
 
 /*
  * Bootstrap Angular app with a top level NgModule

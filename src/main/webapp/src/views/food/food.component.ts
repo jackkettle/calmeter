@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { FoodService } from './food.service';
+import { FoodService } from '../../_services/food.service';
 
 import 'rxjs/Rx';
 
@@ -28,12 +28,12 @@ export class FoodComponent implements OnInit {
         this.loadFoodValues();
     }
 
-    delete(id: number) {
-        this.foodService.delete(id)
-            .subscribe(
-            () => { this.router.navigate(['/food']); this.loadFoodValues(); },
-        );
-    }
+    // delete(id: number) {
+    //     this.foodService.delete(id)
+    //         .subscribe(
+    //         () => { this.router.navigate(['/food']); this.loadFoodValues(); },
+    //     );
+    // }
 
     populateChartMap(data: any) {
         if (data === null)

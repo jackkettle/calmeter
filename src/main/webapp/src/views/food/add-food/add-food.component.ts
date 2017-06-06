@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FoodItem } from '../food.interface';
-import { FoodService } from '../food.service';
+import { FoodService } from '../../../_services/food.service';
 
 
 import * as $ from "jquery";

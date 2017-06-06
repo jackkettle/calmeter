@@ -19,6 +19,7 @@
     "@angular/router": "~4.0.0",
     "@swimlane/ngx-datatable": "^9.0.0",
     "@types/bootstrap-datepicker": "0.0.6",
+    "@types/bootstrap.timepicker": "0.0.30",
     "@types/ion.rangeslider": "^2.0.28",
     "@types/node": "7.0.07",
     "angular-in-memory-web-api": "~0.3.0",

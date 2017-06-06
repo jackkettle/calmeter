@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core'
 import { RouterModule } from "@angular/router";
-import { AppComponent } from "./app";
+import { AppComponent } from "./app.component";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// Config
+import { APP_CONFIG, AppConfig } from './app.config';
 
 // PLugins
 import { SelectModule } from 'ng-select';
@@ -21,6 +24,7 @@ import { DiaryModule } from "../views/diary/diary.module";
 import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
 import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
+import { LoginModule } from "../views/login/login.module";
 
 
 // App modules/components
@@ -35,7 +39,7 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         // Angular modules
         BrowserModule,
         HttpModule,
-        FormsModule, 
+        FormsModule,
         ReactiveFormsModule,
 
         // Plugin modules
@@ -52,6 +56,7 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         AddDiaryEntryModule,
         UserModule,
         EditUserModule,
+        LoginModule,
 
         // Modules
         NavigationModule,
@@ -60,7 +65,10 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
 
         RouterModule.forRoot(ROUTES)
     ],
-    providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+    providers: [
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: APP_CONFIG, useValue: AppConfig }
+    ],
     bootstrap: [AppComponent]
 })
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { smoothlyMenu } from '../../../app/app.helpers';
+import { smoothlyMenu } from '../../../_app/app.helpers';
 declare var jQuery:any;
 
 @Component({
