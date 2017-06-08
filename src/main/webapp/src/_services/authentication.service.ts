@@ -1,44 +1,59 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 import { APP_CONFIG, IAppConfig } from '../_app/app.config';
 import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
 
-private apiUrl = this.config.apiEndpoint + 'food';
+    private apiUrl = this.config.apiEndpoint + 'auth';
 
     constructor(private http: Http, @Inject(APP_CONFIG) private config: IAppConfig) {
-        // set token if saved in local storage
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
 
+    createHeader() {
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('X-Requested-With', 'XMLHttpRequest');
+        return headers;
+    }
+
     login(username: string, password: string): Observable<boolean> {
-        return this.http.post('/api/authenticate', JSON.stringify({ username: username, password: password }))
+
+        console.log("AuthenticationService.login");
+        console.log("username: " + username);
+        console.log("password: " + password);
+
+        let options = new RequestOptions({ headers: this.createHeader() });
+        let body = JSON.stringify({ username: username, password: password });
+
+        return this.http.post(`${this.apiUrl}/login`, body, options)
             .map((response: Response) => {
-                // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().token;
                 if (token) {
-                    // set token property
                     this.token = token;
 
-                    // store username and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
-
-                    // return true to indicate successful login
+                    var jsonAuthData = JSON.stringify({ username: username, token: token });
+                    console.log(jsonAuthData);
+                    localStorage.setItem('currentUser', jsonAuthData);
                     return true;
                 } else {
-                    // return false to indicate failed login
                     return false;
+                }
+            })
+            .catch(e => {
+                if (e.status === 401) {
+                    return Observable.throw('Unauthorized');
                 }
             });
     }
 
     logout(): void {
-        // clear token remove user from local storage to log user out
         this.token = null;
         localStorage.removeItem('currentUser');
     }

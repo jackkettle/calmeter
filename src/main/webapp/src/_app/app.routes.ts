@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { LoginComponent } from "../views/login/login.component";
 import { DashboardComponent } from "../views/dashboard/dashboard.component";
 import { minorViewComponent } from "../views/minor-view/minor-view.component";
 import { FoodComponent } from "../views/food/food.component";
@@ -9,24 +10,26 @@ import { AddDiaryEntryComponent } from "../views/diary/add-diary-entry/add-diary
 import { UserComponent } from "../views/user/user.component";
 import { EditUserComponent } from "../views/user/edit-user/edit-user.component";
 
-
-
-
+import { AuthGuard } from '../_guards/auth.guard';
 
 export const ROUTES: Routes = [
+    // Login
+    { path: 'login', component: LoginComponent },
+
     // Main redirect
-    { path: '', redirectTo: 'mainView', pathMatch: 'full' },
+    { path: '', redirectTo: 'mainView', pathMatch: 'full', canActivate: [AuthGuard] },
 
     // App views
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'minorView', component: minorViewComponent },
-    { path: 'food', component: FoodComponent },
-    { path: 'food/addRecipe', component: AddRecipeComponent },
-    { path: 'food/addFood', component: AddFoodComponent },
-    { path: 'diary', component: DiaryComponent },
-    { path: 'diary/addEntry', component: AddDiaryEntryComponent },
-    { path: 'user', component: UserComponent },
-    { path: 'user/edit', component: EditUserComponent },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
+    { path: 'minorView', component: minorViewComponent, canActivate: [AuthGuard] },
+    { path: 'food', component: FoodComponent, canActivate: [AuthGuard] },
+    { path: 'food/addRecipe', component: AddRecipeComponent, canActivate: [AuthGuard] },
+    { path: 'food/addFood', component: AddFoodComponent, canActivate: [AuthGuard] },
+    { path: 'diary', component: DiaryComponent, canActivate: [AuthGuard] },
+    { path: 'diary/addEntry', component: AddDiaryEntryComponent, canActivate: [AuthGuard] },
+    { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
+    { path: 'user/edit', component: EditUserComponent, canActivate: [AuthGuard] },
+    
     // Handle all other routes
-    { path: '**', component: DashboardComponent }
+    { path: '**', component: DashboardComponent, canActivate: [AuthGuard] }
 ];

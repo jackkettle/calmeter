@@ -3,6 +3,8 @@ package com.calmeter.core.security.auth.ajax;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,7 +39,8 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
-
+        logger.info ("AjaxAuthenticationProvider.authentication");
+        
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
@@ -62,4 +65,6 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
+    
+    private static Logger logger = LoggerFactory.getLogger(AjaxAuthenticationProvider.class);
 }

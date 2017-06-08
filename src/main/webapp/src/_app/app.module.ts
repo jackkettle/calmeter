@@ -26,11 +26,14 @@ import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
 import { LoginModule } from "../views/login/login.module";
 
-
 // App modules/components
 import { NavigationModule } from "../views/common/navigation/navigation.module";
 import { FooterModule } from "../views/common/footer/footer.module";
 import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
+
+import { AuthGuard } from "../_guards/auth.guard";
+import { AuthenticationService } from "../_services/authentication.service";
+
 
 @NgModule({
     declarations: [AppComponent],
@@ -67,7 +70,9 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: APP_CONFIG, useValue: AppConfig }
+        { provide: APP_CONFIG, useValue: AppConfig },
+        AuthGuard,
+        AuthenticationService
     ],
     bootstrap: [AppComponent]
 })
