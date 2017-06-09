@@ -13,7 +13,7 @@ spring:
         hibernate.ddl-auto: create
         
 demo.security.jwt:
-    tokenExpirationTime: 15
-    refreshTokenExpTime: 60
+    tokenExpirationTime: 60
+    refreshTokenExpTime: 120
     tokenIssuer: http://calmeter.com
-    tokenSigningKey: aUzK5mvLw5cl8qQq4q
+    tokenSigningKey: aUzK5mvLw5cl8  qQq4q

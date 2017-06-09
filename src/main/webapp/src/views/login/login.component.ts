@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { AuthenticationService } from '../../_services/authentication.service';
+import { AuthService } from '../../_services/auth.service';
 import 'rxjs/add/operator/catch';
 
 @Component({
     selector: 'login',
     templateUrl: 'login.template.html',
-    providers: [AuthenticationService]
+    providers: [AuthService]
 })
 
 export class LoginComponent implements OnInit {
@@ -18,16 +18,18 @@ export class LoginComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService) { }
+        private authService: AuthService) { }
 
     ngOnInit() {
-        this.authenticationService.logout();
+        this.authService.logout();
     }
 
     login() {
         this.loading = true;
-        this.authenticationService.login(this.model.username, this.model.password).subscribe(
-            (success) => {
+        this.authService.login(this.model.username, this.model.password).subscribe(
+            result => {
+                console.log(result);
+                this.authService.addTokens(result.token, result.refreshToken);
                 this.router.navigate(['/']);
             },
             (error) => {

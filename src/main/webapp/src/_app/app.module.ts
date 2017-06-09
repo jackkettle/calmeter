@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { BrowserModule } from "@angular/platform-browser";
-import { HttpModule } from "@angular/http";
+import { HttpModule, Http } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 // Config
 import { APP_CONFIG, AppConfig } from './app.config';
@@ -13,6 +14,7 @@ import { APP_CONFIG, AppConfig } from './app.config';
 // PLugins
 import { SelectModule } from 'ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
@@ -32,8 +34,18 @@ import { FooterModule } from "../views/common/footer/footer.module";
 import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
 
 import { AuthGuard } from "../_guards/auth.guard";
-import { AuthenticationService } from "../_services/authentication.service";
+import { AuthService } from "../_services/auth.service";
+import { AuthHttpService } from "../_services/auth-http.service";
 
+export function getAuthHttp(http) {
+    return new AuthHttp(new AuthConfig({
+        headerName: 'X-Authorization',
+        headerPrefix: 'Bearer',
+        tokenName: 'id_token',
+        globalHeaders: [{ 'Accept': 'application/json' }],
+        tokenGetter: (() => localStorage.getItem('id_token')),
+    }), http);
+}
 
 @NgModule({
     declarations: [AppComponent],
@@ -71,8 +83,14 @@ import { AuthenticationService } from "../_services/authentication.service";
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: APP_CONFIG, useValue: AppConfig },
+        {
+            provide: AuthHttp,
+            useFactory: getAuthHttp,
+            deps: [Http]
+        },
         AuthGuard,
-        AuthenticationService
+        AuthService,
+        AuthHttpService
     ],
     bootstrap: [AppComponent]
 })

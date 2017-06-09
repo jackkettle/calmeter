@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +18,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.calmeter.core.Main;
 import com.calmeter.core.security.auth.JwtAuthenticationToken;
 import com.calmeter.core.security.auth.jwt.extractor.TokenExtractor;
 import com.calmeter.core.security.config.WebSecurityConfig;
@@ -46,6 +49,9 @@ public class JwtTokenAuthenticationProcessingFilter
 	@Override
 	protected void successfulAuthentication (HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
 			throws IOException, ServletException {
+		
+		logger.info ("JwtTokenAuthenticationProcessingFilter.successfulAuthentication");
+		
 		SecurityContext context = SecurityContextHolder.createEmptyContext ();
 		context.setAuthentication (authResult);
 		SecurityContextHolder.setContext (context);
@@ -58,4 +64,7 @@ public class JwtTokenAuthenticationProcessingFilter
 		SecurityContextHolder.clearContext ();
 		failureHandler.onAuthenticationFailure (request, response, failed);
 	}
+	
+	private static Logger logger = LoggerFactory.getLogger(JwtTokenAuthenticationProcessingFilter.class);
+	
 }

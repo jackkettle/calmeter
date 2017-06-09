@@ -2,6 +2,8 @@ package com.calmeter.core.account.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +49,7 @@ public class User {
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -55,6 +58,7 @@ public class User {
 		this.password = password;
 	}
 
+	@JsonIgnore
 	@Transient
 	public String getPasswordConfirm() {
 		return passwordConfirm;

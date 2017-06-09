@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "user_role")
 public class UserRole {
@@ -48,6 +50,7 @@ public class UserRole {
 		this.role = role;
 	}
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "roles")
 	public Set<User> getUsers() {
 		return users;

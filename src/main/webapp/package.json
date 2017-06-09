@@ -23,6 +23,7 @@
     "@types/ion.rangeslider": "^2.0.28",
     "@types/node": "7.0.07",
     "angular-in-memory-web-api": "~0.3.0",
+    "angular2-jwt": "0.2.0",
     "animate.css": "3.1.1",
     "bootstrap": "^3.3.7",
     "bootstrap-datepicker": "^1.6.4",
