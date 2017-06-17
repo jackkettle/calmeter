@@ -3,6 +3,7 @@ package com.calmeter.core.tests.jpa;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -41,91 +42,106 @@ public class FoodRepositoryIntegrationTests {
 
 	@Before
 	@Transactional
-	public void runBeforeTestMethod() {
+	public void runBeforeTestMethod () {
 
-		User user = userRepository.findByUsername(Constants.USERNAME);
+		Optional<User> userWrapper = userRepository.findByUsername (Constants.USERNAME);
+		User user = null;
+		
+		if (!userWrapper.isPresent ()) {
+			user = new User ();
+			user.setEmail (Constants.EMAIL);
+			user.setPassword (Constants.PASSWORD);
+			user.setUsername (Constants.USERNAME);
 
-		if (user == null) {
-			user = new User();
-			user.setEmail(Constants.EMAIL);
-			user.setPassword(Constants.PASSWORD);
-			user.setUsername(Constants.USERNAME);
-
-			entityManager.persist(user);
-			entityManager.flush();
+			entityManager.persist (user);
+			entityManager.flush ();
+		}
+		else {
+			user = userWrapper.get ();
 		}
 
-		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000.0);
+		NutritionalInformation nutritionalInformation = new NutritionalInformation ();
+		nutritionalInformation.setCalories (1000.0);
 		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
 		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
 		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_B12, 5000.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_A, 30.0);
 
-		FoodItem foodItem = new FoodItem();
-		foodItem.setName("Banana");
-		foodItem.setWeightInGrams(1000);
-		foodItem.setNutritionalInformation(nutritionalInformation);
-		foodItem.setCreator(user);
+		FoodItem foodItem = new FoodItem ();
+		foodItem.setName ("Banana");
+		foodItem.setWeightInGrams (1000);
+		foodItem.setNutritionalInformation (nutritionalInformation);
+		foodItem.setCreator (user);
 
-		entityManager.persist(foodItem);
-		entityManager.flush();
+		entityManager.persist (foodItem);
+		entityManager.flush ();
 
 	}
 
 	@Test
 	@Transactional
-	public void foodItemTest() throws Exception {
+	public void foodItemTest ()
+			throws Exception {
 
-		FoodItem foundFoodItem = foodItemRepository.findByName("Banana");
+		Optional<FoodItem> foundFoodItemWrapper = foodItemRepository.findByName ("Banana");
 
-		assertEquals("Banana", foundFoodItem.getName());
-		assertEquals(1000, foundFoodItem.getWeightInGrams());
-		assertEquals(1000, foundFoodItem.getNutritionalInformation().getCalories(), 0.1);
-		assertEquals(10.0, foundFoodItem.getNutritionalInformation().getConsolidatedCarbs ().getSugar (), 0.1);
-		assertEquals(Constants.USERNAME, foundFoodItem.getCreator().getUsername());
+		if (!foundFoodItemWrapper.isPresent ()) {
+			throw new Exception ("Could not find foodItem");
+		}
 
-		Double a = foundFoodItem.getNutritionalInformation().getVitaminMap().get(VitaminLabel.VITAMIN_B12);
-		Double b = foundFoodItem.getNutritionalInformation().getVitaminMap().get(VitaminLabel.VITAMIN_A);
+		FoodItem foundFoodItem = foundFoodItemWrapper.get ();
+		assertEquals ("Banana", foundFoodItem.getName ());
+		assertEquals (1000, foundFoodItem.getWeightInGrams ());
+		assertEquals (1000, foundFoodItem.getNutritionalInformation ().getCalories (), 0.1);
+		assertEquals (10.0, foundFoodItem.getNutritionalInformation ().getConsolidatedCarbs ().getSugar (), 0.1);
+		assertEquals (Constants.USERNAME, foundFoodItem.getCreator ().getUsername ());
+
+		Double a = foundFoodItem.getNutritionalInformation ().getVitaminMap ().get (VitaminLabel.VITAMIN_B12);
+		Double b = foundFoodItem.getNutritionalInformation ().getVitaminMap ().get (VitaminLabel.VITAMIN_A);
 
 		if (a == null || b == null)
-			throw new Exception();
+			throw new Exception ();
 
-		assertEquals(5000, a, 0.1);
-		assertEquals(30.0, b, 0.1);
+		assertEquals (5000, a, 0.1);
+		assertEquals (30.0, b, 0.1);
 
 	}
 
 	@Test
 	@Transactional
-	public void foodItemsByUserTest() throws Exception {
+	public void foodItemsByUserTest ()
+			throws Exception {
 
-		User user = userRepository.findByUsername(Constants.USERNAME);
+		Optional<User> userWrapper = userRepository.findByUsername (Constants.USERNAME);
+		if (!userWrapper.isPresent ()) {
+			throw new Exception ("Could not find user");
+		}
+		User user = userWrapper.get ();
 
-		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000.0);
+		NutritionalInformation nutritionalInformation = new NutritionalInformation ();
+		nutritionalInformation.setCalories (1000.0);
 		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
 		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
 		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_B12, 5000.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_A, 30.0);
 
-		FoodItem foodItem = new FoodItem();
-		foodItem.setName("Apples");
-		foodItem.setWeightInGrams(1000);
-		foodItem.setNutritionalInformation(nutritionalInformation);
-		foodItem.setCreator(user);
+		FoodItem foodItem = new FoodItem ();
+		foodItem.setName ("Apples");
+		foodItem.setWeightInGrams (1000);
+		foodItem.setNutritionalInformation (nutritionalInformation);
+		foodItem.setCreator (user);
 
-		foodItemRepository.save(foodItem);
+		foodItemRepository.save (foodItem);
 
-		List<FoodItem> userItems = foodItemRepository.findAllByCreator(user);
+		List<FoodItem> userItems = foodItemRepository.findAllByCreator (user);
 
-		assertEquals(2, userItems.size());
+		assertEquals (2, userItems.size ());
 
 	}
 
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(FoodRepositoryIntegrationTests.class);
+	private static Logger logger = LoggerFactory.getLogger (FoodRepositoryIntegrationTests.class);
 
 }

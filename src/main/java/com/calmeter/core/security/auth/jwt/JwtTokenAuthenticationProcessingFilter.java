@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.calmeter.core.Main;
 import com.calmeter.core.security.auth.JwtAuthenticationToken;
 import com.calmeter.core.security.auth.jwt.extractor.TokenExtractor;
 import com.calmeter.core.security.config.WebSecurityConfig;

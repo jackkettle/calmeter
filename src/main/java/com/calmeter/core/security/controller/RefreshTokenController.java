@@ -1,4 +1,4 @@
-package com.calmeter.core.security.endpoint;
+package com.calmeter.core.security.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.calmeter.core.security.model.token.RawAccessJwtToken;
 import com.calmeter.core.security.model.token.RefreshToken;
 
 @RestController
-public class RefreshTokenEndpoint {
+public class RefreshTokenController {
 
 	@Autowired
 	private JwtTokenFactory tokenFactory;

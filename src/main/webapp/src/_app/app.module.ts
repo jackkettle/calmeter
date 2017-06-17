@@ -27,6 +27,7 @@ import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-en
 import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
 import { LoginModule } from "../views/login/login.module";
+import { RegistrationModule } from "../views/registration/registration.module";
 
 // App modules/components
 import { NavigationModule } from "../views/common/navigation/navigation.module";
@@ -72,6 +73,7 @@ export function getAuthHttp(http) {
         UserModule,
         EditUserModule,
         LoginModule,
+        RegistrationModule,
 
         // Modules
         NavigationModule,

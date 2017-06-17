@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { LoginComponent } from "../views/login/login.component";
+import { RegistrationComponent } from "../views/registration/registration.component";
 import { DashboardComponent } from "../views/dashboard/dashboard.component";
 import { minorViewComponent } from "../views/minor-view/minor-view.component";
 import { FoodComponent } from "../views/food/food.component";
@@ -15,6 +16,7 @@ import { AuthGuard } from '../_guards/auth.guard';
 export const ROUTES: Routes = [
     // Login
     { path: 'login', component: LoginComponent },
+    { path: 'registration', component: RegistrationComponent },
 
     // Main redirect
     { path: '', redirectTo: 'mainView', pathMatch: 'full', canActivate: [AuthGuard] },
