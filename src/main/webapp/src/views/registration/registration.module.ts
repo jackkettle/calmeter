@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
-
+import { RouterModule } from "@angular/router";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './registration.component';
+import { RegistrationService } from '../../_services/registration.service';
+
 
 @NgModule({
-    imports: [],
+    imports: [FormsModule, ReactiveFormsModule, RouterModule],
     exports: [],
     declarations: [RegistrationComponent],
-    providers: [],
+    providers: [RegistrationService],
 })
 export class RegistrationModule { }

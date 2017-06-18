@@ -321,6 +321,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   -o-transition: all 0.4s;
   transition: all 0.4s;
 }
+
 .navbar-fixed-top {
   background: #fff;
   transition-duration: 0.4s;
@@ -3529,6 +3530,7 @@ video {
 }
 #page-wrapper {
   padding: 0 15px;
+  padding-bottom: 50px;
   min-height: 568px;
   position: relative !important;
 }
@@ -8437,6 +8439,4 @@ td.half-cell{
 
 .text-center {
   text-align: center;
-} 
-
-
+}
