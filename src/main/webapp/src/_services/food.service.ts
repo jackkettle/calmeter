@@ -19,6 +19,18 @@ export class FoodService {
             //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
+    getAllFoodByUser(): Observable<Response[]> {
+        return this.authHttpService.get(`${this.apiUrl}/allFoodItems`)
+            .map((res: Response) => res.json())
+            //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+
+    getAllFoodUsingQuery(query): Observable<Response[]> {
+        return this.authHttpService.get(`${this.apiUrl}/allFoodItems`)
+            .map((res: Response) => res.json())
+            //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+
     getFood(body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.get(`${this.apiUrl}/${bodyString['id']}`)

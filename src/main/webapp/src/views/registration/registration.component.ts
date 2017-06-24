@@ -1,41 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { RegistrationService } from '../../_services/registration.service';
-import { PasswordValidation } from '../../_validators/password-validator';
-
+import { EmailValidator, EqualPasswordsValidator } from '../../_validators';
+import { RegistrationService } from '../../_services';
 
 @Component({
     selector: 'registration',
-    templateUrl: 'registration.template.html'
+    templateUrl: './registration.template.html'
 })
+export class RegistrationComponent {
 
-export class RegistrationComponent implements OnInit {
+    public form: FormGroup;
+     public username: AbstractControl;
+    public firstName: AbstractControl;
+    public lastName: AbstractControl;
+    public email: AbstractControl;
+    public password: AbstractControl;
+    public confirmPassword: AbstractControl;
+    public passwords: FormGroup;
 
-    formGroup: FormGroup;
+    public submitted: boolean = false;
+    public errorMessage: string = "";
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private registrationService: RegistrationService) { }
+    constructor(fb: FormBuilder, private registrationService: RegistrationService, private router: Router) {
 
-    ngOnInit() {
-
-        this.formGroup = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            userName: ['', Validators.required],
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-            confirmPassword: ['', Validators.required]
-        }, {
-            validator: PasswordValidation.MatchPassword // your validation method
+        this.form = fb.group({
+            'username': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+            'firstName': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+            'lastName': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+            'email': ['', Validators.compose([Validators.required, EmailValidator.validate])],
+            'passwords': fb.group({
+                'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+                'confirmPassword': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
+            }, { validator: EqualPasswordsValidator.validate('password', 'confirmPassword') })
         });
 
+        this.username = this.form.controls['username'];
+        this.firstName = this.form.controls['firstName'];
+        this.lastName = this.form.controls['lastName'];
+        this.email = this.form.controls['email'];
+        this.passwords = <FormGroup>this.form.controls['passwords'];
+        this.password = this.passwords.controls['password'];
+        this.confirmPassword = this.passwords.controls['confirmPassword'];
     }
 
-    register(model) {
-        console.log(model);
+    public register(values: Object): void {
+        this.submitted = true;
+        if (this.form.valid) {
+            console.log(values);
+            this.registrationService.register(values).subscribe(
+                result => {
+                    this.errorMessage = "";
+                    this.router.navigate(['/login']);
+                },
+                error => {
+                    this.errorMessage = error._body;
+                    console.log("Error: {}", error);
+                }
+            )
+        }
     }
 }

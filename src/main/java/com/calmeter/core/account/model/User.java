@@ -2,18 +2,26 @@ package com.calmeter.core.account.model;
 
 import javax.persistence.*;
 
+import com.calmeter.core.food.controller.FoodItemDeserializer;
+import com.calmeter.core.security.controller.RegistrationUserDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
+@JsonDeserialize(using = RegistrationUserDeserializer.class)
 public class User {
 
 	private Long id;
 
 	private String username;
+	
+	private String firstName;
+	
+	private String lastName;
 
 	private String password;
 
@@ -41,12 +49,29 @@ public class User {
 		this.id = id;
 	}
 
+	@Column(unique=true, nullable = false)
 	public String getUsername() {
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getFirstName () {
+		return firstName;
+	}
+
+	public void setFirstName (String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName () {
+		return lastName;
+	}
+
+	public void setLastName (String lastName) {
+		this.lastName = lastName;
 	}
 
 	@JsonIgnore

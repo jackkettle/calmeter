@@ -18,6 +18,8 @@ export class AddDiaryEntryComponent implements OnInit {
 
     public searchOption: String;
 
+    public searchField: FormControl;
+
     public rows: Array<any>;
 
     public page;
@@ -50,7 +52,9 @@ export class AddDiaryEntryComponent implements OnInit {
 
         this.searchOptions = [
             { name: 'food', label: 'My Food', sourceID: 1 },
-            { name: 'recipes', label: 'My Recipes', sourceID: 2 }
+            { name: 'recipes', label: 'My Recipes', sourceID: 2 },
+            { name: 'tesco', label: 'Tesco', sourceID: 3 }
+            
         ]
     }
 
@@ -79,13 +83,27 @@ export class AddDiaryEntryComponent implements OnInit {
             foodItemFormArray: this.formBuilder.array([]),
         });
 
+        this.searchField = new FormControl();
+          this.searchField.valueChanges
+            .debounceTime(400)
+            .distinctUntilChanged()
+            .subscribe(term => {
+                console.log(term);
+            });
+
+
     }
 
     assignSearchOption(searchOption) {
         this.searchOption = searchOption;
     }
 
-    getRowData() {
+    getRowDataSearch(searchValue: string): void {
+        this.foodService.getAllFood()
+            .subscribe(response => { this.rows = this.transformData(response) });
+    }
+
+    getRowData(): void {
         this.foodService.getAllFood()
             .subscribe(response => { this.rows = this.transformData(response) });
     }
@@ -168,6 +186,4 @@ export class AddDiaryEntryComponent implements OnInit {
         var dateFormat = days + "/" + month + "/" + date.getFullYear();
         return dateFormat
     }
-
-
 }

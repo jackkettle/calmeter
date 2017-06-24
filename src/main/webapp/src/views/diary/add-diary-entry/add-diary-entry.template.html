@@ -73,43 +73,30 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="form-group col-sm-8">
+                            <div class="form-group col-sm-6">
+                                <label class="col-sm-3 control-label">Search</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text" placeholder="Please enter search term" [formControl]="searchField">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
                                 <div class="btn-group">
                                     <button *ngFor="let option of searchOptions;" [ngClass]="{active: searchOption===option.name}" (click)="assignSearchOption(option.name)"
                                         class="btn btn-white" type="button">{{option.label}}</button>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-2">
-                                <h4 class="text-primary">{{ searchOption }}</h4>
-                            </div>
                         </div>
                         <div class="form-group">
-                            <ngx-datatable 
-                                [rows]="rows" 
-                                [columnMode]="'force'" 
-                                [rowHeight]="'auto'" 
-                                [externalPaging]="true" 
-                                [headerHeight]="45" 
-                                [count]="page.totalElements"
-                                [offset]="page.pageNumber" 
-                                [limit]="page.size" 
-                                [cssClasses]="cssClasses" 
-                                [selected]="selected"
-                                [selectionType]="'checkbox'" 
-                                (page)='setPage($event)'
-                                (select)='onSelect($event)'>
+                            <ngx-datatable [rows]="rows" [columnMode]="'force'" [rowHeight]="'auto'" [externalPaging]="true" [headerHeight]="45" [count]="page.totalElements"
+                                [offset]="page.pageNumber" [limit]="page.size" [cssClasses]="cssClasses" [selected]="selected"
+                                [selectionType]="'checkbox'" (page)='setPage($event)' (select)='onSelect($event)'>
                                 <ngx-datatable-column name="ID" [width]="30">
                                 </ngx-datatable-column>
                                 <ngx-datatable-column name="Name"></ngx-datatable-column>
-                                <ngx-datatable-column 
-                                    [sortable]="false" 
-                                    [canAutoResize]="false" 
-                                    [draggable]="false" 
-                                    [resizeable]="false" 
-                                    [headerCheckboxable]="false"
+                                <ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false"
                                     [checkboxable]="true">
-                                    </ngx-datatable-column>
-                                    </ngx-datatable>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
                         </div>
                     </div>
                 </div>
