@@ -74,7 +74,7 @@ public class TescoHandler
 			Collection<String> numbers = TescoHandlerHelper.getTescoProductNumbersFromJson (EntityUtils.toString (entity));
 			logger.info ("{}", String.join (",", numbers));
 
-			this.getFoodItemsFromTescoProductNumber (numbers);
+			getFoodItemsFromTescoProductNumber (numbers);
 
 		}
 		catch (URISyntaxException | ParseException | IOException e) {
@@ -108,9 +108,8 @@ public class TescoHandler
 
 			if (entity == null)
 				return foodList;
-
-			logger.info ("===========BREAKPOINT===============");
-			logger.info (EntityUtils.toString (entity));
+			
+			TescoHandlerHelper.getFoodItemsFromResponse(EntityUtils.toString (entity));
 
 		}
 		catch (URISyntaxException | ParseException | IOException e) {

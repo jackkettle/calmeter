@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,6 +42,8 @@ public class FoodItem implements IFood{
 	private User creator;
 
 	private Set<Meal> meals;
+	
+	private FoodItemType foodItemType;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -103,6 +107,15 @@ public class FoodItem implements IFood{
 
 	public void setMeals(Set<Meal> meals) {
 		this.meals = meals;
+	}
+
+	@Enumerated(EnumType.STRING)
+	public FoodItemType getFoodItemType() {
+		return foodItemType;
+	}
+
+	public void setFoodItemType(FoodItemType foodItemType) {
+		this.foodItemType = foodItemType;
 	}
 
 }

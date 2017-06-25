@@ -1,5 +1,7 @@
 package com.calmeter.core.food.source.handler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,12 @@ public class FoodHandler
 	@Override
 	public FoodItem getItemFromID (Long id) {
 		return foodItemRepository.findOne (id);
+	}
+
+	@Override
+	public List<FoodItem> search(String search) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
