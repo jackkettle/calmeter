@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { RequestOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthHttp } from 'angular2-jwt';
 import { AuthService } from './auth.service';
@@ -10,7 +11,7 @@ export class AuthHttpService {
 
   constructor(private authHttp: AuthHttp, private authService: AuthService, private router: Router) { }
 
-  get(endpoint: string) {
+  get(endpoint: string, options?:RequestOptionsArgs) {
     if (this.authService.tokenRequiresRefresh()) {
       this.authService.tokenIsBeingRefreshed.next(true);
       return this.authService.refreshToken().switchMap(
@@ -18,7 +19,7 @@ export class AuthHttpService {
           this.authService.refreshTokenSuccessHandler(data);
           if (this.authService.loggedIn()) {
             this.authService.tokenIsBeingRefreshed.next(false);
-            return this.getInternal(endpoint);
+            return this.getInternal(endpoint, options);
           } else {
             this.authService.tokenIsBeingRefreshed.next(false);
             this.router.navigate(['/sessiontimeout']);
@@ -31,7 +32,7 @@ export class AuthHttpService {
       });
     }
     else {
-      return this.getInternal(endpoint);
+      return this.getInternal(endpoint, options);
     }
   }
 
@@ -60,8 +61,8 @@ export class AuthHttpService {
     }
   }
 
-  private getInternal(endpoint: string) {
-    return this.authHttp.get(endpoint);
+  private getInternal(endpoint: string, options?:RequestOptionsArgs) {
+    return this.authHttp.get(endpoint, options);
   }
 
   private postInternal(endpoint: string, body: string) {

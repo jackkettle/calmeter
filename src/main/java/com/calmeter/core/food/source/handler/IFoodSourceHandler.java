@@ -6,8 +6,8 @@ import com.calmeter.core.food.model.FoodItem;
 
 public interface IFoodSourceHandler {
 
-	FoodItem getItemFromID(Long id);
+	public FoodItem getItemFromID (Long id);
 
-	List<FoodItem> search (String search);
-	
+	public List<FoodItem> search (String search);
+
 }

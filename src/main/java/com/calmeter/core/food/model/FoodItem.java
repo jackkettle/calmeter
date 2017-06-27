@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public class FoodItem implements IFood{
 
 	protected Long id;
+	
+	private Long externalId;
 
 	private String name;
 
@@ -53,6 +55,15 @@ public class FoodItem implements IFood{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Column(name = "external_id", nullable = true, unique = true)
+	public Long getExternalId () {
+		return externalId;
+	}
+
+	public void setExternalId (Long externalId) {
+		this.externalId = externalId;
 	}
 
 	@Column(name = "name", nullable = false, unique = true)

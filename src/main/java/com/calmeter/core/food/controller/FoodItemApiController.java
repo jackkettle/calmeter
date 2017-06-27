@@ -3,6 +3,7 @@ package com.calmeter.core.food.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.calmeter.core.food.model.FoodItem;
@@ -20,6 +22,10 @@ import com.calmeter.core.food.model.IFood;
 import com.calmeter.core.food.model.Meal;
 import com.calmeter.core.food.repositroy.IFoodItemRepository;
 import com.calmeter.core.food.repositroy.IMealRepository;
+import com.calmeter.core.food.source.handler.IFoodSourceHandler;
+import com.calmeter.core.food.source.model.FoodSource;
+import com.calmeter.core.food.source.repository.IFoodSourceRepository;
+import com.calmeter.core.food.source.utils.FoodSourceHelper;
 
 @RestController
 @RequestMapping("/api/food-item")
@@ -31,6 +37,12 @@ public class FoodItemApiController {
 	@Autowired
 	IMealRepository mealRepository;
 
+	@Autowired
+	IFoodSourceRepository foodSourceRepository;
+
+	@Autowired
+	FoodSourceHelper foodSourceHelper;
+
 	@RequestMapping(value = "/allFoodItems", method = RequestMethod.GET)
 	ResponseEntity<Collection<FoodItem>> getAllFoodItems () {
 		List<FoodItem> foodItems = foodItemRepository.findAll ();
@@ -38,6 +50,21 @@ public class FoodItemApiController {
 			return new ResponseEntity<Collection<FoodItem>> (HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<FoodItem>> (foodItems, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/searchFood", method = RequestMethod.GET)
+	ResponseEntity<Collection<FoodItem>> searchFood (@RequestParam("query") String query, @RequestParam("foodSource") String inputFoodSource) {
+
+		logger.info ("searchFood: {}, {}", inputFoodSource, query);
+
+		Optional<FoodSource> foodSourceWrapper = foodSourceRepository.findByName (inputFoodSource);
+		if (!foodSourceWrapper.isPresent ())
+			return new ResponseEntity<Collection<FoodItem>> (HttpStatus.METHOD_NOT_ALLOWED);
+
+		IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler (foodSourceWrapper.get ());
+
+		List<FoodItem> foundFoodItems = foodSourceHandler.search (query);
+		return new ResponseEntity<Collection<FoodItem>> (foundFoodItems, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/allMeals", method = RequestMethod.GET)

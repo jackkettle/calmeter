@@ -21,9 +21,8 @@ public class FoodHandler
 	}
 
 	@Override
-	public List<FoodItem> search(String search) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FoodItem> search (String search) {
+		return foodItemRepository.findByNameContainingIgnoreCase (search);
 	}
 
 }

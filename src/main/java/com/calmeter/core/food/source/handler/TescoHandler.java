@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,7 +30,7 @@ public class TescoHandler
 
 	public static final int OFFSET = 0;
 
-	public static final int SEARCH_LIMIT = 3;
+	public static final int SEARCH_LIMIT = 10;
 
 	public static final String SEARCH_API_URL = "https://dev.tescolabs.com/grocery/products/";
 
@@ -72,9 +71,10 @@ public class TescoHandler
 				return foodList;
 
 			Collection<String> numbers = TescoHandlerHelper.getTescoProductNumbersFromJson (EntityUtils.toString (entity));
-			logger.info ("{}", String.join (",", numbers));
 
-			getFoodItemsFromTescoProductNumber (numbers);
+			logger.info ("Found IDs: {}", String.join (",", numbers));
+			
+			foodList.addAll (getFoodItemsFromTescoProductNumber (numbers));
 
 		}
 		catch (URISyntaxException | ParseException | IOException e) {
@@ -108,15 +108,15 @@ public class TescoHandler
 
 			if (entity == null)
 				return foodList;
-			
-			TescoHandlerHelper.getFoodItemsFromResponse(EntityUtils.toString (entity));
+
+			return TescoHandlerHelper.getFoodItemsFromResponse (EntityUtils.toString (entity));
 
 		}
 		catch (URISyntaxException | ParseException | IOException e) {
 			logger.error ("Unable to build URI: {}", SEARCH_API_URL, e);
 			return foodList;
 		}
-		return foodList;
+
 	}
 
 	private static Logger logger = LoggerFactory.getLogger (TescoHandler.class);

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Response } from '@angular/http';
+import { Response, RequestOptionsArgs, RequestOptions, URLSearchParams  } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { APP_CONFIG, IAppConfig } from '../_app/app.config';
 import { AuthHttpService } from './auth-http.service';
@@ -25,8 +25,16 @@ export class FoodService {
             //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    getAllFoodUsingQuery(query): Observable<Response[]> {
-        return this.authHttpService.get(`${this.apiUrl}/allFoodItems`)
+    getAllFoodUsingQuery(query, foodSource): Observable<Response[]> {
+
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('query', query);
+        params.set('foodSource', foodSource);
+
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.get(`${this.apiUrl}/searchFood`, requestOptions)
             .map((res: Response) => res.json())
             //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }

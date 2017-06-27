@@ -116,10 +116,6 @@ export class AuthService {
   }
 
   tokenRequiresRefresh(): boolean {
-    if (!this.loggedIn()) {
-      console.log("123 Token refresh is required");
-    }
-
     return !this.loggedIn();
   }
 

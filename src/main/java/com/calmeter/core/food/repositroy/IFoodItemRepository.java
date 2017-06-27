@@ -13,4 +13,6 @@ public interface IFoodItemRepository extends JpaRepository<FoodItem, Long> {
 	Optional<FoodItem> findByName(String name);
 	
 	List<FoodItem> findAllByCreator(User creator);
+	
+	List<FoodItem> findByNameContainingIgnoreCase(String searchString);
 }

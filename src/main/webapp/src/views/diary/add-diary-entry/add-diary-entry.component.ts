@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { FoodService } from '../../../_services/food.service';
-import { DiaryService }  from '../../../_services/diary.service';
+import { DiaryService } from '../../../_services/diary.service';
 import { DiaryEntry } from '../diary.interface';
 
 import * as $ from "jquery";
@@ -54,14 +54,13 @@ export class AddDiaryEntryComponent implements OnInit {
             { name: 'food', label: 'My Food', sourceID: 1 },
             { name: 'recipes', label: 'My Recipes', sourceID: 2 },
             { name: 'tesco', label: 'Tesco', sourceID: 3 }
-            
         ]
     }
 
     ngOnInit() {
-
         this.searchOption = "food";
         this.selected = new Array();
+        let dateObject = new Date();
 
         $('.datepicker').datepicker({
             todayBtn: true,
@@ -74,8 +73,6 @@ export class AddDiaryEntryComponent implements OnInit {
 
         this.setPage({ offset: 0 });
 
-        let dateObject = new Date();
-
         this.formGroup = this.formBuilder.group({
             date: [this.getDateFormat(dateObject)],
             time: [this.getTimeFormat(dateObject)],
@@ -84,39 +81,66 @@ export class AddDiaryEntryComponent implements OnInit {
         });
 
         this.searchField = new FormControl();
-          this.searchField.valueChanges
+        this.searchField.valueChanges
             .debounceTime(400)
             .distinctUntilChanged()
             .subscribe(term => {
                 console.log(term);
+                this.loadingIndicator = true;
+                this.getRowDataUsingQuery(term);
             });
+    }
 
+    initTouchSpin(index: number) {
+        var query = "table tr:eq(" + (index + 1) + ") input.touchspin2Decimal";
+        $(query).TouchSpin({
+            min: 0,
+            max: 200,
+            step: .1,
+            decimals: 2,
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+    }
 
+    getRowDataUsingQuery(query: string) {
+        this.foodService.getAllFoodUsingQuery(query, this.searchOption)
+            .subscribe(response => {
+                this.rows = this.transformData(response);
+                this.page.totalElements = this.rows.length;
+                this.loadingIndicator = false;
+            });
     }
 
     assignSearchOption(searchOption) {
         this.searchOption = searchOption;
     }
 
-    getRowDataSearch(searchValue: string): void {
-        this.foodService.getAllFood()
-            .subscribe(response => { this.rows = this.transformData(response) });
-    }
-
     getRowData(): void {
+        this.loadingIndicator = true;
         this.foodService.getAllFood()
-            .subscribe(response => { this.rows = this.transformData(response) });
+            .subscribe(response => {
+                this.rows = this.transformData(response)
+                this.loadingIndicator = false;
+            });
     }
 
     transformData(data) {
         let dataRows: Array<any> = []
         for (let entry of data) {
             let rowData = {
-                'id': entry.id,
+                'id': entry.externalId,
                 'name': entry.name,
                 'label': entry.name,
+                'servingSize': entry.nutritionalInformation.servingSize + ' g',
                 'source': this.searchOption
             }
+            if (this.searchOption === "food")
+                rowData.id = entry.id
+
+            if (this.searchOption === "tesco")
+                rowData.id = entry.externalId
+
             dataRows.push(rowData);
         }
         return dataRows;
@@ -127,33 +151,49 @@ export class AddDiaryEntryComponent implements OnInit {
         this.foodService.getAllFood().subscribe(response => {
             this.rows = this.transformData(response);
             this.page.totalElements = this.rows.length;
+            this.loadingIndicator = false;
         });
     }
 
-    onSelect({ selected }) {
-        console.log('Select Event', selected);
-        console.log('1', this.selected); 
-        this.selected.splice(0, this.selected.length);
-        this.selected.push(...selected);
+    onSelect(selected) { // either add or remove
 
-        const control = <FormArray>this.formGroup.controls['foodItemFormArray'];
+        selected = selected.selected;
 
-        while (control.length) {
-            control.removeAt(control.length - 1);
-        }
+        let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
 
-        for(let entry of selected){
+        if (controls.length < selected.length) { // Add
+
+            let entry = selected[selected.length - 1];;
             let row = this.formBuilder.group({
+                ngxIndex: [entry.$$index, Validators.required],
                 name: [entry.name, Validators.required],
                 id: [entry.id, Validators.required],
                 source: [entry.source, Validators.required],
-                servings: ['', Validators.required],
+                servingSize: [entry.servingSize, Validators.required],
+                servings: [1.0, Validators.required],
                 weight: ['', Validators.required]
             });
-            control.push(row);
-        }
+            controls.push(row);
 
-        console.log(control);
+        } else { // Remove
+
+            var foundNgxIds = Array();
+            for (let entry of selected) {
+                foundNgxIds.push(entry.$$index);
+            }
+
+            for (var i = 0; i < controls.length; i++) {
+
+                let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
+                var ngxValue = myFormGroup.controls["ngxIndex"].value;
+
+                if (!foundNgxIds.includes(ngxValue)) {
+                    controls.removeAt(i);
+                    return;
+                }
+            }
+
+        }
 
     }
 
