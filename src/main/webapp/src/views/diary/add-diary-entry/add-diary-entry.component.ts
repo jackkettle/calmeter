@@ -82,7 +82,7 @@ export class AddDiaryEntryComponent implements OnInit {
 
         this.searchField = new FormControl();
         this.searchField.valueChanges
-            .debounceTime(400)
+            .debounceTime(700)
             .distinctUntilChanged()
             .subscribe(term => {
                 console.log(term);

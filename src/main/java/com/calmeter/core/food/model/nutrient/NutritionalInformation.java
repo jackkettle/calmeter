@@ -108,7 +108,7 @@ public class NutritionalInformation {
 		this.consolidatedProteins = consolidatedProteins;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
@@ -120,7 +120,7 @@ public class NutritionalInformation {
 		this.vitaminMap = vitaminMap;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")

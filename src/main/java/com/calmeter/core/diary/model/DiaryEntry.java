@@ -51,6 +51,10 @@ public class DiaryEntry {
 
 	private NutritionalInformation totalNutrionalnformation;
 
+	public DiaryEntry () {
+		this.totalNutrionalnformation = new NutritionalInformation ();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId () {
@@ -127,6 +131,12 @@ public class DiaryEntry {
 
 	public void computeNutritionalInformation () {
 		this.setTotalNutrionalnformation (DiaryEntryHelper.computeNutritionalInformation (this));
+	}
+
+	public void applyServingsModifiers () {
+		for (int i = 0; i < this.getFoodItems ().size (); i++) {
+			this.getFoodItems ().get (i).applyServingModifier ();
+		}
 	}
 
 	@SuppressWarnings("unused")

@@ -55,7 +55,7 @@ public class FoodItemApiController {
 	@RequestMapping(value = "/searchFood", method = RequestMethod.GET)
 	ResponseEntity<Collection<FoodItem>> searchFood (@RequestParam("query") String query, @RequestParam("foodSource") String inputFoodSource) {
 
-		logger.info ("searchFood: {}, {}", inputFoodSource, query);
+		logger.info ("searchFood: souce; {}, query; {}", inputFoodSource, query);
 
 		Optional<FoodSource> foodSourceWrapper = foodSourceRepository.findByName (inputFoodSource);
 		if (!foodSourceWrapper.isPresent ())

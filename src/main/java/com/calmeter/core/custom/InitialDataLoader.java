@@ -77,7 +77,7 @@ public class InitialDataLoader
 
 		FoodItem foodItem = new FoodItem ();
 		foodItem.setName ("Banana");
-		foodItem.setWeightInGrams (118);
+		foodItem.setWeightInGrams (118.0);
 		foodItem.setNutritionalInformation (nutritionalInformation);
 		foodItem.setCreator (user);
 		
@@ -97,7 +97,7 @@ public class InitialDataLoader
 
 		foodItem = new FoodItem ();
 		foodItem.setName ("Egg, fried");
-		foodItem.setWeightInGrams (46);
+		foodItem.setWeightInGrams (46.0);
 		foodItem.setNutritionalInformation (nutritionalInformation);
 		foodItem.setCreator (user);
 

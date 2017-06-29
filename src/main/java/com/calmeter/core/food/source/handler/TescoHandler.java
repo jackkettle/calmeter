@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.FoodItemType;
+import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.config.FoodSourceConfig;
 import com.calmeter.core.food.source.handler.helper.TescoHandlerHelper;
 
@@ -39,10 +42,44 @@ public class TescoHandler
 	@Autowired
 	FoodSourceConfig foodSourceConfig;
 
+	@Autowired
+	IFoodItemService foodItemService;
+
 	@Override
-	public FoodItem getItemFromID (Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<FoodItem> getItemFromID (Long id) {
+		HttpClient httpclient = HttpClients.createDefault ();
+
+		URIBuilder builder = null;
+		try {
+			builder = new URIBuilder (PRODUCT_API_URL);
+			builder.addParameter ("tpnb", id + "");
+
+			URI uri = builder.build ();
+			HttpGet request = new HttpGet (uri);
+
+			request.setHeader ("Ocp-Apim-Subscription-Key", foodSourceConfig.getTescoSubscriptionKey ());
+
+			HttpResponse response = httpclient.execute (request);
+			HttpEntity entity = response.getEntity ();
+
+			if (entity == null)
+				return Optional.empty ();
+
+			List<FoodItem> foodItems = TescoHandlerHelper.getFoodItemsFromResponse (EntityUtils.toString (entity));
+
+			logger.info ("Total food items found: {}", foodItems.size ());
+
+			if (foodItems.size () > 0)
+				return Optional.of (foodItems.get (0));
+
+			return Optional.empty ();
+
+		}
+		catch (URISyntaxException | ParseException | IOException e) {
+			logger.error ("Unable to build URI: {}", SEARCH_API_URL, e);
+			return Optional.empty ();
+		}
+
 	}
 
 	@Override
@@ -71,9 +108,23 @@ public class TescoHandler
 				return foodList;
 
 			Collection<String> numbers = TescoHandlerHelper.getTescoProductNumbersFromJson (EntityUtils.toString (entity));
-
 			logger.info ("Found IDs: {}", String.join (",", numbers));
-			
+
+			List<FoodItem> existingFoodItems = getExistingFoodItems (numbers);
+			logger.info ("Total existing foodItems Found in DB: {}", existingFoodItems.size ());
+
+			foodList.addAll (existingFoodItems);
+
+			for (FoodItem foodItem : existingFoodItems) {
+
+				String exId = Long.toString (foodItem.getExternalId ());
+				if (numbers.contains (exId)) {
+					logger.debug ("Removing found tpub from list: {}", exId);
+					numbers.remove (exId);
+				}
+			}
+
+			logger.info ("Total foodItems to add to get from response: {}", existingFoodItems.size ());
 			foodList.addAll (getFoodItemsFromTescoProductNumber (numbers));
 
 		}
@@ -85,7 +136,24 @@ public class TescoHandler
 		return foodList;
 	}
 
-	public List<FoodItem> getFoodItemsFromTescoProductNumber (Collection<String> numbers) {
+	private List<FoodItem> getExistingFoodItems (Collection<String> numbers) {
+		List<FoodItem> foodItems = new ArrayList<> ();
+		for (String externalId : numbers) {
+
+			Long id = Long.valueOf (externalId);
+			if (!foodItemService.existsExternal (id, FoodItemType.TESCO_ITEM))
+				continue;
+
+			Optional<FoodItem> foodItemWrapper = foodItemService.getExternal (id, FoodItemType.TESCO_ITEM);
+			if (!foodItemWrapper.isPresent ())
+				continue;
+
+			foodItems.add (foodItemWrapper.get ());
+		}
+		return foodItems;
+	}
+
+	private List<FoodItem> getFoodItemsFromTescoProductNumber (Collection<String> numbers) {
 
 		HttpClient httpclient = HttpClients.createDefault ();
 

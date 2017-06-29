@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.controller.FoodItemDeserializer;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
+import com.calmeter.core.food.utils.FoodItemHelper;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -34,7 +35,7 @@ public class FoodItem implements IFood{
 
 	private String name;
 
-	private Integer weightInGrams;
+	private Double weightInGrams;
 
 	private String description;
 
@@ -84,11 +85,11 @@ public class FoodItem implements IFood{
 		this.description = description;
 	}
 
-	public int getWeightInGrams() {
+	public Double getWeightInGrams() {
 		return weightInGrams;
 	}
 
-	public void setWeightInGrams(int weightInGrams) {
+	public void setWeightInGrams(Double weightInGrams) {
 		this.weightInGrams = weightInGrams;
 	}
 
@@ -127,6 +128,10 @@ public class FoodItem implements IFood{
 
 	public void setFoodItemType(FoodItemType foodItemType) {
 		this.foodItemType = foodItemType;
+	}
+	
+	public void applyServingModifier () {
+		FoodItemHelper.applyServingModifierToValues (this);
 	}
 
 }

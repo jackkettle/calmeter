@@ -11,7 +11,7 @@ export class DiaryService {
 
     constructor(@Inject(APP_CONFIG) private config: IAppConfig, private authHttpService: AuthHttpService) { }
 
-    private apiUrl = this.config.apiEndpoint + 'food';
+    private apiUrl = this.config.apiEndpoint + 'diary';
 
     getEntries(): Observable<Response[]> {
 

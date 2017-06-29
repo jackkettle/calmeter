@@ -70,7 +70,7 @@ public class FoodRepositoryIntegrationTests {
 
 		FoodItem foodItem = new FoodItem ();
 		foodItem.setName ("Banana");
-		foodItem.setWeightInGrams (1000);
+		foodItem.setWeightInGrams (1000.0);
 		foodItem.setNutritionalInformation (nutritionalInformation);
 		foodItem.setCreator (user);
 
@@ -92,7 +92,7 @@ public class FoodRepositoryIntegrationTests {
 
 		FoodItem foundFoodItem = foundFoodItemWrapper.get ();
 		assertEquals ("Banana", foundFoodItem.getName ());
-		assertEquals (1000, foundFoodItem.getWeightInGrams ());
+		assertEquals (1000, foundFoodItem.getWeightInGrams (), 0.1);
 		assertEquals (1000, foundFoodItem.getNutritionalInformation ().getCalories (), 0.1);
 		assertEquals (10.0, foundFoodItem.getNutritionalInformation ().getConsolidatedCarbs ().getSugar (), 0.1);
 		assertEquals (Constants.USERNAME, foundFoodItem.getCreator ().getUsername ());
@@ -129,7 +129,7 @@ public class FoodRepositoryIntegrationTests {
 
 		FoodItem foodItem = new FoodItem ();
 		foodItem.setName ("Apples");
-		foodItem.setWeightInGrams (1000);
+		foodItem.setWeightInGrams (1000.0);
 		foodItem.setNutritionalInformation (nutritionalInformation);
 		foodItem.setCreator (user);
 

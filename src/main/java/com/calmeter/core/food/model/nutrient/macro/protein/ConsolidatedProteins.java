@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,7 +44,7 @@ public class ConsolidatedProteins {
 		this.protein = protein;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "protein_values", joinColumns = @JoinColumn(name = "consolidated_proteins_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")

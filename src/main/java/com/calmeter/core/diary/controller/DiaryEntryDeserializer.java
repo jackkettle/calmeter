@@ -15,9 +15,10 @@ import org.springframework.stereotype.Component;
 
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 import com.calmeter.core.food.source.model.FoodSource;
-import com.calmeter.core.food.source.service.FoodSourceService;
+import com.calmeter.core.food.source.service.IFoodSourceService;
 import com.calmeter.core.food.source.utils.FoodSourceHelper;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +31,10 @@ public class DiaryEntryDeserializer
 		extends JsonDeserializer<DiaryEntry> {
 
 	@Autowired
-	FoodSourceService foodSourceService;
+	IFoodSourceService foodSourceService;
+
+	@Autowired
+	IFoodItemService foodItemService;
 
 	@Autowired
 	FoodSourceHelper foodSourceHelper;
@@ -68,9 +72,21 @@ public class DiaryEntryDeserializer
 			}
 
 			IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler (foodSourceWrapper.get ());
-			FoodItem foodItem = foodSourceHandler.getItemFromID (Long.valueOf (id.longValue ()));
+			Optional<FoodItem> foodItemWrapper = foodSourceHandler.getItemFromID (Long.valueOf (id.longValue ()));
 
-			foodItems.add (foodItem);
+			if (!foodItemWrapper.isPresent ()) {
+				logger.error ("Unable to get FoodItem from ID: {}, source: {}", id.longValue (), foodSourceString);
+				continue;
+			}
+
+			FoodItem foodItem = foodItemWrapper.get ();
+
+			if (foodItem.getId () == null) {
+				logger.info ("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId ());
+				foodItemService.add (foodItem);
+			}
+
+			foodItems.add (foodItemWrapper.get ());
 		}
 		diaryEnty.setFoodItems (foodItems);
 

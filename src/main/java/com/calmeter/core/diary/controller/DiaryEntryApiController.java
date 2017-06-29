@@ -18,7 +18,7 @@ import com.calmeter.core.diary.repository.IDiaryEntryRepository;
 
 @RestController
 @RequestMapping("/api/diary")
-public class DiaryApiController {
+public class DiaryEntryApiController {
 
 	@Autowired
 	IDiaryEntryRepository diaryEntryRepository;
@@ -47,6 +47,6 @@ public class DiaryApiController {
 
 	}
 
-	public static final Logger logger = LoggerFactory.getLogger (DiaryApiController.class);
+	public static final Logger logger = LoggerFactory.getLogger (DiaryEntryApiController.class);
 
 }

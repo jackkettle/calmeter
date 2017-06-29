@@ -72,7 +72,7 @@ public class DiaryEntryRepositoryIntegrationTests {
 
 		FoodItem foodItem = new FoodItem ();
 		foodItem.setName ("Banana");
-		foodItem.setWeightInGrams (1000);
+		foodItem.setWeightInGrams (1000.0);
 		foodItem.setNutritionalInformation (nutritionalInformation);
 		foodItem.setCreator (user);
 

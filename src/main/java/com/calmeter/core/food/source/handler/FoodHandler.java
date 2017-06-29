@@ -1,28 +1,29 @@
 package com.calmeter.core.food.source.handler;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.calmeter.core.food.model.FoodItem;
-import com.calmeter.core.food.repositroy.IFoodItemRepository;
+import com.calmeter.core.food.service.IFoodItemService;
 
 @Component
 public class FoodHandler
 		implements IFoodSourceHandler {
 
 	@Autowired
-	IFoodItemRepository foodItemRepository;
+	IFoodItemService foodItemService;
 
 	@Override
-	public FoodItem getItemFromID (Long id) {
-		return foodItemRepository.findOne (id);
+	public Optional<FoodItem> getItemFromID (Long id) {
+		return foodItemService.get (id);
 	}
 
 	@Override
 	public List<FoodItem> search (String search) {
-		return foodItemRepository.findByNameContainingIgnoreCase (search);
+		return foodItemService.search (search);
 	}
 
 }

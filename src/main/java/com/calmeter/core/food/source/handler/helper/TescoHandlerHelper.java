@@ -89,14 +89,18 @@ public class TescoHandlerHelper {
 
 			JsonNode nutritionNode = productNode.get ("calcNutrition");
 
+			if(nutritionNode.has ("perServingHeader")){
 			Optional<Double> servingSizeWrapper = getServingSizeFromString (nutritionNode.get ("perServingHeader").asText ());
 			if (!servingSizeWrapper.isPresent ()) {
 				logger.debug ("Unable to get serving size from item");
 				nutritionalInformation.setServingSize (100.0);
 			}
 			else {
-				logger.debug ("Serving size: {}", servingSizeWrapper.get ());
 				nutritionalInformation.setServingSize (servingSizeWrapper.get ());
+			}
+			}else{
+				logger.debug ("Unable to get serving size from item");
+				nutritionalInformation.setServingSize (100.0);
 			}
 
 			JsonNode nutrientsNode = nutritionNode.get ("calcNutrients");
@@ -127,7 +131,7 @@ public class TescoHandlerHelper {
 
 			foodItem.setName (productNode.get ("description").asText ());
 			foodItem.setExternalId (productNode.get ("tpnb").asLong ());
-			foodItem.setWeightInGrams (nutritionalInformation.getServingSize ().intValue ());
+			foodItem.setWeightInGrams (nutritionalInformation.getServingSize ().doubleValue ());
 			foodItem.setNutritionalInformation (nutritionalInformation);
 			foodItem.setFoodItemType (FoodItemType.TESCO_ITEM);
 
@@ -135,7 +139,7 @@ public class TescoHandlerHelper {
 		}
 		catch (Exception e) {
 			logger.error ("productNode: {}", productNode.toString ());
-			logger.error ("Unable to get foodItem from JSON", e.getMessage ());
+			logger.error ("Unable to get foodItem from JSON. {}", e.getMessage ());
 			return Optional.empty ();
 		}
 

@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.calmeter.core.food.source.model.FoodSource;
 import com.calmeter.core.food.source.repository.IFoodSourceRepository;
 
-@Component
-public class FoodSourceService {
+@Component("foodSourceService")
+public class FoodSourceServiceImpl
+		implements IFoodSourceService {
 
 	@Autowired
 	IFoodSourceRepository foodSourceRepository;

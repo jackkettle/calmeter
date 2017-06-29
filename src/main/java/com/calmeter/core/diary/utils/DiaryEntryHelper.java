@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 
+import com.calmeter.core.Constants;
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
@@ -34,7 +35,7 @@ public class DiaryEntryHelper {
 
 		for (PropertyDescriptor propertyDescriptor : individualAccessor.getPropertyDescriptors ()) {
 
-			if (EXLUSION_PROPERTIES.contains (propertyDescriptor.getName ()))
+			if (Constants.EXLUSION_PROPERTIES.contains (propertyDescriptor.getName ()))
 				continue;
 
 			Object individualValue = individualAccessor.getPropertyValue (propertyDescriptor.getName ());
@@ -83,13 +84,13 @@ public class DiaryEntryHelper {
 				Map<Object, Double> totalMap = (Map<Object, Double>)totalValue;
 				for (Map.Entry<?, Double> entry : individualMap.entrySet ()) {
 
-					if(entry.getValue () == null)
+					if (entry.getValue () == null)
 						continue;
 
 					Double rowTotalValue = totalMap.get (entry.getKey ());
-					
+
 					Double sumValue = 0.0;
-					if(rowTotalValue == null)
+					if (rowTotalValue == null)
 						sumValue = entry.getValue ();
 					else
 						sumValue = entry.getValue () + rowTotalValue;

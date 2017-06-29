@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -79,7 +80,7 @@ public class ConsolidatedCarbs {
 		this.sugar = sugar;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "carb_sugar_values", joinColumns = @JoinColumn(name = "consolidated_carbs_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
