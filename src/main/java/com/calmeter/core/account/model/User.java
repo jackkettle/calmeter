@@ -2,8 +2,7 @@ package com.calmeter.core.account.model;
 
 import javax.persistence.*;
 
-import com.calmeter.core.food.controller.FoodItemDeserializer;
-import com.calmeter.core.security.controller.RegistrationUserDeserializer;
+import com.calmeter.core.security.controller.UserDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -12,16 +11,16 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user")
-@JsonDeserialize(using = RegistrationUserDeserializer.class)
+@JsonDeserialize(using = UserDeserializer.class)
 public class User {
 
 	private Long id;
 
 	private String username;
 	
-	private String firstName;
+	private String firstname;
 	
-	private String lastName;
+	private String lastname;
 
 	private String password;
 
@@ -32,10 +31,13 @@ public class User {
 	private Boolean enabled;
 
 	private Set<UserRole> roles;
+	
+	private Boolean isUserProfileSet;
 
 	private UserProfile UserProfile;
 
 	public User() {
+		isUserProfileSet = false; 
 		roles = new HashSet<>();
 	}
 
@@ -58,20 +60,20 @@ public class User {
 		this.username = username;
 	}
 
-	public String getFirstName () {
-		return firstName;
+	public String getFirstname () {
+		return firstname;
 	}
 
-	public void setFirstName (String firstName) {
-		this.firstName = firstName;
+	public void setFirstname (String firstname) {
+		this.firstname = firstname;
 	}
 
-	public String getLastName () {
-		return lastName;
+	public String getLastname () {
+		return lastname;
 	}
 
-	public void setLastName (String lastName) {
-		this.lastName = lastName;
+	public void setLastname (String lastname) {
+		this.lastname = lastname;
 	}
 
 	@JsonIgnore
@@ -118,6 +120,14 @@ public class User {
 
 	public void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
+	}
+
+	public Boolean getIsUserProfileSet() {
+		return isUserProfileSet;
+	}
+
+	public void setIsUserProfileSet(Boolean isUserProfileSet) {
+		this.isUserProfileSet = isUserProfileSet;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

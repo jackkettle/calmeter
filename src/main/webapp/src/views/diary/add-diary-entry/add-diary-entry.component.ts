@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
 import { Observable } from 'rxjs/Rx';
+import { NotificationsService } from 'angular2-notifications';
+import { SharedData } from '../../../_providers/shared-data.provider';
 import { FoodService } from '../../../_services/food.service';
 import { DiaryService } from '../../../_services/diary.service';
-import { DiaryEntry } from '../diary.interface';
 
 import * as $ from "jquery";
 
@@ -32,14 +34,29 @@ export class AddDiaryEntryComponent implements OnInit {
 
     public loadingIndicator: boolean = true;
 
+    public notificationOptions: any;
+
     formGroup: FormGroup;
 
-    constructor(private formBuilder: FormBuilder, private foodService: FoodService, private diaryService: DiaryService) {
+    constructor(
+        private router: Router,
+        private sharedData: SharedData,
+        private formBuilder: FormBuilder,
+        private foodService: FoodService,
+        private diaryService: DiaryService,
+        private notificationsService: NotificationsService) {
+
         this.page = {
             pageNumber: 0,
             size: 20,
             totalElements: 0
         }
+
+        this.notificationOptions = {
+            position: ["top", "right"],
+            timeOut: 5000,
+            lastOnBottom: true,
+        };
 
         this.cssClasses = {
             'sortAscending': 'fa fa-fw fa-sort-desc',
@@ -62,22 +79,25 @@ export class AddDiaryEntryComponent implements OnInit {
         this.selected = new Array();
         let dateObject = new Date();
 
-        $('.datepicker').datepicker({
-            todayBtn: true,
-            todayHighlight: true
-        });
-
-        $('.timepicker-input').timepicker({
-            showInputs: false
-        });
-
-        this.setPage({ offset: 0 });
-
         this.formGroup = this.formBuilder.group({
             date: [this.getDateFormat(dateObject)],
             time: [this.getTimeFormat(dateObject)],
             description: [''],
             foodItemFormArray: this.formBuilder.array([]),
+        });
+
+        this.setPage({ offset: 0 });
+
+        $('.datepicker').datepicker({
+            todayBtn: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy'
+        }).on("changeDate", (event) => {
+            this.formGroup.controls['date'].setValue(this.getDateFormat(event.date));
+        });
+
+        $('.timepicker-input').timepicker({
+            showInputs: false
         });
 
         this.searchField = new FormControl();
@@ -156,13 +176,10 @@ export class AddDiaryEntryComponent implements OnInit {
     }
 
     onSelect(selected) { // either add or remove
-
         selected = selected.selected;
-
         let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
 
         if (controls.length < selected.length) { // Add
-
             let entry = selected[selected.length - 1];;
             let row = this.formBuilder.group({
                 ngxIndex: [entry.$$index, Validators.required],
@@ -183,7 +200,6 @@ export class AddDiaryEntryComponent implements OnInit {
             }
 
             for (var i = 0; i < controls.length; i++) {
-
                 let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
                 var ngxValue = myFormGroup.controls["ngxIndex"].value;
 
@@ -192,9 +208,7 @@ export class AddDiaryEntryComponent implements OnInit {
                     return;
                 }
             }
-
         }
-
     }
 
     save(model) {
@@ -202,7 +216,8 @@ export class AddDiaryEntryComponent implements OnInit {
         console.log(model.value);
         this.diaryService.addEntry(model.value).subscribe(
             res => {
-                console.log(res);
+                this.sharedData.diaryNotificationQueue.push({ "type": "success", "time": model.value.time });
+                this.router.navigate(["/diary"]);
             }, err => {
                 console.log(err);
             }

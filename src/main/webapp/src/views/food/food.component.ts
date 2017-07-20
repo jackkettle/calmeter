@@ -15,7 +15,8 @@ export class FoodComponent implements OnInit {
 
     public pieChartType: string = 'pie';
     public pieChartLegend: boolean = false;
-    public pieChartLabels: string[] = ['Carbs', 'Fat', 'Protein'];
+    public pieChartLabels: string[] = ['Protein', 'Fat', 'Carbs'];
+
     public chartMap: Map<number, number[]>;
 
     public toDeleteID: number;
@@ -43,7 +44,7 @@ export class FoodComponent implements OnInit {
             let carbs: number = entry.nutritionalInformation.consolidatedCarbs.total;
             let fats: number = entry.nutritionalInformation.consolidatedFats.totalFat;
             let protein: number = entry.nutritionalInformation.consolidatedProteins.protein;
-            let chartData: number[] = [carbs, fats, protein];
+            let chartData: number[] = [protein, fats, carbs];
             this.chartMap.set(entry.id, chartData);
         }
     }

@@ -1,33 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-
+import { UserService } from "../../../_services/";
 
 import * as $ from "jquery";
 
 @Component({
     selector: 'editUserSelector',
-    templateUrl: 'edit-user.template.html'
+    templateUrl: 'edit-user.template.html',
+    providers: [UserService]
 })
-
 export class EditUserComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    firstName: FormControl;
-    lastName: FormControl;
-    email: FormControl;
-    dateOfBirth: FormControl;
-    sex: FormControl;
-    height: FormControl;
-    weight: FormControl;
-
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder, private userService: UserService) { }
 
     ngOnInit() {
 
         this.formGroup = this.formBuilder.group({
-            firstName: [''],
-            lastName: [''],
+            username: new FormControl({ value: '', disabled: true }),
+            id: new FormControl({ value: '', disabled: true }),
+            firstname: [''],
+            lastname: [''],
             email: [''],
             dateOfBirth: [''],
             sex: [''],
@@ -35,12 +29,28 @@ export class EditUserComponent implements OnInit {
             weight: ['']
         });
 
-        $(".height-slider").ionRangeSlider({
-            values: this.generateHeightValues()
-        });
+        console.log(this.formGroup);
 
-        $(".weight-slider").ionRangeSlider({
-            values: this.generateWeightValues()
+        var heightSelector = $(".height-slider");
+        heightSelector.ionRangeSlider({
+            values: this.generateHeightValues(),
+            onFinish: (function (data) {
+                var value = data.from_value;
+                value = value.substring(0, value.indexOf("cm"));
+                value = value.trim();
+                this.formGroup.controls["height"].setValue(value);
+            }).bind(this)
+        })
+
+        var weightSelector = $(".weight-slider");
+        weightSelector.ionRangeSlider({
+            values: this.generateWeightValues(),
+            onFinish: (function (data) {
+                var value = data.from_value;
+                value = value.substring(0, value.indexOf("kgs"));
+                value = value.trim();
+                this.formGroup.controls["weight"].setValue(value);
+            }).bind(this)
         });
 
         $('.datepicker').datepicker({
@@ -50,6 +60,45 @@ export class EditUserComponent implements OnInit {
             this.formGroup.controls['dateOfBirth'].setValue(this.getDateFormat(event.date));
         })
 
+
+        this.callValues();
+
+    }
+
+    callValues() {
+        this.userService.getThisUser().subscribe(
+            data => {
+                this.applyValues(data);
+            }
+        );
+    }
+
+    applyValues(data) {
+
+        this.formGroup.controls["username"].setValue(data.username);
+        this.formGroup.controls["id"].setValue(data.id);
+        this.formGroup.controls["firstname"].setValue(data.firstname);
+        this.formGroup.controls["lastname"].setValue(data.lastname);
+        this.formGroup.controls["email"].setValue(data.email);
+
+        if (data.isUserProfileSet) {
+            var dob: Date = new Date(data.userProfile.dateOfBirth * 1000);
+            console.log(this.getDateFormat(dob));
+            this.formGroup.controls["dateOfBirth"].setValue(this.getDateFormat(dob));
+            var sex: string = data.userProfile.sex;
+            sex = sex.toLocaleLowerCase();
+            sex = sex.charAt(0).toUpperCase() + sex.slice(1)   
+            this.formGroup.controls["sex"].setValue(sex);
+
+            this.formGroup.controls["height"].setValue(data.userProfile.height);
+            $(".height-slider").data("ionRangeSlider").update({
+                from: data.userProfile.height - 1
+            });
+            this.formGroup.controls["weight"].setValue(data.userProfile.weight);
+            $(".weight-slider").data("ionRangeSlider").update({
+                from: (data.userProfile.weight * 10) - 10
+            });
+        }
     }
 
     generateHeightValues() {
@@ -115,7 +164,11 @@ export class EditUserComponent implements OnInit {
     }
 
     save(data) {
-        console.log(data);
+        this.userService.edit(data.value).subscribe(
+            res => {
+                console.log(res);
+            }
+        );
     }
 
 }

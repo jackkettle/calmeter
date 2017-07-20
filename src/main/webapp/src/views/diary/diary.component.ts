@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { DiaryService } from '../../_services/diary.service';
+import { NotificationsService } from 'angular2-notifications';
+import { DiaryService, GoalsService } from '../../_services';
+import { SharedData } from '../../_providers/shared-data.provider';
+
 
 @Component({
     selector: 'diary',
     templateUrl: 'diary.template.html',
-    providers: [DiaryService]
+    providers: [DiaryService, GoalsService]
 })
 export class DiaryComponent implements OnInit {
 
     public diaryEntries: Array<any>;
+    public goalProfile: any;
+    public isGoalProfileSet: boolean = false;;
 
     public currentDate: Date;
 
@@ -21,6 +26,11 @@ export class DiaryComponent implements OnInit {
     public pieChartLabels: string[] = ['Carbs', 'Fat', 'Protein'];
     public chartMap: Map<number, number[]>;
 
+    public notificationOptions: any = {
+        position: ["top", "right"],
+        lastOnBottom: true,
+        timeOut: 3000,
+    };
 
     public barChartColors: Array<any> = [
         {
@@ -59,19 +69,56 @@ export class DiaryComponent implements OnInit {
         }
     };
 
-    constructor(private diaryService: DiaryService) {
+    constructor(
+        private diaryService: DiaryService,
+        private goalService: GoalsService,
+        private notificationsService: NotificationsService,
+        private sharedData: SharedData) {
+
         this.chartMap = new Map<number, number[]>();
+        this.goalProfile = {};
     }
 
     ngOnInit() {
         this.currentDate = new Date();
-        this.loadDiaryEntries();
+        //this.loadDiaryEntriesTotal();
+        this.loadDiaryEntries(this.currentDate);
+        this.loadNutritionGoalValues();
+
+        setTimeout(() => {
+            this.processNotifications();
+        }, 500);
     };
 
-    loadDiaryEntries() {
-        console.log("loading entries");
-        this.diaryService.getEntries()
-            .subscribe(data => { this.diaryEntries = data; this.populateChartMap(data); });
+    loadNutritionGoalValues() {
+        this.goalService.getGoalProfile().subscribe(
+            data => {
+                this.goalProfile = data;
+                this.isGoalProfileSet = true;
+            },
+            error => {
+                console.log("error");
+                this.isGoalProfileSet = false;
+            }
+        );
+    }
+
+    processNotifications() {
+        while (this.sharedData.diaryNotificationQueue.length > 0) {
+            var notification = this.sharedData.diaryNotificationQueue.pop();
+            if (notification.type === "success") {
+                this.successNotification(notification);
+            }
+        }
+    }
+
+    loadDiaryEntries(date: Date) {
+        this.diaryService.getEntriesByDate(date).subscribe(
+            data => {
+                this.diaryEntries = data;
+                this.populateChartMap(data);
+            }
+        );
     }
 
     populateChartMap(data: any) {
@@ -85,6 +132,33 @@ export class DiaryComponent implements OnInit {
             let chartData: number[] = [carbs, fats, protein];
             this.chartMap.set(entry.id, chartData);
         }
+    }
+
+    test() {
+        console.log("click");
+        this.notificationsService.success(
+            'Diary entry successfully added',
+            'Time: ',
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
+    }
+
+    successNotification(notification) {
+        this.notificationsService.success(
+            'Diary entry successfully added',
+            'Time: ' + notification.time,
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
     }
 
 }

@@ -13,45 +13,44 @@ import com.calmeter.core.food.repositroy.IFoodItemRepository;
 
 @Component("foodItemService")
 @Transactional
-public class FoodItemServiceImpl
-		implements IFoodItemService {
+public class FoodItemServiceImpl implements IFoodItemService {
 
 	@Autowired
 	IFoodItemRepository foodItemRepository;
 
 	@Override
-	public Optional<FoodItem> get (long id) {
+	public Optional<FoodItem> get(long id) {
 
-		FoodItem foodItem = foodItemRepository.findOne (id);
+		FoodItem foodItem = foodItemRepository.findOne(id);
 		if (foodItem == null)
-			return Optional.empty ();
+			return Optional.empty();
 
-		return Optional.of (foodItem);
+		return Optional.of(foodItem);
 	}
 
 	@Override
-	public Optional<FoodItem> get (String name) {
-		return foodItemRepository.findByName (name);
+	public Optional<FoodItem> get(String name) {
+		return foodItemRepository.findByName(name);
 	}
 
 	@Override
-	public FoodItem add (FoodItem foodItem) {
-		return foodItemRepository.save (foodItem);
+	public FoodItem add(FoodItem foodItem) {
+		return foodItemRepository.save(foodItem);
 	}
 
 	@Override
-	public List<FoodItem> search (String query) {
-		return foodItemRepository.findByNameContainingIgnoreCase (query);
+	public List<FoodItem> search(String query) {
+		return foodItemRepository.findByNameContainingIgnoreCase(query);
 	}
 
 	@Override
-	public Optional<FoodItem> getExternal (long externalId, FoodItemType foodItemType) {
-		return foodItemRepository.findByExternalIdAndFoodItemType (externalId, foodItemType);
+	public Optional<FoodItem> getExternal(long externalId, FoodItemType foodItemType) {
+		return foodItemRepository.findByExternalIdAndFoodItemType(externalId, foodItemType);
 	}
 
 	@Override
-	public boolean existsExternal (long externalId, FoodItemType foodItemType) {
-		return foodItemRepository.existsByExternalIdAndFoodItemType (externalId, foodItemType);
+	public boolean existsExternal(long externalId, FoodItemType foodItemType) {
+		return foodItemRepository.existsByExternalIdAndFoodItemType(externalId, foodItemType);
 	}
 
 }

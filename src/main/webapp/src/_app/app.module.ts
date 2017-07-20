@@ -2,19 +2,23 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule, Http } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
 // Config
 import { APP_CONFIG, AppConfig } from './app.config';
+
+// Providers
+import { SharedData } from "../_providers/shared-data.provider";
 
 // PLugins
 import { SelectModule } from 'ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
@@ -23,6 +27,7 @@ import { FoodModule } from "../views/food/food.module";
 import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
 import { AddFoodModule } from "../views/food/add-food/add-food.module";
 import { DiaryModule } from "../views/diary/diary.module";
+import { GoalsModule } from "../views/goals/goals.module";
 import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
 import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
@@ -44,7 +49,7 @@ export function getAuthHttp(http) {
         headerPrefix: 'Bearer',
         tokenName: 'id_token',
         globalHeaders: [
-            { 'Accept': 'application/json' }, 
+            { 'Accept': 'application/json' },
             { 'Content-Type': 'application/json' }],
         tokenGetter: (() => localStorage.getItem('id_token')),
     }), http);
@@ -56,6 +61,7 @@ export function getAuthHttp(http) {
 
         // Angular modules
         BrowserModule,
+        BrowserAnimationsModule,
         HttpModule,
         FormsModule,
         ReactiveFormsModule,
@@ -63,6 +69,7 @@ export function getAuthHttp(http) {
         // Plugin modules
         SelectModule,
         NgxDatatableModule,
+        SimpleNotificationsModule.forRoot(),
 
         // Views
         DashboardModule,
@@ -71,6 +78,7 @@ export function getAuthHttp(http) {
         AddRecipeModule,
         AddFoodModule,
         DiaryModule,
+        GoalsModule,
         AddDiaryEntryModule,
         UserModule,
         EditUserModule,
@@ -94,7 +102,8 @@ export function getAuthHttp(http) {
         },
         AuthGuard,
         AuthService,
-        AuthHttpService
+        AuthHttpService,
+        SharedData
     ],
     bootstrap: [AppComponent]
 })

@@ -43,7 +43,7 @@ public class DiaryEntry {
 
 	private List<FoodItem> foodItems;
 
-	private LocalDateTime time;
+	private LocalDateTime dateTime;
 
 	private boolean eatan;
 
@@ -96,12 +96,12 @@ public class DiaryEntry {
 	}
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	public LocalDateTime getTime () {
-		return time;
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 
-	public void setTime (LocalDateTime time) {
-		this.time = time;
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 	public boolean isEatan () {

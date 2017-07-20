@@ -50,7 +50,7 @@ public class NutritionalInformation {
 	
 	private Integer caffeine;
 	
-	private NutrionalInfoType type;
+	private NutritionalInfoType type;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -141,11 +141,11 @@ public class NutritionalInformation {
 	}
 
 	@Enumerated(EnumType.STRING)
-	public NutrionalInfoType getType() {
+	public NutritionalInfoType getType() {
 		return type;
 	}
 
-	public void setType(NutrionalInfoType type) {
+	public void setType(NutritionalInfoType type) {
 		this.type = type;
 	}
 
@@ -158,8 +158,8 @@ public class NutritionalInformation {
 		this.mineralMap = new HashMap<MineralLabel, Double> ();
 	}
 
-	public NutritionalInformation (NutrionalInfoType nutrionalProfile) {
-		super();
+	public NutritionalInformation (NutritionalInfoType nutrionalProfile) {
+		this();
 		this.setType (nutrionalProfile);
 	}
 }

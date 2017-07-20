@@ -1,0 +1,125 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+
+                        <div class="col-sm-4">
+
+                            <h3>Basal Metabolic Rate</h3>
+
+                            <p class="h-110">
+                                Basal Metabolic Rate (BMR) is a measure of only the most basic functions (effectively the same as if you rested in bed the
+                                whole day). Other terms synonymous with BMR are Resting Metabolic Rate (RMR) and Resting
+                                Energy Expenditure (REE).
+                            </p>
+                            <div *ngIf="userBMR != 0">
+                                <div class="col-sm-6">
+                                    <h4 class="font-bold no-margins">Your BMR</h4>
+                                    <h1 class="m-b-xs">{{userBMR}}</h1>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-sm btn-primary m-t-md" (click)="save()">Save your goals profile</button>
+                                </div>
+                            </div>
+
+
+                            <div *ngIf="userBMR == 0">
+                                <div class="col-sm-6">
+                                    <p class="text-info">To calculate your BMR you must first setup your user profile</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-sm btn-info m-t-md" [routerLink]="['/user/edit']">Setup user profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                            <h3>Activity level</h3>
+
+                            <p class="h-110">
+                                The physical activity level (PAL) is a way to express a person's daily physical activity as a number, and is used to estimate
+                                a person's total energy expenditure. In combination with the basal metabolic rate, it can
+                                be used to compute the amount of food energy a person needs to consume in order to maintain
+                                a particular lifestyle.
+                            </p>
+
+                            <h5 class="m-t-sm">Input your activity level</h5>
+                            <ng-select [active]="[activityLevel]" [items]="activityLevels" (selected)="onActivitySelected($event)">
+                            </ng-select>
+
+                        </div>
+
+                        <div class="col-sm-4">
+
+                            <h3>Nutrition Goals</h3>
+
+                            <p class="h-110">
+                                A proper weight for your size is definitely a healthy condition. But it won't be healthy if you cut down too sharply on calories,
+                                do too much exercise without eating properly, or take other extreme measures. Weight should
+                                always be lost gradually. Maintaining a healthy diet while you lose weight will just help
+                                the whole process along.
+                            </p>
+
+                            <h5 class="m-t-sm">Input your weight goal</h5>
+                            <ng-select [active]="[weightGoal]" [items]="weightGoals" (selected)="onWeightSelected($event)">
+                            </ng-select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3" *ngFor="let ratio of ratios; let i = index">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>{{ ratio.name }}</h5>
+                </div>
+                <div class="ibox-content">
+                    <div [innerHTML]="ratio.description">
+                    </div>
+                    <ul class="stat-list">
+                        <li>
+                            <!--<h2 class="no-margins">2,346</h2>-->
+                            <small>Carbohydrates</small>
+                            <div class="stat-percent">{{ratio.nutritionalInformation.consolidatedCarbs.total }}% <i class="fa fa-apple text-navy"></i></div>
+                            <div class="progress progress-mini">
+                                <div [style.width]="ratio.nutritionalInformation.consolidatedCarbs.total + '%'" class="progress-bar carb"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <!--<h2 class="no-margins ">4,422</h2>-->
+                            <small>Proteins</small>
+                            <div class="stat-percent">{{ratio.nutritionalInformation.consolidatedProteins.protein}}% <i class="fa fa-heart text-navy"></i></div>
+                            <div class="progress progress-mini">
+                                <div [style.width]="ratio.nutritionalInformation.consolidatedProteins.protein + '%'" class="progress-bar protein"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <!--<h2 class="no-margins ">9,180</h2>-->
+                            <small>Fats</small>
+                            <div class="stat-percent">{{ratio.nutritionalInformation.consolidatedFats.totalFat }}% <i class="fa fa-tint text-navy"></i></div>
+                            <div class="progress progress-mini">
+                                <div [style.width]="ratio.nutritionalInformation.consolidatedFats.totalFat + '%'" class="progress-bar fat"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ibox-footer">
+                    <span class="btn btn-sm btn-primary pull-right" *ngIf="chosenRatio.id == ratio.id">Selected <i class="fa fa-check" aria-hidden="true"></i>
+</span>
+                    <button class="btn btn-sm btn-white pull-right" *ngIf="chosenRatio.id != ratio.id" (click)="choseRatio(ratio)">Choose the ratio</button>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>

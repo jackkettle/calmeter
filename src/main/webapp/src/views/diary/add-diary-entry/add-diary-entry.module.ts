@@ -5,6 +5,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { OnCreate } from '../../../_directives/';
 import { AddDiaryEntryComponent } from "./add-diary-entry.component";
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 
 @NgModule({
     declarations: [
@@ -14,7 +16,8 @@ import { AddDiaryEntryComponent } from "./add-diary-entry.component";
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        NgxDatatableModule]
+        NgxDatatableModule,
+        SimpleNotificationsModule]
 })
 
 export class AddDiaryEntryModule { }

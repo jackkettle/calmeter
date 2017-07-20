@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Response } from '@angular/http';
+import { Response, RequestOptionsArgs, RequestOptions, URLSearchParams  } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { APP_CONFIG, IAppConfig } from '../_app/app.config';
 import { AuthHttpService } from './auth-http.service';
@@ -13,9 +13,15 @@ export class DiaryService {
 
     private apiUrl = this.config.apiEndpoint + 'diary';
 
-    getEntries(): Observable<Response[]> {
+    getEntriesByDate(date: Date): Observable<Response[]> {
 
-        return this.authHttpService.get(`${this.apiUrl}/allEntries`)
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('date', date.toISOString());
+
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.get(`${this.apiUrl}/getEntriesByDate`, requestOptions)
             .map((res: Response) => res.json());
     }
 

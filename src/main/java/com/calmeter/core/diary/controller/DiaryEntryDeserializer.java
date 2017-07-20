@@ -48,13 +48,13 @@ public class DiaryEntryDeserializer
 
 		String date = rootNode.get ("date").asText ();
 		String time = rootNode.get ("time").asText ();
-
+		
 		String fullDateTimeString = date + " " + time;
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern ("dd/MM/yyyy h:mm a");
 		LocalDateTime dateTime = LocalDateTime.parse (fullDateTimeString, formatter);
-
-		diaryEnty.setTime (dateTime);
+		
+		diaryEnty.setDateTime (dateTime);
 
 		Iterator<JsonNode> foodItemsNodes = rootNode.get ("foodItemFormArray").elements ();
 

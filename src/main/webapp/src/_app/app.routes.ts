@@ -7,6 +7,7 @@ import { FoodComponent } from "../views/food/food.component";
 import { AddRecipeComponent } from "../views/food/add-recipe/add-recipe.component";
 import { AddFoodComponent } from "../views/food/add-food/add-food.component";
 import { DiaryComponent } from "../views/diary/diary.component";
+import { GoalsComponent } from "../views/goals/goals.component";
 import { AddDiaryEntryComponent } from "../views/diary/add-diary-entry/add-diary-entry.component";
 import { UserComponent } from "../views/user/user.component";
 import { EditUserComponent } from "../views/user/edit-user/edit-user.component";
@@ -22,16 +23,17 @@ export const ROUTES: Routes = [
     { path: '', redirectTo: 'mainView', pathMatch: 'full', canActivate: [AuthGuard] },
 
     // App views
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'minorView', component: minorViewComponent, canActivate: [AuthGuard] },
     { path: 'food', component: FoodComponent, canActivate: [AuthGuard] },
     { path: 'food/addRecipe', component: AddRecipeComponent, canActivate: [AuthGuard] },
     { path: 'food/addFood', component: AddFoodComponent, canActivate: [AuthGuard] },
+    { path: 'goals', component: GoalsComponent, canActivate: [AuthGuard] },
     { path: 'diary', component: DiaryComponent, canActivate: [AuthGuard] },
     { path: 'diary/addEntry', component: AddDiaryEntryComponent, canActivate: [AuthGuard] },
     { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
     { path: 'user/edit', component: EditUserComponent, canActivate: [AuthGuard] },
-    
+
     // Handle all other routes
     { path: '**', component: DashboardComponent, canActivate: [AuthGuard] }
 ];
