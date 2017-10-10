@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
 import { Observable } from 'rxjs/Rx';
+import { NotificationsService } from 'angular2-notifications';
+import { SharedData } from '../../../_providers/shared-data.provider';
 import { FoodService } from '../../../_services/food.service';
-import { DiaryService }  from '../../../_services/diary.service';
-import { DiaryEntry } from '../diary.interface';
+import { DiaryService } from '../../../_services/diary.service';
 
 import * as $ from "jquery";
 
@@ -18,6 +20,8 @@ export class AddDiaryEntryComponent implements OnInit {
 
     public searchOption: String;
 
+    public searchField: FormControl;
+
     public rows: Array<any>;
 
     public page;
@@ -30,14 +34,29 @@ export class AddDiaryEntryComponent implements OnInit {
 
     public loadingIndicator: boolean = true;
 
+    public notificationOptions: any;
+
     formGroup: FormGroup;
 
-    constructor(private formBuilder: FormBuilder, private foodService: FoodService, private diaryService: DiaryService) {
+    constructor(
+        private router: Router,
+        private sharedData: SharedData,
+        private formBuilder: FormBuilder,
+        private foodService: FoodService,
+        private diaryService: DiaryService,
+        private notificationsService: NotificationsService) {
+
         this.page = {
             pageNumber: 0,
             size: 20,
             totalElements: 0
         }
+
+        this.notificationOptions = {
+            position: ["top", "right"],
+            timeOut: 5000,
+            lastOnBottom: true,
+        };
 
         this.cssClasses = {
             'sortAscending': 'fa fa-fw fa-sort-desc',
@@ -50,26 +69,14 @@ export class AddDiaryEntryComponent implements OnInit {
 
         this.searchOptions = [
             { name: 'food', label: 'My Food', sourceID: 1 },
-            { name: 'recipes', label: 'My Recipes', sourceID: 2 }
+            { name: 'recipes', label: 'My Recipes', sourceID: 2 },
+            { name: 'tesco', label: 'Tesco', sourceID: 3 }
         ]
     }
 
     ngOnInit() {
-
         this.searchOption = "food";
         this.selected = new Array();
-
-        $('.datepicker').datepicker({
-            todayBtn: true,
-            todayHighlight: true
-        });
-
-        $('.timepicker-input').timepicker({
-            showInputs: false
-        });
-
-        this.setPage({ offset: 0 });
-
         let dateObject = new Date();
 
         this.formGroup = this.formBuilder.group({
@@ -79,26 +86,81 @@ export class AddDiaryEntryComponent implements OnInit {
             foodItemFormArray: this.formBuilder.array([]),
         });
 
+        this.setPage({ offset: 0 });
+
+        $('.datepicker').datepicker({
+            todayBtn: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy'
+        }).on("changeDate", (event) => {
+            this.formGroup.controls['date'].setValue(this.getDateFormat(event.date));
+        });
+
+        $('.timepicker-input').timepicker({
+            showInputs: false
+        });
+
+        this.searchField = new FormControl();
+        this.searchField.valueChanges
+            .debounceTime(700)
+            .distinctUntilChanged()
+            .subscribe(term => {
+                console.log(term);
+                this.loadingIndicator = true;
+                this.getRowDataUsingQuery(term);
+            });
+    }
+
+    initTouchSpin(index: number) {
+        var query = "table tr:eq(" + (index + 1) + ") input.touchspin2Decimal";
+        $(query).TouchSpin({
+            min: 0,
+            max: 200,
+            step: .1,
+            decimals: 2,
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+    }
+
+    getRowDataUsingQuery(query: string) {
+        this.foodService.getAllFoodUsingQuery(query, this.searchOption)
+            .subscribe(response => {
+                this.rows = this.transformData(response);
+                this.page.totalElements = this.rows.length;
+                this.loadingIndicator = false;
+            });
     }
 
     assignSearchOption(searchOption) {
         this.searchOption = searchOption;
     }
 
-    getRowData() {
+    getRowData(): void {
+        this.loadingIndicator = true;
         this.foodService.getAllFood()
-            .subscribe(response => { this.rows = this.transformData(response) });
+            .subscribe(response => {
+                this.rows = this.transformData(response)
+                this.loadingIndicator = false;
+            });
     }
 
     transformData(data) {
         let dataRows: Array<any> = []
         for (let entry of data) {
             let rowData = {
-                'id': entry.id,
+                'id': entry.externalId,
                 'name': entry.name,
                 'label': entry.name,
+                'servingSize': entry.nutritionalInformation.servingSize + ' g',
                 'source': this.searchOption
             }
+            if (this.searchOption === "food")
+                rowData.id = entry.id
+
+            if (this.searchOption === "tesco")
+                rowData.id = entry.externalId
+
             dataRows.push(rowData);
         }
         return dataRows;
@@ -109,34 +171,44 @@ export class AddDiaryEntryComponent implements OnInit {
         this.foodService.getAllFood().subscribe(response => {
             this.rows = this.transformData(response);
             this.page.totalElements = this.rows.length;
+            this.loadingIndicator = false;
         });
     }
 
-    onSelect({ selected }) {
-        console.log('Select Event', selected);
-        console.log('1', this.selected); 
-        this.selected.splice(0, this.selected.length);
-        this.selected.push(...selected);
+    onSelect(selected) { // either add or remove
+        selected = selected.selected;
+        let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
 
-        const control = <FormArray>this.formGroup.controls['foodItemFormArray'];
-
-        while (control.length) {
-            control.removeAt(control.length - 1);
-        }
-
-        for(let entry of selected){
+        if (controls.length < selected.length) { // Add
+            let entry = selected[selected.length - 1];;
             let row = this.formBuilder.group({
+                ngxIndex: [entry.$$index, Validators.required],
                 name: [entry.name, Validators.required],
                 id: [entry.id, Validators.required],
                 source: [entry.source, Validators.required],
-                servings: ['', Validators.required],
+                servingSize: [entry.servingSize, Validators.required],
+                servings: [1.0, Validators.required],
                 weight: ['', Validators.required]
             });
-            control.push(row);
+            controls.push(row);
+
+        } else { // Remove
+
+            var foundNgxIds = Array();
+            for (let entry of selected) {
+                foundNgxIds.push(entry.$$index);
+            }
+
+            for (var i = 0; i < controls.length; i++) {
+                let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
+                var ngxValue = myFormGroup.controls["ngxIndex"].value;
+
+                if (!foundNgxIds.includes(ngxValue)) {
+                    controls.removeAt(i);
+                    return;
+                }
+            }
         }
-
-        console.log(control);
-
     }
 
     save(model) {
@@ -144,7 +216,8 @@ export class AddDiaryEntryComponent implements OnInit {
         console.log(model.value);
         this.diaryService.addEntry(model.value).subscribe(
             res => {
-                console.log(res);
+                this.sharedData.diaryNotificationQueue.push({ "type": "success", "time": model.value.time });
+                this.router.navigate(["/diary"]);
             }, err => {
                 console.log(err);
             }
@@ -168,6 +241,4 @@ export class AddDiaryEntryComponent implements OnInit {
         var dateFormat = days + "/" + month + "/" + date.getFullYear();
         return dateFormat
     }
-
-
 }

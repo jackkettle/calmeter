@@ -1,18 +1,101 @@
+<simple-notifications [options]="notificationOptions"></simple-notifications>
 <div class="animated fadeInRight">
     <div class="row  border-bottom white-bg dashboard-header">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <h2 class="text-info text-header">{{ currentDate | date:'EEEE' }}</h2>
             <small>{{ currentDate | date:'dd MMMM yyyy' }}</small>
             <div class="m-t">
                 <!--<a [routerLink]="['somepath']" fragment="Test">Jump to 'Test' anchor </a>-->
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
+            <ul class="stat-list" *ngIf="isGoalProfileSet">
+
+                <div class="col-sm-12 m-b-md">
+                    <li>
+                        <!--<h2 class="no-margins">2,346</h2>-->
+                        <span class="">Total calories</span>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.calories}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar carb"></div>
+                        </div>
+                    </li>
+                </div>
+
+                <div class="col-sm-6">
+                    <li>
+                        <!--<h2 class="no-margins ">4,422</h2>-->
+                        <small>Total Fat</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedFats.totalFat}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar protein"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Saturated fat</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedFats.saturatedFat}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Cholesterol</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedFats.cholesterol}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Sodium</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.mineralMap.SODIUM}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                </div>
+                <div class="col-sm-6">
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Potassium</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.mineralMap.POTASSIUM}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Total Carbohydrate</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedCarbs.total}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Sugar</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedCarbs.sugar}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--<h2 class="no-margins ">9,180</h2>-->
+                        <small>Protein</small>
+                        <div class="stat-percent"> 0 / {{goalProfile.nutritionalInformation.consolidatedProteins.protein}} </div>
+                        <div class="progress progress-mini">
+                            <div [style.width]="0 + '%'" class="progress-bar fat"></div>
+                        </div>
+                    </li>
+                </div>
+            </ul>
+        </div>
+        <div class="col-md-5">
             <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors" [options]="barChartOptions"
                 [legend]="barChartLegend" [chartType]="barChartType">
-                </canvas>
-        </div>
-        <div class="col-md-3">
+            </canvas>
         </div>
     </div>
     <div class="row">
@@ -59,7 +142,7 @@
                                                         {{ foodItem.name }}
                                                     </td>
                                                     <td class="no-borders">
-                                                        {{foodItem.weightInGrams}}
+                                                        {{ foodItem.weightInGrams }}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -70,7 +153,7 @@
                                             <div>
                                                 <h5 class="m-b-xs">Calories</h5>
                                                 <div class="col-xs-6">
-                                                    <h1 class="no-margins">550</h1>
+                                                    <h1 class="no-margins">{{ diaryEntry.totalNutrionalnformation.calories }}</h1>
                                                 </div>
                                                 <div class="col-xs-6">
                                                     <div class="p-h-xs font-bold text-navy">26% <i class="fa fa-fire"></i></div>
@@ -124,4 +207,5 @@
             </div>
         </div>
     </div>
+    <button (click)="test()">Testing</button>
 </div>

@@ -50,7 +50,7 @@ public class NutritionalInformation {
 	
 	private Integer caffeine;
 	
-	private NutrionalInfoType type;
+	private NutritionalInfoType type;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -108,7 +108,7 @@ public class NutritionalInformation {
 		this.consolidatedProteins = consolidatedProteins;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
@@ -120,7 +120,7 @@ public class NutritionalInformation {
 		this.vitaminMap = vitaminMap;
 	}
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
@@ -141,11 +141,11 @@ public class NutritionalInformation {
 	}
 
 	@Enumerated(EnumType.STRING)
-	public NutrionalInfoType getType() {
+	public NutritionalInfoType getType() {
 		return type;
 	}
 
-	public void setType(NutrionalInfoType type) {
+	public void setType(NutritionalInfoType type) {
 		this.type = type;
 	}
 
@@ -158,8 +158,8 @@ public class NutritionalInformation {
 		this.mineralMap = new HashMap<MineralLabel, Double> ();
 	}
 
-	public NutritionalInformation (NutrionalInfoType nutrionalProfile) {
-		super();
+	public NutritionalInformation (NutritionalInfoType nutrionalProfile) {
+		this();
 		this.setType (nutrionalProfile);
 	}
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { FoodItem } from '../food.interface';
 import { FoodService } from '../../../_services/food.service';
 
 
@@ -157,8 +156,7 @@ export class AddFoodComponent implements OnInit {
         control.push(this.initRow());
     }
 
-    save(model: FoodItem) {
-        console.log(model);
+    save(model) {
         this.foodService.addFood(model).subscribe(
             res => {
                 console.log(res);

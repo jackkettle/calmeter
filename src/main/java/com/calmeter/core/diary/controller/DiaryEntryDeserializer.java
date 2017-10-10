@@ -11,15 +11,15 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 import com.calmeter.core.food.source.model.FoodSource;
+import com.calmeter.core.food.source.service.IFoodSourceService;
 import com.calmeter.core.food.source.utils.FoodSourceHelper;
-import com.calmeter.core.spring.ApplicationContextProvider;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -29,6 +29,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Component
 public class DiaryEntryDeserializer
 		extends JsonDeserializer<DiaryEntry> {
+
+	@Autowired
+	IFoodSourceService foodSourceService;
+
+	@Autowired
+	IFoodItemService foodItemService;
 
 	@Autowired
 	FoodSourceHelper foodSourceHelper;
@@ -42,13 +48,13 @@ public class DiaryEntryDeserializer
 
 		String date = rootNode.get ("date").asText ();
 		String time = rootNode.get ("time").asText ();
-
+		
 		String fullDateTimeString = date + " " + time;
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern ("dd/MM/yyyy h:mm a");
 		LocalDateTime dateTime = LocalDateTime.parse (fullDateTimeString, formatter);
-
-		diaryEnty.setTime (dateTime);
+		
+		diaryEnty.setDateTime (dateTime);
 
 		Iterator<JsonNode> foodItemsNodes = rootNode.get ("foodItemFormArray").elements ();
 
@@ -59,37 +65,32 @@ public class DiaryEntryDeserializer
 			Integer id = foodItemNode.get ("id").asInt ();
 			String foodSourceString = foodItemNode.get ("source").asText ();
 
-			Optional<FoodSource> foodSourceWrapper = foodSourceHelper.getFoodSourceFromName (foodSourceString);
+			Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName (foodSourceString);
 			if (!foodSourceWrapper.isPresent ()) {
 				logger.error ("Unable to get food source: {}", foodSourceString);
 				continue;
 			}
 
-			IFoodSourceHandler foodSourceHandler = getFoodSourceHandler(foodSourceWrapper.get ());
-			FoodItem foodItem = foodSourceHandler.getItemFromID (Long.valueOf (id.longValue ()));
+			IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler (foodSourceWrapper.get ());
+			Optional<FoodItem> foodItemWrapper = foodSourceHandler.getItemFromID (Long.valueOf (id.longValue ()));
 
-			foodItems.add (foodItem);
+			if (!foodItemWrapper.isPresent ()) {
+				logger.error ("Unable to get FoodItem from ID: {}, source: {}", id.longValue (), foodSourceString);
+				continue;
+			}
+
+			FoodItem foodItem = foodItemWrapper.get ();
+
+			if (foodItem.getId () == null) {
+				logger.info ("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId ());
+				foodItemService.add (foodItem);
+			}
+
+			foodItems.add (foodItemWrapper.get ());
 		}
 		diaryEnty.setFoodItems (foodItems);
 
 		return diaryEnty;
-	}
-	
-	IFoodSourceHandler getFoodSourceHandler(FoodSource foodSource){
-		IFoodSourceHandler foodSourceHandler = null;
-		try {
-			foodSourceHandler = foodSource.getSourceHandler ().newInstance ();
-			AutowireCapableBeanFactory factory = ApplicationContextProvider.getApplicationContext ().getAutowireCapableBeanFactory ();
-
-			factory.autowireBean (foodSourceHandler);
-			factory.initializeBean (foodSourceHandler, "foodSourceHandler");
-
-		}
-		catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace ();
-		}
-		
-		return foodSourceHandler;
 	}
 
 	private static Logger logger = LoggerFactory.getLogger (DiaryEntryDeserializer.class);

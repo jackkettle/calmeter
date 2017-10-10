@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { BrowserModule } from "@angular/platform-browser";
-import { HttpModule } from "@angular/http";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpModule, Http } from "@angular/http";
 import { ROUTES } from "./app.routes";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,9 +11,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Config
 import { APP_CONFIG, AppConfig } from './app.config';
 
+// Providers
+import { SharedData } from "../_providers/shared-data.provider";
+
 // PLugins
 import { SelectModule } from 'ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
@@ -21,16 +27,33 @@ import { FoodModule } from "../views/food/food.module";
 import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
 import { AddFoodModule } from "../views/food/add-food/add-food.module";
 import { DiaryModule } from "../views/diary/diary.module";
+import { GoalsModule } from "../views/goals/goals.module";
 import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
 import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
 import { LoginModule } from "../views/login/login.module";
-
+import { RegistrationModule } from "../views/registration/registration.module";
 
 // App modules/components
 import { NavigationModule } from "../views/common/navigation/navigation.module";
 import { FooterModule } from "../views/common/footer/footer.module";
 import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
+
+import { AuthGuard } from "../_guards/auth.guard";
+import { AuthService } from "../_services/auth.service";
+import { AuthHttpService } from "../_services/auth-http.service";
+
+export function getAuthHttp(http) {
+    return new AuthHttp(new AuthConfig({
+        headerName: 'X-Authorization',
+        headerPrefix: 'Bearer',
+        tokenName: 'id_token',
+        globalHeaders: [
+            { 'Accept': 'application/json' },
+            { 'Content-Type': 'application/json' }],
+        tokenGetter: (() => localStorage.getItem('id_token')),
+    }), http);
+}
 
 @NgModule({
     declarations: [AppComponent],
@@ -38,6 +61,7 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
 
         // Angular modules
         BrowserModule,
+        BrowserAnimationsModule,
         HttpModule,
         FormsModule,
         ReactiveFormsModule,
@@ -45,6 +69,7 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         // Plugin modules
         SelectModule,
         NgxDatatableModule,
+        SimpleNotificationsModule.forRoot(),
 
         // Views
         DashboardModule,
@@ -53,10 +78,12 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
         AddRecipeModule,
         AddFoodModule,
         DiaryModule,
+        GoalsModule,
         AddDiaryEntryModule,
         UserModule,
         EditUserModule,
         LoginModule,
+        RegistrationModule,
 
         // Modules
         NavigationModule,
@@ -67,7 +94,16 @@ import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: APP_CONFIG, useValue: AppConfig }
+        { provide: APP_CONFIG, useValue: AppConfig },
+        {
+            provide: AuthHttp,
+            useFactory: getAuthHttp,
+            deps: [Http]
+        },
+        AuthGuard,
+        AuthService,
+        AuthHttpService,
+        SharedData
     ],
     bootstrap: [AppComponent]
 })

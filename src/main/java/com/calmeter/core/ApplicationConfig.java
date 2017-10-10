@@ -1,8 +1,12 @@
 package com.calmeter.core;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 
-@Configuration
+@ComponentScan("com.calmeter.core")
+@EntityScan("com.calmeter.core")
+@EnableAutoConfiguration
 public class ApplicationConfig {
 
 }

@@ -43,13 +43,17 @@ public class DiaryEntry {
 
 	private List<FoodItem> foodItems;
 
-	private LocalDateTime time;
+	private LocalDateTime dateTime;
 
 	private boolean eatan;
 
 	private String description;
 
 	private NutritionalInformation totalNutrionalnformation;
+
+	public DiaryEntry () {
+		this.totalNutrionalnformation = new NutritionalInformation ();
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -92,12 +96,12 @@ public class DiaryEntry {
 	}
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	public LocalDateTime getTime () {
-		return time;
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 
-	public void setTime (LocalDateTime time) {
-		this.time = time;
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 	public boolean isEatan () {
@@ -127,6 +131,12 @@ public class DiaryEntry {
 
 	public void computeNutritionalInformation () {
 		this.setTotalNutrionalnformation (DiaryEntryHelper.computeNutritionalInformation (this));
+	}
+
+	public void applyServingsModifiers () {
+		for (int i = 0; i < this.getFoodItems ().size (); i++) {
+			this.getFoodItems ().get (i).applyServingModifier ();
+		}
 	}
 
 	@SuppressWarnings("unused")

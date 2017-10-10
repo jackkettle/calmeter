@@ -3,6 +3,8 @@ package com.calmeter.core.security.auth.jwt;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -34,6 +36,9 @@ public class JwtAuthenticationProvider
 	@Override
 	public Authentication authenticate (Authentication authentication)
 			throws AuthenticationException {
+		
+		logger.info ("JwtAuthenticationProvider.authentication");
+		
 		RawAccessJwtToken rawAccessToken = (RawAccessJwtToken)authentication.getCredentials ();
 
 		Jws<Claims> jwsClaims = rawAccessToken.parseClaims (jwtSettings.getTokenSigningKey ());
@@ -51,4 +56,6 @@ public class JwtAuthenticationProvider
 	public boolean supports (Class<?> authentication) {
 		return (JwtAuthenticationToken.class.isAssignableFrom (authentication));
 	}
+
+	private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationProvider.class);
 }

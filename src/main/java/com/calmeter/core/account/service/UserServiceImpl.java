@@ -8,9 +8,9 @@ import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.model.UserRole;
 import com.calmeter.core.account.repository.IUserRoleRepository;
 import com.calmeter.core.account.repository.IUserRepository;
-import com.google.common.base.Strings;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl
@@ -31,11 +31,7 @@ public class UserServiceImpl
 		userRepository.save (user);
 	}
 
-	public User findByUsername (String username) {
-
-		if (Strings.isNullOrEmpty (username))
-			return null;
-
-		return userRepository.findByUsername (username).get ();
+	public Optional<User> findByUsername (String username) {
+		return userRepository.findByUsername (username);
 	}
 }

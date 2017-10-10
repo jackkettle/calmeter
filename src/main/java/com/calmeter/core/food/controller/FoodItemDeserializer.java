@@ -34,7 +34,7 @@ public class FoodItemDeserializer
 		FoodItem foodItem = new FoodItem ();
 
 		foodItem.setName (rootNode.get ("name").asText ());
-		foodItem.setWeightInGrams (rootNode.get ("weightInGrams").asInt ());
+		foodItem.setWeightInGrams (rootNode.get ("weightInGrams").asDouble ());
 		foodItem.setDescription (rootNode.get ("description").asText ());
 
 		NutritionalInformation nutritionalInformation = new NutritionalInformation ();

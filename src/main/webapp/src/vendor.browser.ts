@@ -9,6 +9,8 @@ import 'bootstrap-touchspin';
 import 'bootstrap-datepicker';
 import 'bootstrap-timepicker';
 import 'ion-rangeslider';
+import 'angular2-jwt';
+import 'angular2-notifications';
 
 // Angular 2
 import '@angular/platform-browser';

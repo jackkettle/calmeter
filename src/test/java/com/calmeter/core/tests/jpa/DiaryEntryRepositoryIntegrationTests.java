@@ -3,6 +3,7 @@ package com.calmeter.core.tests.jpa;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -30,73 +31,77 @@ import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class DiaryEntryRepositoryIntegrationTests {
-	
+
 	@Autowired
 	IUserRepository userRepository;
-	
+
 	@Autowired
 	IDiaryEntryRepository diaryEntryRepository;
-	
+
 	@Autowired
 	EntityManager entityManager;
 
 	private LocalDateTime localDateTime;
-	
-    @Before
-    @Transactional
-    public void runBeforeTestMethod() {
-    	
-		User user = userRepository.findByUsername(Constants.USERNAME);
 
-		if (user == null) {
-			user = new User();
-			user.setEmail(Constants.EMAIL);
-			user.setPassword(Constants.PASSWORD);
-			user.setUsername(Constants.USERNAME);
+	@Before
+	@Transactional
+	public void runBeforeTestMethod () {
 
-			entityManager.persist(user);
-			entityManager.flush();
+		Optional<User> userWrapper = userRepository.findByUsername (Constants.USERNAME);
+		User user = null;
+		if (userWrapper.isPresent ()) {
+			user = new User ();
+			user.setEmail (Constants.EMAIL);
+			user.setPassword (Constants.PASSWORD);
+			user.setUsername (Constants.USERNAME);
+
+			entityManager.persist (user);
+			entityManager.flush ();
+		}
+		else {
+			user = userWrapper.get ();
 		}
 
-		NutritionalInformation nutritionalInformation = new NutritionalInformation();
-		nutritionalInformation.setCalories(1000.0);
+		NutritionalInformation nutritionalInformation = new NutritionalInformation ();
+		nutritionalInformation.setCalories (1000.0);
 		nutritionalInformation.getConsolidatedCarbs ().setSugar (10.0);
 		nutritionalInformation.getConsolidatedFats ().setCholesterol (3.0);
 		nutritionalInformation.getConsolidatedProteins ().setProtein (20.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_B12, 5000.0);
-		nutritionalInformation.getVitaminMap().put(VitaminLabel.VITAMIN_A, 30.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_B12, 5000.0);
+		nutritionalInformation.getVitaminMap ().put (VitaminLabel.VITAMIN_A, 30.0);
 
-		FoodItem foodItem = new FoodItem();
-		foodItem.setName("Banana");
-		foodItem.setWeightInGrams(1000);
-		foodItem.setNutritionalInformation(nutritionalInformation);
-		foodItem.setCreator(user);
+		FoodItem foodItem = new FoodItem ();
+		foodItem.setName ("Banana");
+		foodItem.setWeightInGrams (1000.0);
+		foodItem.setNutritionalInformation (nutritionalInformation);
+		foodItem.setCreator (user);
 
-		entityManager.persist(foodItem);
-		entityManager.flush();
-    	
-    	localDateTime = LocalDateTime.now();
+		entityManager.persist (foodItem);
+		entityManager.flush ();
 
-    	List<FoodItem> foodItems = new ArrayList<FoodItem>();
-    	foodItems.add(foodItem);
-    	
-    	DiaryEntry diaryEntry = new DiaryEntry();
-    	diaryEntry.setUser(user);
-    	diaryEntry.setFoodItems(foodItems);
-    	diaryEntry.setTime(localDateTime);
-    	
-    	entityManager.persist(diaryEntry);
-    	
-    }
-	
-	@Test
-	@Transactional
-	public void findByUserNameTest() throws Exception {
-		DiaryEntry diaryEntry = diaryEntryRepository.findAll().get(0);
-		logger.info("{}", diaryEntry.getTime());
+		localDateTime = LocalDateTime.now ();
+
+		List<FoodItem> foodItems = new ArrayList<FoodItem> ();
+		foodItems.add (foodItem);
+
+		DiaryEntry diaryEntry = new DiaryEntry ();
+		diaryEntry.setUser (user);
+		diaryEntry.setFoodItems (foodItems);
+		diaryEntry.setTime (localDateTime);
+
+		entityManager.persist (diaryEntry);
 
 	}
 
-	private static Logger logger = LoggerFactory.getLogger(DiaryEntryRepositoryIntegrationTests.class);
-	
+	@Test
+	@Transactional
+	public void findByUserNameTest ()
+			throws Exception {
+		DiaryEntry diaryEntry = diaryEntryRepository.findAll ().get (0);
+		logger.info ("{}", diaryEntry.getTime ());
+
+	}
+
+	private static Logger logger = LoggerFactory.getLogger (DiaryEntryRepositoryIntegrationTests.class);
+
 }

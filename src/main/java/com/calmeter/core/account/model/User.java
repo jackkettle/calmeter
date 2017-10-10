@@ -2,16 +2,25 @@ package com.calmeter.core.account.model;
 
 import javax.persistence.*;
 
+import com.calmeter.core.security.controller.UserDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
+@JsonDeserialize(using = UserDeserializer.class)
 public class User {
 
 	private Long id;
 
 	private String username;
+	
+	private String firstname;
+	
+	private String lastname;
 
 	private String password;
 
@@ -22,10 +31,13 @@ public class User {
 	private Boolean enabled;
 
 	private Set<UserRole> roles;
+	
+	private Boolean isUserProfileSet;
 
 	private UserProfile UserProfile;
 
 	public User() {
+		isUserProfileSet = false; 
 		roles = new HashSet<>();
 	}
 
@@ -39,6 +51,7 @@ public class User {
 		this.id = id;
 	}
 
+	@Column(unique=true, nullable = false)
 	public String getUsername() {
 		return username;
 	}
@@ -47,6 +60,23 @@ public class User {
 		this.username = username;
 	}
 
+	public String getFirstname () {
+		return firstname;
+	}
+
+	public void setFirstname (String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname () {
+		return lastname;
+	}
+
+	public void setLastname (String lastname) {
+		this.lastname = lastname;
+	}
+
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -55,6 +85,7 @@ public class User {
 		this.password = password;
 	}
 
+	@JsonIgnore
 	@Transient
 	public String getPasswordConfirm() {
 		return passwordConfirm;
@@ -89,6 +120,14 @@ public class User {
 
 	public void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
+	}
+
+	public Boolean getIsUserProfileSet() {
+		return isUserProfileSet;
+	}
+
+	public void setIsUserProfileSet(Boolean isUserProfileSet) {
+		this.isUserProfileSet = isUserProfileSet;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
