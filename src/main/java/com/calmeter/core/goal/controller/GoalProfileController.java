@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.utils.UserHelper;
+import com.calmeter.core.config.service.IConfigOptionService;
+import com.calmeter.core.food.service.INutritionalInformationService;
 import com.calmeter.core.goal.model.ActivityLevel;
 import com.calmeter.core.goal.model.GoalProfile;
 import com.calmeter.core.goal.model.NutritionalRatio;
@@ -37,10 +39,16 @@ public class GoalProfileController {
 	GoalProfileHelper goalProfileHelper;
 
 	@Autowired
+	IConfigOptionService configService;
+
+	@Autowired
 	IGoalProfileService goalProfileService;
 
 	@Autowired
 	INutritionalRatioService nutritionalRationService;
+
+	@Autowired
+	INutritionalInformationService nutritionalInformationService;
 
 	@RequestMapping(value = "/getUserBMR", method = RequestMethod.GET)
 	public ResponseEntity<Integer> getUserBMR() {
@@ -98,7 +106,10 @@ public class GoalProfileController {
 		Optional<GoalProfile> goalProfileWrapper = goalProfileService.get(userWrapper.get());
 		if (!goalProfileWrapper.isPresent()) {
 			logger.info("Unalbe to get GoalProfile");
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+			GoalProfile goalProfile = new GoalProfile();
+			goalProfile.setNutritionalInformation(nutritionalInformationService.getBaseline());
+			return new ResponseEntity<>(goalProfile, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(goalProfileWrapper.get(), HttpStatus.OK);
@@ -112,10 +123,9 @@ public class GoalProfileController {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		goalProfile.setUser(userWrapper.get());
-
 		goalProfile.setNutritionalInformation(goalProfileHelper.getModifiedNutritionalInfo(goalProfile));
-
-		return new ResponseEntity<>(goalProfileService.update(goalProfile), HttpStatus.OK);
+		
+		return new ResponseEntity<>(goalProfileService.save(goalProfile), HttpStatus.OK);
 
 	}
 

@@ -44,6 +44,10 @@ export class GoalsComponent implements OnInit {
             id: 0
         }
 
+        this.chosenRatio = {
+            id: 0
+        }
+
         this.getUserBMR();
         this.getActivityLevels();
         this.getWeightGoals();

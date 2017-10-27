@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.service.IFoodItemService;
 
 @RunWith(SpringRunner.class)
@@ -21,23 +22,22 @@ public class FoodItemHelperTests {
 	IFoodItemService foodItemService;
 
 	@Test
-	public void applyServingModifierTest ()
-			throws Exception {
+	public void applyServingModifierTest() throws Exception {
 
-		FoodItem foodItem = foodItemService.get ("Egg, fried").get ();
+		FoodItemEntry foodItemEntry = new FoodItemEntry();
+		FoodItem foodItem = foodItemService.get("Egg, fried").get();
 
-		foodItem.setWeightInGrams (250.0);
+		foodItemEntry.setFoodItem(foodItem);
+		foodItemEntry.setWeightInGrams(75.0);
 
-		// 90
-		logger.info ("Cals before: {}", foodItem.getNutritionalInformation ().getCalories ());
-		foodItem.applyServingModifier ();
-		// 489
-		logger.info ("Cals after: {}", foodItem.getNutritionalInformation ().getCalories ());
+		logger.info("Cals before: {}", foodItem.getNutritionalInformation().getCalories());
+		foodItemEntry.applyServingModifier();
+		logger.info("Cals after: {}", foodItemEntry.getComputedNutritionalInformation().getCalories());
 
-		assertEquals (0, Double.compare (489.13, foodItem.getNutritionalInformation ().getCalories ()));
+		assertEquals(0, Double.compare(146.25, foodItemEntry.getComputedNutritionalInformation().getCalories()));
 
 	}
 
-	private static Logger logger = LoggerFactory.getLogger (FoodItemHelperTests.class);
+	private static Logger logger = LoggerFactory.getLogger(FoodItemHelperTests.class);
 
 }

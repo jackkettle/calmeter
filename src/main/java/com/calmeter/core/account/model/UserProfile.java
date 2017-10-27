@@ -1,5 +1,6 @@
 package com.calmeter.core.account.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -15,7 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "user_profile")
-public class UserProfile {
+public class UserProfile implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	protected Long id;
 	

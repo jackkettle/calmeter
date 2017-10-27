@@ -13,18 +13,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.diary.controller.DiaryEntryDeserializer;
-import com.calmeter.core.diary.controller.FoodItemListLiteSerializer;
+import com.calmeter.core.diary.controller.FoodItemEntryListLiteSerializer;
 import com.calmeter.core.diary.utils.DiaryEntryHelper;
-import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.model.Meal;
+import com.calmeter.core.food.model.nutrient.NutritionalInfoType;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
 import com.calmeter.core.json.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -41,7 +42,7 @@ public class DiaryEntry {
 
 	private List<Meal> meals;
 
-	private List<FoodItem> foodItems;
+	private List<FoodItemEntry> foodItemEntries;
 
 	private LocalDateTime dateTime;
 
@@ -51,48 +52,48 @@ public class DiaryEntry {
 
 	private NutritionalInformation totalNutrionalnformation;
 
-	public DiaryEntry () {
-		this.totalNutrionalnformation = new NutritionalInformation ();
+	public DiaryEntry() {
+		this.totalNutrionalnformation = new NutritionalInformation(NutritionalInfoType.DIARY_RECORD);
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId () {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId (Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	public User getUser () {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser (User user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "diary_meal_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "meal_id"))
-	public List<Meal> getMeals () {
+	public List<Meal> getMeals() {
 		return this.meals;
 	}
 
-	public void setMeals (List<Meal> meal) {
+	public void setMeals(List<Meal> meal) {
 		this.meals = meal;
 	}
 
-	@JsonSerialize(using = FoodItemListLiteSerializer.class)
+	@JsonSerialize(using = FoodItemEntryListLiteSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "diary_food_item_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_id"))
-	public List<FoodItem> getFoodItems () {
-		return foodItems;
+	@JoinTable(name = "diary_food_item_entry_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_entry_id"))
+	public List<FoodItemEntry> getFoodItemEntries() {
+		return foodItemEntries;
 	}
 
-	public void setFoodItems (List<FoodItem> foodItem) {
-		this.foodItems = foodItem;
+	public void setFoodItemEntries(List<FoodItemEntry> foodItemEntries) {
+		this.foodItemEntries = foodItemEntries;
 	}
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -104,42 +105,43 @@ public class DiaryEntry {
 		this.dateTime = dateTime;
 	}
 
-	public boolean isEatan () {
+	public boolean isEatan() {
 		return eatan;
 	}
 
-	public void setEatan (boolean eatan) {
+	public void setEatan(boolean eatan) {
 		this.eatan = eatan;
 	}
 
-	public String getDescription () {
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription (String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	@Transient
-	public NutritionalInformation getTotalNutrionalnformation () {
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "nutritional_info_id")
+	public NutritionalInformation getTotalNutrionalnformation() {
 		return totalNutrionalnformation;
 	}
 
-	public void setTotalNutrionalnformation (NutritionalInformation totalNutrionalnformation) {
+	public void setTotalNutrionalnformation(NutritionalInformation totalNutrionalnformation) {
 		this.totalNutrionalnformation = totalNutrionalnformation;
 	}
 
-	public void computeNutritionalInformation () {
-		this.setTotalNutrionalnformation (DiaryEntryHelper.computeNutritionalInformation (this));
+	public void computeNutritionalInformation() {
+		this.setTotalNutrionalnformation(DiaryEntryHelper.computeNutritionalInformation(this));
 	}
 
-	public void applyServingsModifiers () {
-		for (int i = 0; i < this.getFoodItems ().size (); i++) {
-			this.getFoodItems ().get (i).applyServingModifier ();
+	public void applyServingsModifiers() {
+		for (int i = 0; i < this.getFoodItemEntries().size(); i++) {
+			this.getFoodItemEntries().get(i).applyServingModifier();
 		}
 	}
 
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger (DiaryEntry.class);
+	private static Logger logger = LoggerFactory.getLogger(DiaryEntry.class);
 
 }

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Response, RequestOptionsArgs, RequestOptions, URLSearchParams  } from '@angular/http';
+import { Response, RequestOptionsArgs, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { APP_CONFIG, IAppConfig } from '../_app/app.config';
 import { AuthHttpService } from './auth-http.service';
@@ -9,9 +9,32 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class DiaryService {
 
-    constructor(@Inject(APP_CONFIG) private config: IAppConfig, private authHttpService: AuthHttpService) { }
+    constructor( @Inject(APP_CONFIG) private config: IAppConfig, private authHttpService: AuthHttpService) { }
 
     private apiUrl = this.config.apiEndpoint + 'diary';
+
+    getLast7Days(date: Date) {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('date', date.toISOString());
+
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.get(`${this.apiUrl}/getLast7Days`, requestOptions)
+            .map((res: Response) => res.json());
+    }
+
+    getTotalDiaryNutritionByDate(date: Date): Observable<Response[]> {
+
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('date', date.toISOString());
+
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.get(`${this.apiUrl}/getTotalDiaryNutritionByDate`, requestOptions)
+            .map((res: Response) => res.json());
+    }
 
     getEntriesByDate(date: Date): Observable<Response[]> {
 

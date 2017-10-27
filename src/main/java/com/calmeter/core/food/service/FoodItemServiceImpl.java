@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemType;
 import com.calmeter.core.food.repositroy.IFoodItemRepository;
@@ -20,12 +21,7 @@ public class FoodItemServiceImpl implements IFoodItemService {
 
 	@Override
 	public Optional<FoodItem> get(long id) {
-
-		FoodItem foodItem = foodItemRepository.findOne(id);
-		if (foodItem == null)
-			return Optional.empty();
-
-		return Optional.of(foodItem);
+		return foodItemRepository.findById(id);
 	}
 
 	@Override
@@ -34,7 +30,12 @@ public class FoodItemServiceImpl implements IFoodItemService {
 	}
 
 	@Override
-	public FoodItem add(FoodItem foodItem) {
+	public List<FoodItem> getAll(User user) {
+		return foodItemRepository.findAllByCreator(user);
+	}
+
+	@Override
+	public FoodItem save(FoodItem foodItem) {
 		return foodItemRepository.save(foodItem);
 	}
 
@@ -51,6 +52,16 @@ public class FoodItemServiceImpl implements IFoodItemService {
 	@Override
 	public boolean existsExternal(long externalId, FoodItemType foodItemType) {
 		return foodItemRepository.existsByExternalIdAndFoodItemType(externalId, foodItemType);
+	}
+	
+	@Override
+	public void delete(Long id) {
+		foodItemRepository.delete(id);
+	}
+
+	@Override
+	public void delete(FoodItem foodItem) {
+		foodItemRepository.delete(foodItem);
 	}
 
 }

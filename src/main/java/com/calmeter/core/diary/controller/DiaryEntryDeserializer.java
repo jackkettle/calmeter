@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 import com.calmeter.core.food.source.model.FoodSource;
@@ -27,8 +28,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @Component
-public class DiaryEntryDeserializer
-		extends JsonDeserializer<DiaryEntry> {
+public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 
 	@Autowired
 	IFoodSourceService foodSourceService;
@@ -40,59 +40,68 @@ public class DiaryEntryDeserializer
 	FoodSourceHelper foodSourceHelper;
 
 	@Override
-	public DiaryEntry deserialize (JsonParser jsonParser, DeserializationContext context)
+	public DiaryEntry deserialize(JsonParser jsonParser, DeserializationContext context)
 			throws IOException, JsonProcessingException {
 
-		JsonNode rootNode = jsonParser.getCodec ().readTree (jsonParser);
-		DiaryEntry diaryEnty = new DiaryEntry ();
+		JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
+		DiaryEntry diaryEnty = new DiaryEntry();
 
-		String date = rootNode.get ("date").asText ();
-		String time = rootNode.get ("time").asText ();
-		
+		String date = rootNode.get("date").asText();
+		String time = rootNode.get("time").asText();
+
 		String fullDateTimeString = date + " " + time;
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern ("dd/MM/yyyy h:mm a");
-		LocalDateTime dateTime = LocalDateTime.parse (fullDateTimeString, formatter);
-		
-		diaryEnty.setDateTime (dateTime);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a");
+		LocalDateTime dateTime = LocalDateTime.parse(fullDateTimeString, formatter);
 
-		Iterator<JsonNode> foodItemsNodes = rootNode.get ("foodItemFormArray").elements ();
+		diaryEnty.setDateTime(dateTime);
 
-		List<FoodItem> foodItems = new ArrayList<> ();
-		while (foodItemsNodes.hasNext ()) {
-			JsonNode foodItemNode = foodItemsNodes.next ();
+		Iterator<JsonNode> foodItemsNodes = rootNode.get("foodItemFormArray").elements();
 
-			Integer id = foodItemNode.get ("id").asInt ();
-			String foodSourceString = foodItemNode.get ("source").asText ();
+		List<FoodItemEntry> foodItemEntries = new ArrayList<>();
+		while (foodItemsNodes.hasNext()) {
+			JsonNode foodItemNode = foodItemsNodes.next();
 
-			Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName (foodSourceString);
-			if (!foodSourceWrapper.isPresent ()) {
-				logger.error ("Unable to get food source: {}", foodSourceString);
+			Double servings = foodItemNode.get("servings").asDouble();
+
+			Integer id = foodItemNode.get("id").asInt();
+			String foodSourceString = foodItemNode.get("source").asText();
+
+			Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName(foodSourceString);
+			if (!foodSourceWrapper.isPresent()) {
+				logger.error("Unable to get food source: {}", foodSourceString);
 				continue;
 			}
 
-			IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler (foodSourceWrapper.get ());
-			Optional<FoodItem> foodItemWrapper = foodSourceHandler.getItemFromID (Long.valueOf (id.longValue ()));
+			IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSourceWrapper.get());
+			logger.info("Getting foodItem using source and Id: {}, {}", foodSourceHandler.getClass(), id.longValue());
+			Optional<FoodItem> foodItemWrapper = foodSourceHandler.getItemFromID(Long.valueOf(id.longValue()));
 
-			if (!foodItemWrapper.isPresent ()) {
-				logger.error ("Unable to get FoodItem from ID: {}, source: {}", id.longValue (), foodSourceString);
+			if (!foodItemWrapper.isPresent()) {
+				logger.error("Unable to get FoodItem from ID: {}, source: {}", id.longValue(), foodSourceString);
 				continue;
 			}
 
-			FoodItem foodItem = foodItemWrapper.get ();
+			FoodItem foodItem = foodItemWrapper.get();
 
-			if (foodItem.getId () == null) {
-				logger.info ("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId ());
-				foodItemService.add (foodItem);
+			Double weightInGrams = servings * foodItem.getNutritionalInformation().getServingSize();
+
+			if (foodItem.getId() == null) {
+				logger.info("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId());
+				foodItemService.save(foodItem);
 			}
 
-			foodItems.add (foodItemWrapper.get ());
+			FoodItemEntry foodItemEntry = new FoodItemEntry();
+			foodItemEntry.setFoodItem(foodItem);
+			foodItemEntry.setWeightInGrams(weightInGrams);
+
+			foodItemEntries.add(foodItemEntry);
 		}
-		diaryEnty.setFoodItems (foodItems);
+		diaryEnty.setFoodItemEntries(foodItemEntries);
 
 		return diaryEnty;
 	}
 
-	private static Logger logger = LoggerFactory.getLogger (DiaryEntryDeserializer.class);
+	private static Logger logger = LoggerFactory.getLogger(DiaryEntryDeserializer.class);
 
 }

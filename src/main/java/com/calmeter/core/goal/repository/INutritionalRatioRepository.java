@@ -15,5 +15,8 @@ public interface INutritionalRatioRepository extends JpaRepository<NutritionalRa
 	List<NutritionalRatio> findByGlobal(Boolean global);
 	
 	Optional<NutritionalRatio> findById(Long id);
+	
+	Optional<NutritionalRatio> findByName(String name);
+
 
 }

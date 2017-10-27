@@ -1,24 +1,24 @@
 spring:
-    datasource:
-        driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/calmeter?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-        username: root
-        password: password
-    mvc:
-        view:
-            prefix: /
-            suffix: .jsp
-    jpa:
-        generate-ddl: true
-        hibernate.ddl-auto: create
-        
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/calmeter?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: password
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+  jpa:
+    generate-ddl: true
+    hibernate.ddl-auto: update
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 demo.security.jwt:
-    tokenExpirationTime: 60
-    refreshTokenExpTime: 120
-    tokenIssuer: http://calmeter.com
-    tokenSigningKey: aUzK5mvLw5cl8qQq4q
-
+  tokenExpirationTime: 60
+  refreshTokenExpTime: 120
+  tokenIssuer: http://calmeter.com
+  tokenSigningKey: aUzK5mvLw5cl8qQq4q
 logging:
   level:
-    com.calmeter.core: DEBUG
-    com.calmeter.core.food.source.handler: INFO
+    com.calmeter.core: INFO

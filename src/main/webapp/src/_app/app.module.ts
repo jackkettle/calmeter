@@ -14,18 +14,20 @@ import { APP_CONFIG, AppConfig } from './app.config';
 // Providers
 import { SharedData } from "../_providers/shared-data.provider";
 
+//Pipes
+import { ReversePipe } from "../_pipes"; 
+
 // PLugins
-import { SelectModule } from 'ng-select';
+import { SelectModule } from 'ng2-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
-import { MinorViewModule } from "../views/minor-view/minor-view.module";
 import { FoodModule } from "../views/food/food.module";
 import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
-import { AddFoodModule } from "../views/food/add-food/add-food.module";
+import { FoodActionModule } from "../views/food/food-action/food-action.module";
 import { DiaryModule } from "../views/diary/diary.module";
 import { GoalsModule } from "../views/goals/goals.module";
 import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
@@ -73,10 +75,9 @@ export function getAuthHttp(http) {
 
         // Views
         DashboardModule,
-        MinorViewModule,
         FoodModule,
         AddRecipeModule,
-        AddFoodModule,
+        FoodActionModule,
         DiaryModule,
         GoalsModule,
         AddDiaryEntryModule,
@@ -103,7 +104,8 @@ export function getAuthHttp(http) {
         AuthGuard,
         AuthService,
         AuthHttpService,
-        SharedData
+        SharedData,
+        ReversePipe
     ],
     bootstrap: [AppComponent]
 })

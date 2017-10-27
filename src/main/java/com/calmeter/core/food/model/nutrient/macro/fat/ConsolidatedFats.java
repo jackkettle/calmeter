@@ -1,5 +1,7 @@
 package com.calmeter.core.food.model.nutrient.macro.fat;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +11,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "consolidated_fats")
-public class ConsolidatedFats {
+public class ConsolidatedFats implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 

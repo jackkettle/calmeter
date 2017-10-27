@@ -53,7 +53,7 @@
                 <div class="contact-box-footer">
                     <div class="m-t-xs btn-group">
                         <a class="btn btn-xs btn-white"><i class="fa fa-eye"></i> View</a>
-                        <a class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Edit</a>
+                        <a class="btn btn-xs btn-white" [routerLink]="['/food', 'edit', foodItem.id]"><i class="fa fa-pencil"></i> Edit</a>
                         <a (click)="toDeleteID=foodItem.id" data-toggle="modal" data-target="#deleteModal" class="btn btn-xs btn-white"><i class="fa fa-trash"></i> Delete</a>
                     </div>
                 </div>

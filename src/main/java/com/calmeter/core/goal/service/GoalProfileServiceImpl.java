@@ -16,11 +16,6 @@ public class GoalProfileServiceImpl implements IGoalProfileService {
 
 	@Autowired
 	IGoalProfileRepository goalProfileRepository;
-	
-	@Override
-	public GoalProfile add(GoalProfile goalProfile) {
-		return goalProfileRepository.save(goalProfile);
-	}
 
 	@Override
 	public Optional<GoalProfile> get(User user) {
@@ -33,7 +28,7 @@ public class GoalProfileServiceImpl implements IGoalProfileService {
 	}
 	
 	@Override
-	public GoalProfile update(GoalProfile goalProfile) {
+	public GoalProfile save(GoalProfile goalProfile) {
 		return goalProfileRepository.save(goalProfile);
 	}
 

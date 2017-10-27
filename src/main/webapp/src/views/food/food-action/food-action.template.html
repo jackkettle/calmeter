@@ -121,7 +121,7 @@
                                 <tr *ngFor="let VitaminRow of formGroup.controls.vitaminFormArray.controls; let i=index" [formGroupName]="i">
                                     <td class="col-xs-4">
                                         <ng-select 
-                                        [options]="vitaminSelectArray" 
+                                        [items]="vitaminSelectArray" 
                                         [multiple]="false" 
                                         (selected)="onSelected($event)"
                                         formControlName="name">
@@ -144,7 +144,7 @@
                                 <tr *ngFor="let mineralRow of formGroup.controls.mineralFormArray.controls; let i=index" [formGroupName]="i">
                                     <td class="col-xs-4">
                                         <ng-select 
-                                        [options]="mineralSelectArray" 
+                                        [items]="mineralSelectArray" 
                                         [multiple]="false" 
                                         (selected)="onSelected($event)"
                                         formControlName="name">

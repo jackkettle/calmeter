@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.calmeter.core.account.model.Sex;
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.diary.utils.DiaryEntryHelper;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
 import com.calmeter.core.food.service.INutritionalInformationService;
 import com.calmeter.core.goal.model.ActivityLevel;
 import com.calmeter.core.goal.model.GoalProfile;
 import com.calmeter.core.goal.service.IGoalProfileService;
+import com.calmeter.core.utils.DoubleHelper;
 
 @Component
 public class GoalProfileHelper {
@@ -23,7 +25,7 @@ public class GoalProfileHelper {
 
 	@Autowired
 	INutritionalInformationService nutritionalInformationService;
-	
+
 	public int getUserBMR(User user) {
 
 		if (!user.getIsUserProfileSet()) {
@@ -68,7 +70,29 @@ public class GoalProfileHelper {
 
 	public NutritionalInformation getModifiedNutritionalInfo(GoalProfile goalProfile) {
 		NutritionalInformation baselineNutritionalInformation = nutritionalInformationService.getBaseline();
-		return baselineNutritionalInformation;
+		NutritionalInformation ratioNutritionalInformation = goalProfile.getNutritionalRatio()
+				.getNutritionalInformation();
+		
+		NutritionalInformation modifiedNutritionalInformation = goalProfile.getNutritionalInformation();
+		
+		DiaryEntryHelper.addObjects(baselineNutritionalInformation, modifiedNutritionalInformation);
+		
+		Integer dailyCals = goalProfile.getDailyCalories();
+		modifiedNutritionalInformation.setCalories(dailyCals.doubleValue());
+
+		Double carbPercentage = ratioNutritionalInformation.getConsolidatedCarbs().getTotal();
+		Double proteinPercentage = ratioNutritionalInformation.getConsolidatedProteins().getProtein();
+		Double fatPercentage = ratioNutritionalInformation.getConsolidatedFats().getTotalFat();
+		
+		Double carbValue = DoubleHelper.round(((dailyCals * (carbPercentage / 100)) / 4), 2);
+		Double proteinValue = DoubleHelper.round(((dailyCals * (proteinPercentage / 100)) / 4), 2);
+		Double fatValue = DoubleHelper.round(((dailyCals * (fatPercentage / 100)) / 9), 2);
+
+		modifiedNutritionalInformation.getConsolidatedCarbs().setTotal(carbValue);
+		modifiedNutritionalInformation.getConsolidatedProteins().setProtein(proteinValue);
+		modifiedNutritionalInformation.getConsolidatedFats().setTotalFat(fatValue);
+
+		return modifiedNutritionalInformation;
 	}
 
 }

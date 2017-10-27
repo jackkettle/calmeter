@@ -138,11 +138,12 @@ export class AddDiaryEntryComponent implements OnInit {
 
     getRowData(): void {
         this.loadingIndicator = true;
-        this.foodService.getAllFood()
-            .subscribe(response => {
+        this.foodService.getAllFoodByUser().subscribe(
+            response => {
                 this.rows = this.transformData(response)
                 this.loadingIndicator = false;
-            });
+            }
+        );
     }
 
     transformData(data) {
@@ -168,7 +169,7 @@ export class AddDiaryEntryComponent implements OnInit {
 
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
-        this.foodService.getAllFood().subscribe(response => {
+        this.foodService.getAllFoodByUser().subscribe(response => {
             this.rows = this.transformData(response);
             this.page.totalElements = this.rows.length;
             this.loadingIndicator = false;

@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FoodService } from '../../../_services/food.service';
 
 
@@ -7,28 +8,17 @@ import * as $ from "jquery";
 
 
 @Component({
-    selector: 'addFood',
+    selector: 'foodAction',
     providers: [FoodService],
-    templateUrl: 'add-food.template.html'
+    templateUrl: 'food-action.template.html'
 
 })
-export class AddFoodComponent implements OnInit {
+export class FoodActionComponent implements OnInit {
+
+    id: number;
+    action: string;
 
     formGroup: FormGroup;
-
-    name: FormControl;
-    calsPer100: FormControl;
-    servingSize: FormControl;
-    totalfat: FormControl;
-    saturatedFat: FormControl;
-    polyUnsaturatedFat: FormControl;
-    monoUnsaturatedFat: FormControl;
-    cholesterol: FormControl;
-    totalCarbs: FormControl;
-    fiber: FormControl;
-    sugar: FormControl;
-    protein: FormControl;
-    sodium: FormControl;
 
     vitaminFormArray: FormArray;
     mineralFormArray: FormArray;
@@ -42,9 +32,21 @@ export class AddFoodComponent implements OnInit {
     vitaminSelectArray: Array<any> = [];
     mineralSelectArray: Array<any> = [];
 
-    constructor(private formBuilder: FormBuilder, private foodService: FoodService) { }
+    constructor(
+        private formBuilder: FormBuilder,
+        private foodService: FoodService,
+        private route: ActivatedRoute) { }
 
     ngOnInit() {
+
+        this.route.params.subscribe(params => {
+            this.action = params['action'];
+            this.id = +params['id'];
+
+            if (this.action === "edit") {
+                this.loadInitFormValues(this.id);
+            }
+        });
 
         $(".touchspinWhole").TouchSpin({
             min: 0,
@@ -116,6 +118,49 @@ export class AddFoodComponent implements OnInit {
         }
         this.mineralSelectArray = opts.slice(0);
 
+        this.initForm();
+
+    }
+
+    loadInitFormValues(id: number) {
+        this.foodService.getFood(id).subscribe(
+            data => {
+                this.applyData(data);
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+
+    applyData(data: any) {
+
+        console.log(data);
+
+        this.formGroup = this.formBuilder.group({
+            name: [data.name, [Validators.required, Validators.minLength(2)]],
+            calsPer100: [data.nutritionalInformation.calories],
+            servingSize: [data.nutritionalInformation.servingSize],
+            totalfat: [data.nutritionalInformation.consolidatedFats.totalFat],
+            saturatedFat: [data.nutritionalInformation.consolidatedFats.saturatedFat],
+            polyUnsaturatedFat: [data.nutritionalInformation.consolidatedFats.polyUnsaturatedFat],
+            monoUnsaturatedFat: [data.nutritionalInformation.consolidatedFats.monoUnsaturatedFat],
+            cholesterol: [data.nutritionalInformation.consolidatedFats.cholesterol],
+            totalCarbs: [data.nutritionalInformation.consolidatedCarbs.total],
+            fiber: [data.nutritionalInformation.consolidatedCarbs.fiber],
+            sugar: [data.nutritionalInformation.consolidatedCarbs.sugar],
+            protein: [data.nutritionalInformation.consolidatedProteins.protein],
+            sodium: [data.nutritionalInformation.mineralMap.SODIUM],
+            vitaminFormArray: this.formBuilder.array([
+                this.initRow()
+            ]),
+            mineralFormArray: this.formBuilder.array([
+                this.initRow()
+            ])
+        });
+    }
+
+    initForm() {
         this.formGroup = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(2)]],
             calsPer100: [''],
@@ -157,13 +202,26 @@ export class AddFoodComponent implements OnInit {
     }
 
     save(model) {
-        this.foodService.addFood(model).subscribe(
-            res => {
-                console.log(res);
-            }, err => {
-                console.log(err);
-            }
-        );
+
+        if (this.action === "edit") {
+            this.foodService.updateFoodItem(this.id, model).subscribe(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            );
+        }
+
+        if (this.action === "add") {
+            this.foodService.createFoodItem(model).subscribe(
+                res => {
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                }
+            );
+        }
 
     }
 

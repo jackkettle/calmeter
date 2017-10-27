@@ -36,4 +36,14 @@ public class NutritionalInformationServiceImpl implements INutritionalInformatio
 		return nutritionalInformationRepository.getOne(id);
 	}
 
+	@Override
+	public NutritionalInformation save(NutritionalInformation nutritionalInformation) {
+		return nutritionalInformationRepository.save(nutritionalInformation);
+	}
+
+	@Override
+	public Optional<NutritionalInformation> get(Long id) {
+		return nutritionalInformationRepository.findById(id);
+	}
+
 }

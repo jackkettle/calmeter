@@ -13,6 +13,8 @@ import com.calmeter.core.food.model.FoodItemType;
 
 public interface IFoodItemRepository
 		extends JpaRepository<FoodItem, Long> {
+	
+	Optional<FoodItem> findById(Long id);
 
 	Optional<FoodItem> findByName (String name);
 

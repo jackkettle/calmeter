@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from "@angular/platform-browser";
-import { AddFoodComponent } from './add-food.component';
+import { FoodActionComponent } from './food-action.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'ng-select';
+import { SelectModule } from 'ng2-select';
 
 
 @NgModule({
-    declarations: [AddFoodComponent],
+    declarations: [FoodActionComponent],
     imports: [
         BrowserModule,
         FormsModule,
@@ -14,4 +14,4 @@ import { SelectModule } from 'ng-select';
         SelectModule
     ]
 })
-export class AddFoodModule { }
+export class FoodActionModule { }

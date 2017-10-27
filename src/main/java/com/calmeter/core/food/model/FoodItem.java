@@ -1,5 +1,6 @@
 package com.calmeter.core.food.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,33 +21,40 @@ import javax.persistence.Table;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.controller.FoodItemDeserializer;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
-import com.calmeter.core.food.utils.FoodItemHelper;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "food_item")
 @JsonDeserialize(using = FoodItemDeserializer.class)
-public class FoodItem implements IFood{
+public class FoodItem implements IFood, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	protected Long id;
-	
+
 	private Long externalId;
 
 	private String name;
-
-	private Double weightInGrams;
 
 	private String description;
 
 	@JsonManagedReference
 	private NutritionalInformation nutritionalInformation;
-	
+
 	private User creator;
 
 	private Set<Meal> meals;
-	
+
 	private FoodItemType foodItemType;
+
+	public FoodItem() {
+		this.foodItemType = FoodItemType.USER_ITEM;
+	}
+
+	public FoodItem(FoodItemType foodItemType) {
+		this.foodItemType = foodItemType;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,11 +67,11 @@ public class FoodItem implements IFood{
 	}
 
 	@Column(name = "external_id", nullable = true, unique = true)
-	public Long getExternalId () {
+	public Long getExternalId() {
 		return externalId;
 	}
 
-	public void setExternalId (Long externalId) {
+	public void setExternalId(Long externalId) {
 		this.externalId = externalId;
 	}
 
@@ -83,14 +91,6 @@ public class FoodItem implements IFood{
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Double getWeightInGrams() {
-		return weightInGrams;
-	}
-
-	public void setWeightInGrams(Double weightInGrams) {
-		this.weightInGrams = weightInGrams;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -128,10 +128,6 @@ public class FoodItem implements IFood{
 
 	public void setFoodItemType(FoodItemType foodItemType) {
 		this.foodItemType = foodItemType;
-	}
-	
-	public void applyServingModifier () {
-		FoodItemHelper.applyServingModifierToValues (this);
 	}
 
 }

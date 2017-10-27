@@ -1,5 +1,6 @@
 package com.calmeter.core.food.model.nutrient.macro.protein;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.CollectionTable;
@@ -17,7 +18,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "consolidated_proteins")
-public class ConsolidatedProteins {
+public class ConsolidatedProteins implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
@@ -28,19 +31,19 @@ public class ConsolidatedProteins {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId () {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId (Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Double getProtein () {
+	public Double getProtein() {
 		return protein;
 	}
 
-	public void setProtein (Double protein) {
+	public void setProtein(Double protein) {
 		this.protein = protein;
 	}
 
@@ -48,11 +51,11 @@ public class ConsolidatedProteins {
 	@CollectionTable(name = "protein_values", joinColumns = @JoinColumn(name = "consolidated_proteins_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
-	public Map<ProteinLabel, Double> getProteinMap () {
+	public Map<ProteinLabel, Double> getProteinMap() {
 		return proteinMap;
 	}
 
-	public void setProteinMap (Map<ProteinLabel, Double> proteinMap) {
+	public void setProteinMap(Map<ProteinLabel, Double> proteinMap) {
 		this.proteinMap = proteinMap;
 	}
 

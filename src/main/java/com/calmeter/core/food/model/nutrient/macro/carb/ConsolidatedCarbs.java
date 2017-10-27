@@ -1,5 +1,6 @@
 package com.calmeter.core.food.model.nutrient.macro.carb;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.CollectionTable;
@@ -17,7 +18,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "consolidated_carbs")
-public class ConsolidatedCarbs {
+public class ConsolidatedCarbs implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
@@ -32,7 +35,7 @@ public class ConsolidatedCarbs {
 
 	@Column(precision = 10, scale = 2)
 	private Double sugar;
-	
+
 	@Column(precision = 10, scale = 2)
 	private Double total;
 
@@ -40,43 +43,43 @@ public class ConsolidatedCarbs {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId () {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId (Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Double getFiber () {
+	public Double getFiber() {
 		return fiber;
 	}
 
-	public void setFiber (Double fiber) {
+	public void setFiber(Double fiber) {
 		this.fiber = fiber;
 	}
 
-	public Double getStarch () {
+	public Double getStarch() {
 		return starch;
 	}
 
-	public void setStarch (Double starch) {
+	public void setStarch(Double starch) {
 		this.starch = starch;
 	}
 
-	public Double getSugarAlcohol () {
+	public Double getSugarAlcohol() {
 		return sugarAlcohol;
 	}
 
-	public void setSugarAlcohol (Double sugarAlcohol) {
+	public void setSugarAlcohol(Double sugarAlcohol) {
 		this.sugarAlcohol = sugarAlcohol;
 	}
 
-	public Double getSugar () {
+	public Double getSugar() {
 		return sugar;
 	}
 
-	public void setSugar (Double sugar) {
+	public void setSugar(Double sugar) {
 		this.sugar = sugar;
 	}
 
@@ -84,21 +87,19 @@ public class ConsolidatedCarbs {
 	@CollectionTable(name = "carb_sugar_values", joinColumns = @JoinColumn(name = "consolidated_carbs_id"))
 	@MapKeyEnumerated(EnumType.STRING)
 	@Column(name = "value")
-	public Map<SugarLabel, Double> getSugarMap () {
+	public Map<SugarLabel, Double> getSugarMap() {
 		return sugarMap;
 	}
 
-	public void setSugarMap (Map<SugarLabel, Double> sugarMap) {
+	public void setSugarMap(Map<SugarLabel, Double> sugarMap) {
 		this.sugarMap = sugarMap;
 	}
 
-	
-	public Double getTotal () {
+	public Double getTotal() {
 		return total;
 	}
 
-	
-	public void setTotal (Double total) {
+	public void setTotal(Double total) {
 		this.total = total;
 	}
 

@@ -16,11 +16,13 @@ import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.model.nutrient.NutritionalInfoType;
 import com.calmeter.core.food.model.nutrient.NutritionalInformation;
 import com.calmeter.core.goal.controller.GoalProfileDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "goal_profile")
 @JsonDeserialize(using = GoalProfileDeserializer.class)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class GoalProfile {
 
 	private Long id;
@@ -54,7 +56,7 @@ public class GoalProfile {
 		this.id = id;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "nutritional_ratio_id")
 	public NutritionalRatio getNutritionalRatio() {
 		return nutritionalRatio;

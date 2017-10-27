@@ -131,7 +131,6 @@ public class TescoHandlerHelper {
 
 			foodItem.setName (productNode.get ("description").asText ());
 			foodItem.setExternalId (productNode.get ("tpnb").asLong ());
-			foodItem.setWeightInGrams (nutritionalInformation.getServingSize ().doubleValue ());
 			foodItem.setNutritionalInformation (nutritionalInformation);
 			foodItem.setFoodItemType (FoodItemType.TESCO_ITEM);
 

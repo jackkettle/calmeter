@@ -112,9 +112,10 @@
                     </ul>
                 </div>
                 <div class="ibox-footer">
-                    <span class="btn btn-sm btn-primary pull-right" *ngIf="chosenRatio.id == ratio.id">Selected <i class="fa fa-check" aria-hidden="true"></i>
+
+                    <span class="btn btn-sm btn-primary pull-right" *ngIf="chosenRatio?.id === ratio?.id">Selected <i class="fa fa-check" aria-hidden="true"></i>
 </span>
-                    <button class="btn btn-sm btn-white pull-right" *ngIf="chosenRatio.id != ratio.id" (click)="choseRatio(ratio)">Choose the ratio</button>
+                    <button class="btn btn-sm btn-white pull-right" *ngIf="chosenRatio?.id !== ratio?.id" (click)="choseRatio(ratio)">Choose the ratio</button>
                 </div>
             </div>
 

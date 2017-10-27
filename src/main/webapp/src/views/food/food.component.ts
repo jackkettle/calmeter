@@ -29,12 +29,12 @@ export class FoodComponent implements OnInit {
         this.loadFoodValues();
     }
 
-    // delete(id: number) {
-    //     this.foodService.delete(id)
-    //         .subscribe(
-    //         () => { this.router.navigate(['/food']); this.loadFoodValues(); },
-    //     );
-    // }
+    delete(id: number) {
+        this.foodService.deleteFoodItem(id)
+            .subscribe(
+            () => { this.router.navigate(['/food']); this.loadFoodValues(); },
+        );
+    }
 
     populateChartMap(data: any) {
         if (data === null)
@@ -50,7 +50,7 @@ export class FoodComponent implements OnInit {
     }
 
     loadFoodValues() {
-        this.foodService.getAllFood()
+        this.foodService.getAllFoodByUser()
             .subscribe(data => { this.foodItems = data; this.populateChartMap(data) });
     }
 }

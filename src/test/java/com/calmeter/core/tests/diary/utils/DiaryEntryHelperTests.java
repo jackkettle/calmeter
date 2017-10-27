@@ -1,5 +1,7 @@
 package com.calmeter.core.tests.diary.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.diary.service.IDiaryEntryService;
-import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.model.FoodItemEntry;
+import com.calmeter.core.food.service.IFoodItemEntryService;
 import com.calmeter.core.food.service.IFoodItemService;
 
 @RunWith(SpringRunner.class)
@@ -26,47 +29,52 @@ public class DiaryEntryHelperTests {
 	IFoodItemService foodItemService;
 
 	@Autowired
+	IFoodItemEntryService foodItemEntryService;
+
+	@Autowired
 	IDiaryEntryService diaryEntryService;
 
 	private DiaryEntry diaryEntry;
 
 	@Before
-	public void init ()
-			throws Exception {
+	public void runBeforeTestMethod() {
 
-		List<FoodItem> foodItems = new ArrayList<FoodItem> ();
-		foodItems.add (foodItemService.get ("Banana").get ());
-		foodItems.add (foodItemService.get ("Egg, fried").get ());
+		List<FoodItemEntry> foodItemEntries = new ArrayList<FoodItemEntry>();
+		foodItemEntries.add(new FoodItemEntry(150.0, foodItemService.get("Banana").get()));
+		foodItemEntries.add(new FoodItemEntry(50.0, foodItemService.get("Egg, fried").get()));
 
-		DiaryEntry diaryEntry = new DiaryEntry ();
-		diaryEntry.setFoodItems (foodItems);
+		for (FoodItemEntry entry : foodItemEntries) {
+			foodItemEntryService.save(entry);
+		}
 
-		diaryEntry.setTime (LocalDateTime.now ());
-		this.diaryEntry = diaryEntryService.add (diaryEntry);
+		DiaryEntry diaryEntry = new DiaryEntry();
+		diaryEntry.setFoodItemEntries(foodItemEntries);
+		diaryEntry.setDateTime(LocalDateTime.now());
+		this.diaryEntry = diaryEntryService.save(diaryEntry);
 
 	}
 
 	@Test
-	public void addObjectsTest ()
-			throws Exception {
+	public void addObjectsTest() throws Exception {
+
+		diaryEntry.applyServingsModifiers();
+		diaryEntry.computeNutritionalInformation();
 
 		DiaryEntry diaryEntry = this.diaryEntry;
-		
-		diaryEntry.computeNutritionalInformation ();
-		
-		logger.info ("After compute: {}", diaryEntry.getTotalNutrionalnformation ().getCalories ());
-		
-		diaryEntry.applyServingsModifiers ();
-		diaryEntry.computeNutritionalInformation ();
-		
-		logger.info ("After serving modifier: {}", diaryEntry.getTotalNutrionalnformation ().getCalories ());
+		double totalCals = 0.0;
 
+		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
+			logger.info("Food: {}, cals: {}", entry.getFoodItem().getName(),
+					entry.getComputedNutritionalInformation().getCalories());
+			totalCals += entry.getComputedNutritionalInformation().getCalories();
+		}
 
-		
-		diaryEntry.getTotalNutrionalnformation ().getCalories ();
+		logger.info("totalCals: {}, totalNutritionCals: {}", totalCals,
+				diaryEntry.getTotalNutrionalnformation().getCalories());
+		assertEquals(0, Double.compare(totalCals, diaryEntry.getTotalNutrionalnformation().getCalories()));
 
 	}
 
-	private static Logger logger = LoggerFactory.getLogger (DiaryEntryHelperTests.class);
+	private static Logger logger = LoggerFactory.getLogger(DiaryEntryHelperTests.class);
 
 }
