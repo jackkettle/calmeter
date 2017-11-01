@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.service.IFoodItemService;
 
@@ -22,8 +23,8 @@ public class FoodHandler
 	}
 
 	@Override
-	public List<FoodItem> search (String search) {
-		return foodItemService.search (search);
+	public List<FoodItem> search (String search, User user) {
+		return foodItemService.search (search, false, user);
 	}
 
 }

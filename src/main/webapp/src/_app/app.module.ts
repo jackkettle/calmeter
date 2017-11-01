@@ -26,11 +26,11 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 // App views
 import { DashboardModule } from "../views/dashboard/dashboard.module";
 import { FoodModule } from "../views/food/food.module";
-import { AddRecipeModule } from "../views/food/add-recipe/add-recipe.module";
+import { MealActionModule } from "../views/food/meal-action/meal-action.module";
 import { FoodActionModule } from "../views/food/food-action/food-action.module";
 import { DiaryModule } from "../views/diary/diary.module";
 import { GoalsModule } from "../views/goals/goals.module";
-import { AddDiaryEntryModule } from "../views/diary/add-diary-entry/add-diary-entry.module";
+import { DiaryEntryActionModule } from "../views/diary/diary-entry-action/diary-entry-action.module";
 import { UserModule } from "../views/user/user.module";
 import { EditUserModule } from "../views/user/edit-user/edit-user.module";
 import { LoginModule } from "../views/login/login.module";
@@ -76,11 +76,11 @@ export function getAuthHttp(http) {
         // Views
         DashboardModule,
         FoodModule,
-        AddRecipeModule,
+        MealActionModule,
         FoodActionModule,
         DiaryModule,
+        DiaryEntryActionModule,
         GoalsModule,
-        AddDiaryEntryModule,
         UserModule,
         EditUserModule,
         LoginModule,

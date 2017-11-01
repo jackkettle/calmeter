@@ -7,7 +7,7 @@
                 <small>{{ activeDate | date:'dd MMMM yyyy' }}</small>
             </div>
             <div class="m-t-xsm">
-                <a class="btn btn-outline btn-link" [routerLink]="['/diary/', prevDate | date:'yyyy-MM-dd']">
+                <a class="btn btn-outline btn-link" [routerLink]="['/diary/', prevDate | date: urlDateTimeFormat]">
                     <i class="fa fa-chevron-left"></i>
                 </a>
                 <a href="" class="btn btn-outline btn-link fa-2x disabled" disabled aria-disabled="true">
@@ -16,14 +16,14 @@
 
                     </i>
                 </a>
-                <a class="btn btn-outline btn-link" [routerLink]="['/diary/', nextDate | date:'yyyy-MM-dd' ]">
+                <a class="btn btn-outline btn-link" [routerLink]="['/diary/', nextDate | date: urlDateTimeFormat ]">
                     <i class="fa fa-chevron-right"></i>
                 </a>
 
             </div>
             <hr class="m-t-none">
             <div class="m-t">
-                <a class="btn btn-sm btn-info" [routerLink]="['./add']">Add diary Entry
+                <a class="btn btn-sm btn-info" [routerLink]="['/diary/add/', activeDate | date: urlDateTimeFormat]">Add diary Entry
                     <i class="fa fa-plus-circle fa-2"></i>
                 </a>
             </div>
@@ -32,15 +32,17 @@
             <ul class="stat-list" *ngIf="totalDiaryNutrition && goalProfile && goalProfile.nutritionalInformation">
                 <div *ngIf="goalProfile.id === null" class="col-sm-12 m-b-md well">
 
-                    <h5 class="col-md-12 text-info">These are generic nutrition targets</h5>
+                    <h5 class="col-md-12 text-info">
+                        These are generic nutrition targets
+                    </h5>
 
-                    <p class="col-md-8">
+                    <p class="col-md-7">
                         You can update these targets to be unique to you by adding your user settings and nutrition goals
                     </p>
 
-                    <div class="col-md-4">
-                        <a class="btn btn-sm btn-info" href="" [routerLink]="['/user/edit']">Edit user</a>
-                        <a class="btn btn-sm btn-info" href="" [routerLink]="['/goals']">Edit goal</a>
+                    <div class="col-md-5">
+                        <a class="btn btn-sm btn-info m-t-sm" href="" [routerLink]="['/user/edit']">Edit user</a>
+                        <a class="btn btn-sm btn-info m-t-sm" href="" [routerLink]="['/goals']">Edit goal</a>
                     </div>
 
                 </div>
@@ -184,7 +186,7 @@
                                     <small class="text-navy">Breakfast</small>
                                 </div>
                                 <div class="col-xs-11 content">
-                                    <div class="col-xs-3">
+                                    <div class="col-md-3">
                                         <table class="table table-hover m-t-md">
                                             <thead>
                                                 <tr>
@@ -202,7 +204,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-md-3">
                                         <div>
                                             <table class="table table-hover m-t-md">
                                                 <thead>
@@ -260,14 +262,14 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-md-3">
                                         <div class="p-m" style="display: block">
                                             <canvas baseChart [data]="chartMap.get(diaryEntry.id)" [labels]="pieChartLabels" [colors]="pieChartColors" [chartType]="pieChartType"
                                                 [legend]="pieChartLegend">
                                             </canvas>
                                         </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-md-3">
                                         <div class="m-t-md">
                                             <table class="table table-hover m-t-md">
                                                 <thead>

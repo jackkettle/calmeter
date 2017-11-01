@@ -36,9 +36,7 @@ public class JwtAuthenticationProvider
 	@Override
 	public Authentication authenticate (Authentication authentication)
 			throws AuthenticationException {
-		
-		logger.info ("JwtAuthenticationProvider.authentication");
-		
+						
 		RawAccessJwtToken rawAccessToken = (RawAccessJwtToken)authentication.getCredentials ();
 
 		Jws<Claims> jwsClaims = rawAccessToken.parseClaims (jwtSettings.getTokenSigningKey ());
@@ -57,5 +55,6 @@ public class JwtAuthenticationProvider
 		return (JwtAuthenticationToken.class.isAssignableFrom (authentication));
 	}
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationProvider.class);
 }

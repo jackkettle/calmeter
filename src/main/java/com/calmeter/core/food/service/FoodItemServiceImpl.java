@@ -40,8 +40,8 @@ public class FoodItemServiceImpl implements IFoodItemService {
 	}
 
 	@Override
-	public List<FoodItem> search(String query) {
-		return foodItemRepository.findByNameContainingIgnoreCase(query);
+	public List<FoodItem> search(String query, boolean showDisabled, User user) {
+		return foodItemRepository.findByNameContainingIgnoreCaseAndDisabledAndCreator(query, showDisabled, user);
 	}
 
 	@Override

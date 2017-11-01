@@ -3,6 +3,7 @@ package com.calmeter.core.diary.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,11 @@ public class DiaryEntryServiceImpl implements IDiaryEntryService {
 	}
 
 	@Override
+	public Optional<DiaryEntry> get(long id) {
+		return diaryEntryRepository.getById(id);
+	}
+
+	@Override
 	public List<DiaryEntry> getDiaryEntriesByDay(User user, LocalDate day) {
 
 		LocalDateTime start = day.atStartOfDay();
@@ -39,6 +45,16 @@ public class DiaryEntryServiceImpl implements IDiaryEntryService {
 		LocalDateTime end = start.plusDays(1);
 
 		return diaryEntryRepository.findByDateTimeBetween(start, end);
+	}
+
+	@Override
+	public void delete(long id) {
+		diaryEntryRepository.delete(id);
+	}
+	
+	@Override
+	public void delete(DiaryEntry diaryEntry) {
+		diaryEntryRepository.delete(diaryEntry);
 	}
 
 }

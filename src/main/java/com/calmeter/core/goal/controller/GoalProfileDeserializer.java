@@ -26,7 +26,7 @@ public class GoalProfileDeserializer extends JsonDeserializer<GoalProfile> {
 
 	@Autowired
 	UserHelper userHelper;
-	
+
 	@Autowired
 	GoalProfileHelper goalProfileHelper;
 
@@ -62,11 +62,11 @@ public class GoalProfileDeserializer extends JsonDeserializer<GoalProfile> {
 
 		WeightGoal weightGoal = WeightGoal.fromString(weightGoalText);
 		goalProfile.setWeightGoal(weightGoal);
-		
+
 		int dailyCalories = goalProfileHelper.getDailyCalories(userWrapper.get(), activityLevel);
 		dailyCalories = dailyCalories + weightGoal.getCaloriesModifer();
 		goalProfile.setDailyCalories(dailyCalories);
-		
+
 		Optional<NutritionalRatio> nutritionalRatioWrapper = nutritionalRatioService.getRatio(ratioId);
 		if (nutritionalRatioWrapper.isPresent()) {
 			goalProfile.setNutritionalRatio(nutritionalRatioWrapper.get());

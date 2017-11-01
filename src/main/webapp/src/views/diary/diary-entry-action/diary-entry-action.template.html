@@ -4,11 +4,9 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form [formGroup]="formGroup" novalidate (ngSubmit)="save(formGroup)">
+    <form [formGroup]="formGroup" novalidate (ngSubmit)="save(formGroup)" (keydown.enter)="$event.preventDefault(); updateItems()">
         <div class="row">
             <div class="col-md-8">
-
-
                 <div class="col-md-12">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -112,7 +110,7 @@
                     </div>
                     <div class="ibox-footer">
                         <div class="pull-right">
-                            <button class="btn btn-white" type="submit">Cancel</button>
+                            <button class="btn btn-white" (click)="backClicked()" type="button">Cancel</button>
                             <button class="btn btn-primary" type="submit">Submit</button>
                         </div>
                     </div>

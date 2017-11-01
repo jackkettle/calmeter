@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { NotificationsService } from 'angular2-notifications';
+import { APP_CONFIG, IAppConfig } from '../../../_app/app.config';
 import { UserService } from "../../../_services/";
 
 import * as $ from "jquery";
@@ -11,12 +13,21 @@ import * as $ from "jquery";
 })
 export class EditUserComponent implements OnInit {
 
-    formGroup: FormGroup;
+    public formGroup: FormGroup;
 
-    constructor(private formBuilder: FormBuilder, private userService: UserService) { }
+    public notificationOptions: any;
+
+    constructor(
+        @Inject(APP_CONFIG) private config: IAppConfig,        
+        private formBuilder: FormBuilder, 
+        private userService: UserService,
+        private notificationsService: NotificationsService
+    ) { }
 
     ngOnInit() {
 
+        this.notificationOptions = this.config.toastNotificationOptions;
+        
         this.formGroup = this.formBuilder.group({
             username: new FormControl({ value: '', disabled: true }),
             id: new FormControl({ value: '', disabled: true }),
@@ -167,8 +178,22 @@ export class EditUserComponent implements OnInit {
         this.userService.edit(data.value).subscribe(
             res => {
                 console.log(res);
+                this.successNotification();
             }
         );
+    }
+    
+    successNotification() {
+        this.notificationsService.success(
+            'User settings saved',
+            'Time: ' + new Date().toLocaleTimeString(),
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
     }
 
 }

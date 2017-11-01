@@ -48,9 +48,7 @@ public class JwtTokenAuthenticationProcessingFilter
 	@Override
 	protected void successfulAuthentication (HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
 			throws IOException, ServletException {
-		
-		logger.info ("JwtTokenAuthenticationProcessingFilter.successfulAuthentication");
-		
+				
 		SecurityContext context = SecurityContextHolder.createEmptyContext ();
 		context.setAuthentication (authResult);
 		SecurityContextHolder.setContext (context);
@@ -64,6 +62,7 @@ public class JwtTokenAuthenticationProcessingFilter
 		failureHandler.onAuthenticationFailure (request, response, failed);
 	}
 	
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(JwtTokenAuthenticationProcessingFilter.class);
 	
 }

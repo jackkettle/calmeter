@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.utils.UserHelper;
 import com.calmeter.core.food.model.FoodItem;
+import com.calmeter.core.food.service.IFoodItemEntryService;
 import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 import com.calmeter.core.food.source.model.FoodSource;
@@ -39,11 +40,14 @@ public class FoodItemApiController {
 	IFoodSourceService foodSourceService;
 
 	@Autowired
+	IFoodItemEntryService foodItemEntryService;
+
+	@Autowired
 	FoodSourceHelper foodSourceHelper;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	ResponseEntity<FoodItem> getFoodItem(@PathVariable Integer id) {
-		
+
 		Optional<User> userWrapper = userHelper.getLoggedInUser();
 		if (!userWrapper.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -79,8 +83,11 @@ public class FoodItemApiController {
 	@RequestMapping(value = "/searchFood", method = RequestMethod.GET)
 	ResponseEntity<Collection<FoodItem>> searchFood(@RequestParam("query") String query,
 			@RequestParam("foodSource") String inputFoodSource) {
-
-		logger.info("searchFood: souce; {}, query; {}", inputFoodSource, query);
+		
+		Optional<User> userWrapper = userHelper.getLoggedInUser();
+		if (!userWrapper.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 
 		Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName(inputFoodSource);
 		if (!foodSourceWrapper.isPresent())
@@ -88,7 +95,7 @@ public class FoodItemApiController {
 
 		IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSourceWrapper.get());
 
-		List<FoodItem> foundFoodItems = foodSourceHandler.search(query);
+		List<FoodItem> foundFoodItems = foodSourceHandler.search(query, userWrapper.get());
 		return new ResponseEntity<Collection<FoodItem>>(foundFoodItems, HttpStatus.OK);
 	}
 
@@ -130,7 +137,7 @@ public class FoodItemApiController {
 
 	@RequestMapping(value = "/deleteFoodItem/{id}", method = RequestMethod.DELETE)
 	ResponseEntity<?> deleteFoodItem(@PathVariable("id") Long id) {
-		
+
 		Optional<User> userWrapper = userHelper.getLoggedInUser();
 		if (!userWrapper.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -140,13 +147,20 @@ public class FoodItemApiController {
 		if (!originalFoodItemWrapper.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		FoodItem foodItem = originalFoodItemWrapper.get();
 
 		if (!originalFoodItemWrapper.get().getCreator().equals(userWrapper.get())) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 
-		foodItemService.delete(id);
-		return new ResponseEntity<String>(HttpStatus.OK);
+		if (foodItemEntryService.isFoodItemUsed(foodItem)) {
+			foodItem.setDisabled(true);
+			foodItemService.save(foodItem);
+			return new ResponseEntity<String>("FoodItem disabled: " + id, HttpStatus.CREATED);
+		}
+		
+		foodItemService.delete(foodItem);
+		return new ResponseEntity<String>("FoodItem deleted: " + id, HttpStatus.OK);
 	}
 
 	public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);

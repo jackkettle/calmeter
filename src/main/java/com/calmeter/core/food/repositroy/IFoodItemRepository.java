@@ -20,7 +20,9 @@ public interface IFoodItemRepository
 
 	List<FoodItem> findAllByCreator (User creator);
 
-	List<FoodItem> findByNameContainingIgnoreCase (String searchString);
+	List<FoodItem> findByNameContainingIgnoreCaseAndDisabled (String searchString, boolean showDisabled);
+	
+	List<FoodItem> findByNameContainingIgnoreCaseAndDisabledAndCreator (String searchString, boolean showDisabled, User user);
 
 	Optional<FoodItem> findByExternalIdAndFoodItemType (long externalId, FoodItemType foodItemType);
 

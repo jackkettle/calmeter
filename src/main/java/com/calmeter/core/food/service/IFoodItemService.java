@@ -25,6 +25,6 @@ public interface IFoodItemService {
 
 	boolean existsExternal(long externalId, FoodItemType foodItemType);
 
-	List<FoodItem> search(String query);
+	List<FoodItem> search(String query, boolean showDisabled, User user);
 
 }

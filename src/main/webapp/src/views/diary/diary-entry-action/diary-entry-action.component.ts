@@ -1,33 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Rx';
 import { NotificationsService } from 'angular2-notifications';
+import { APP_CONFIG, IAppConfig } from '../../../_app/app.config';
 import { SharedData } from '../../../_providers/shared-data.provider';
 import { FoodService } from '../../../_services/food.service';
 import { DiaryService } from '../../../_services/diary.service';
 
 import * as $ from "jquery";
+import * as moment from "moment";
+
 
 @Component({
-    selector: 'addDiaryEntry',
-    templateUrl: 'add-diary-entry.template.html',
+    selector: 'diaryEntryAction',
+    templateUrl: 'diary-entry-action.template.html',
     providers: [FoodService, DiaryService]
 })
-export class AddDiaryEntryComponent implements OnInit {
+export class DiaryEntryActionComponent implements OnInit {
+
+
+    public id: number;
+    public date: string;
 
     public currentDate: Date;
+    public activeDate: Date;
 
     public searchOption: String;
-
     public searchField: FormControl;
 
     public rows: Array<any>;
-
     public page;
 
     public selected: Array<any>;
-
     public searchOptions: Array<any>;
 
     public cssClasses;
@@ -44,7 +50,9 @@ export class AddDiaryEntryComponent implements OnInit {
         private formBuilder: FormBuilder,
         private foodService: FoodService,
         private diaryService: DiaryService,
-        private notificationsService: NotificationsService) {
+        private notificationsService: NotificationsService,
+        private route: ActivatedRoute,
+        private location: Location) {
 
         this.page = {
             pageNumber: 0,
@@ -75,9 +83,29 @@ export class AddDiaryEntryComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        var editAction = false;
+
+        if (this.router.url.includes('edit'))
+            editAction = true;
+
+        this.route.params.subscribe(params => {
+
+            let date = params['date'];
+            if (date)
+                this.activeDate = new Date(date);
+            else
+                this.activeDate = new Date();
+
+            this.id = +params['id'];
+            if (editAction) {
+                this.loadInitFormValues(this.id);
+            }
+        });
+
         this.searchOption = "food";
         this.selected = new Array();
-        let dateObject = new Date();
+        let dateObject = this.activeDate;
 
         this.formGroup = this.formBuilder.group({
             date: [this.getDateFormat(dateObject)],
@@ -109,6 +137,56 @@ export class AddDiaryEntryComponent implements OnInit {
                 this.loadingIndicator = true;
                 this.getRowDataUsingQuery(term);
             });
+    }
+
+    updateItems() {
+        let term = this.searchField.value;
+
+        console.log(term);
+        this.loadingIndicator = true;
+        this.getRowDataUsingQuery(term);
+
+    }
+
+    loadInitFormValues(id: number) {
+        this.diaryService.get(id).subscribe(
+            data => {
+                this.applyData(data);
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+
+    applyData(data: any) {
+
+        console.log(data);
+
+        this.formGroup = this.formBuilder.group({
+
+            date: [this.getDateFormat(data.date)],
+
+            // name: [data.name, [Validators.required, Validators.minLength(2)]],
+            // calsPer100: [data.nutritionalInformation.calories],
+            // servingSize: [data.nutritionalInformation.servingSize],
+            // totalfat: [data.nutritionalInformation.consolidatedFats.totalFat],
+            // saturatedFat: [data.nutritionalInformation.consolidatedFats.saturatedFat],
+            // polyUnsaturatedFat: [data.nutritionalInformation.consolidatedFats.polyUnsaturatedFat],
+            // monoUnsaturatedFat: [data.nutritionalInformation.consolidatedFats.monoUnsaturatedFat],
+            // cholesterol: [data.nutritionalInformation.consolidatedFats.cholesterol],
+            // totalCarbs: [data.nutritionalInformation.consolidatedCarbs.total],
+            // fiber: [data.nutritionalInformation.consolidatedCarbs.fiber],
+            // sugar: [data.nutritionalInformation.consolidatedCarbs.sugar],
+            // protein: [data.nutritionalInformation.consolidatedProteins.protein],
+            // sodium: [data.nutritionalInformation.mineralMap.SODIUM],
+            // vitaminFormArray: this.formBuilder.array([
+            //     this.initRow()
+            // ]),
+            // mineralFormArray: this.formBuilder.array([
+            //     this.initRow()
+            // ])
+        });
     }
 
     initTouchSpin(index: number) {
@@ -169,7 +247,7 @@ export class AddDiaryEntryComponent implements OnInit {
 
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
-        this.foodService.getAllFoodByUser().subscribe(response => {
+        this.foodService.getAllFoodUsingQuery("", this.searchOption).subscribe(response => {
             this.rows = this.transformData(response);
             this.page.totalElements = this.rows.length;
             this.loadingIndicator = false;
@@ -241,5 +319,9 @@ export class AddDiaryEntryComponent implements OnInit {
         var month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         var dateFormat = days + "/" + month + "/" + date.getFullYear();
         return dateFormat
+    }
+
+    backClicked() {
+        this.location.back();
     }
 }

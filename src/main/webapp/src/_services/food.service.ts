@@ -30,33 +30,34 @@ export class FoodService {
 
         return this.authHttpService.get(`${this.apiUrl}/searchFood`, requestOptions)
             .map((res: Response) => res.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
     getFood(id: number): Observable<Response[]> {
         return this.authHttpService.get(`${this.apiUrl}/${id}`)
             .map((res: Response) => res.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
     deleteFoodItem(id: number): Observable<Response[]> {
-        return this.authHttpService.delete(`${this.apiUrl}/deleteFoodItem/${id}`)
-            .map((res: Response) => res.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+
+        let params: URLSearchParams = new URLSearchParams();
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.delete(`${this.apiUrl}/deleteFoodItem/${id}`, requestOptions)
+            .catch((error: any) => Observable.throw(error || 'Server error'));
+
     }
 
     createFoodItem(body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/createFoodItem`, bodyString)
             .map((res: Response) => res.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
     updateFoodItem(id: number, body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/updateFoodItem/${id}`, bodyString)
             .map((res: Response) => res.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
 }

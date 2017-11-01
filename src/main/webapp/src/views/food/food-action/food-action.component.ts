@@ -135,8 +135,6 @@ export class FoodActionComponent implements OnInit {
 
     applyData(data: any) {
 
-        console.log(data);
-
         this.formGroup = this.formBuilder.group({
             name: [data.name, [Validators.required, Validators.minLength(2)]],
             calsPer100: [data.nutritionalInformation.calories],

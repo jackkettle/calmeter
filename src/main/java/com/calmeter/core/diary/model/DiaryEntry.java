@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -66,7 +67,7 @@ public class DiaryEntry {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	public User getUser() {
 		return user;
 	}
@@ -86,8 +87,8 @@ public class DiaryEntry {
 	}
 
 	@JsonSerialize(using = FoodItemEntryListLiteSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "diary_food_item_entry_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_entry_id"))
+	@OneToMany(mappedBy = "diaryEntry")
+//	@JoinTable(name = "diary_food_item_entry_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_entry_id"))
 	public List<FoodItemEntry> getFoodItemEntries() {
 		return foodItemEntries;
 	}

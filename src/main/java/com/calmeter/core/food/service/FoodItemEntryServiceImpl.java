@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.repositroy.IFoodItemEntryRepository;
 
@@ -16,12 +17,19 @@ public class FoodItemEntryServiceImpl implements IFoodItemEntryService {
 	@Autowired
 	IFoodItemEntryRepository foodItemEntryRepository;
 	
+	@Override
 	public Optional<FoodItemEntry> getFoodItemEntry(Long id){
 		return foodItemEntryRepository.getById(id);
 	}
 	
+	@Override
 	public FoodItemEntry save(FoodItemEntry foodItemEntry){
 		return foodItemEntryRepository.save(foodItemEntry);
+	}
+
+	@Override
+	public boolean isFoodItemUsed(FoodItem foodItem) {
+		return foodItemEntryRepository.getByFoodItem(foodItem).size() > 0;
 	}
 	
 }

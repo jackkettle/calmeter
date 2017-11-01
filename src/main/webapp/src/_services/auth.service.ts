@@ -111,7 +111,10 @@ export class AuthService {
     body.set('grant_type', 'refresh_token');
     body.set('refresh_token', refToken);
 
-    return this.http.post(this.tokenEndpoint, body, options)
+    // return this.http.post(`${this.tokenEndpoint}/token`, body, options)
+    //   .map(res => res.json());
+
+    return this.http.get(`${this.tokenEndpoint}/token`, options)
       .map(res => res.json());
   }
 

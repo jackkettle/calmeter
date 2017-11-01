@@ -13,6 +13,17 @@ export class DiaryService {
 
     private apiUrl = this.config.apiEndpoint + 'diary';
 
+    get(id: number) {
+
+        let params: URLSearchParams = new URLSearchParams();
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.get(`${this.apiUrl}/${id}`, requestOptions)
+            .map((res: Response) => res.json());
+    }
+
+
     getLast7Days(date: Date) {
         let params: URLSearchParams = new URLSearchParams();
         params.set('date', date.toISOString());
@@ -54,5 +65,16 @@ export class DiaryService {
         return this.authHttpService.post(`${this.apiUrl}/createEntry`, bodyString)
             .catch((error: any) => Observable.throw(error || 'Server error'));
     }
+
+    deleteEntry(id: number): Observable<Response[]> {
+
+        let params: URLSearchParams = new URLSearchParams();
+        let requestOptions = new RequestOptions();
+        requestOptions.params = params;
+
+        return this.authHttpService.delete(`${this.apiUrl}/deleteEntry/${id}`, requestOptions)
+            .catch((error: any) => Observable.throw(error || 'Server error'));
+    }
+
 
 }

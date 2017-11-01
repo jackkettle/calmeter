@@ -49,8 +49,16 @@ export class FoodComponent implements OnInit {
         }
     }
 
+    removeDisabledItems(data: Array<any>) {
+        return data.filter(item => !item.disabled);
+    }
+
     loadFoodValues() {
         this.foodService.getAllFoodByUser()
-            .subscribe(data => { this.foodItems = data; this.populateChartMap(data) });
+            .subscribe(data => {
+                data = this.removeDisabledItems(data);
+                this.foodItems = data;
+                this.populateChartMap(data)
+            });
     }
 }

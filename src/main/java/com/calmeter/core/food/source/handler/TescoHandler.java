@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemType;
 import com.calmeter.core.food.service.IFoodItemService;
@@ -83,7 +84,7 @@ public class TescoHandler
 	}
 
 	@Override
-	public List<FoodItem> search (String searchQuery) {
+	public List<FoodItem> search (String searchQuery, User user) {
 
 		HttpClient httpclient = HttpClients.createDefault ();
 

@@ -44,7 +44,7 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 			throws IOException, JsonProcessingException {
 
 		JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
-		DiaryEntry diaryEnty = new DiaryEntry();
+		DiaryEntry diaryEntry = new DiaryEntry();
 
 		String date = rootNode.get("date").asText();
 		String time = rootNode.get("time").asText();
@@ -54,7 +54,7 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a");
 		LocalDateTime dateTime = LocalDateTime.parse(fullDateTimeString, formatter);
 
-		diaryEnty.setDateTime(dateTime);
+		diaryEntry.setDateTime(dateTime);
 
 		Iterator<JsonNode> foodItemsNodes = rootNode.get("foodItemFormArray").elements();
 
@@ -83,10 +83,9 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 			}
 
 			FoodItem foodItem = foodItemWrapper.get();
-
 			Double weightInGrams = servings * foodItem.getNutritionalInformation().getServingSize();
 
-			if (foodItem.getId() == null) {
+			if (foodItem.getId() == null && foodItem.getExternalId() == null) {
 				logger.info("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId());
 				foodItemService.save(foodItem);
 			}
@@ -94,12 +93,13 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 			FoodItemEntry foodItemEntry = new FoodItemEntry();
 			foodItemEntry.setFoodItem(foodItem);
 			foodItemEntry.setWeightInGrams(weightInGrams);
+			foodItemEntry.setDiaryEntry(diaryEntry);
 
 			foodItemEntries.add(foodItemEntry);
 		}
-		diaryEnty.setFoodItemEntries(foodItemEntries);
+		diaryEntry.setFoodItemEntries(foodItemEntries);
 
-		return diaryEnty;
+		return diaryEntry;
 	}
 
 	private static Logger logger = LoggerFactory.getLogger(DiaryEntryDeserializer.class);

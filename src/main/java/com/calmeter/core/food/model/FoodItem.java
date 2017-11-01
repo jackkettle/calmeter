@@ -47,12 +47,16 @@ public class FoodItem implements IFood, Serializable {
 	private Set<Meal> meals;
 
 	private FoodItemType foodItemType;
+	
+	private boolean disabled;
 
 	public FoodItem() {
 		this.foodItemType = FoodItemType.USER_ITEM;
+		disabled = true;
 	}
 
 	public FoodItem(FoodItemType foodItemType) {
+		this();
 		this.foodItemType = foodItemType;
 	}
 
@@ -128,6 +132,14 @@ public class FoodItem implements IFood, Serializable {
 
 	public void setFoodItemType(FoodItemType foodItemType) {
 		this.foodItemType = foodItemType;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 }

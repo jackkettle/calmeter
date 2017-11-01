@@ -1,12 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router'
 import { NotificationsService } from 'angular2-notifications';
+import { APP_CONFIG, IAppConfig } from '../../_app/app.config';
 import { DiaryService, GoalsService } from '../../_services';
 import { SharedData } from '../../_providers/shared-data.provider';
 
-// import { ReversePipe } from "../../_pipes"; 
-
-
+import * as moment from 'moment';
 
 @Component({
     selector: 'diary',
@@ -19,6 +18,9 @@ export class DiaryComponent implements OnInit {
     public totalDiaryNutrition: any;
     public goalProfile: any;
 
+    public urlDateFormat: string;
+    public urlDateTimeFormat: string;
+
     public currentDate: Date;
     public activeDate: Date;
 
@@ -29,20 +31,15 @@ export class DiaryComponent implements OnInit {
     public barChartType: string = 'bar';
     public barChartLegend: boolean = false;
 
+    public toDeleteID: number;
+    public notificationOptions: any;
+
     public pieChartType: string = 'pie';
     public pieChartLegend: boolean = false;
     public pieChartLabels: string[] = ['Carbs', 'Fat', 'Protein'];
     public pieChartColors: any;
     public chartMap: Map<number, number[]>;
     public chartPercentageMap: Map<number, number[]>;
-
-    public toDeleteID: number;
-
-    public notificationOptions: any = {
-        position: ["top", "right"],
-        lastOnBottom: true,
-        timeOut: 3000,
-    };
 
     public barChartColors: Array<any> = [
         {
@@ -78,11 +75,13 @@ export class DiaryComponent implements OnInit {
     };
 
     constructor(
+        @Inject(APP_CONFIG) private config: IAppConfig,
         private diaryService: DiaryService,
         private goalService: GoalsService,
         private notificationsService: NotificationsService,
         private sharedData: SharedData,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private router: Router) {
 
         this.chartMap = new Map<number, number[]>();
         this.chartPercentageMap = new Map<number, number[]>();
@@ -91,27 +90,42 @@ export class DiaryComponent implements OnInit {
 
     ngOnInit() {
 
+        this.notificationOptions = this.config.toastNotificationOptions;
+
+        this.urlDateFormat = this.config.urlDateFormat;
+        this.urlDateTimeFormat = this.config.urlDateTimeFormat;
+
         this.route.params.subscribe(params => {
 
-            this.clearCharts();            
+            this.clearCharts();
 
             this.currentDate = new Date();
             this.activeDate = new Date();
 
             let paramDate = params['date'];
 
+            console.log(paramDate)
+
             if (paramDate == null) {
                 this.activeDate = new Date();
 
+            } else if (paramDate === 'add') {
+
+                var date = new Date();
+                var formattedDate = moment(date).format(this.urlDateTimeFormat);
+
+                console.log(formattedDate)
+                setTimeout(() => {
+                    this.router.navigate(["./" + formattedDate], { relativeTo: this.route });
+                }, 50);
+                
             } else {
 
-                console.log(paramDate);
-
                 let timestamp = new Date(paramDate);
+                if (!this.isValidDate(timestamp))
+                    timestamp = new Date();
+
                 this.activeDate = timestamp
-
-                console.log(this.activeDate);
-
             }
 
             this.init(this.activeDate);
@@ -119,7 +133,7 @@ export class DiaryComponent implements OnInit {
     };
 
     init(date: Date) {
-    
+
         this.nextDate = new Date();
         this.nextDate.setDate(date.getDate() + 1)
         this.prevDate = new Date();
@@ -231,7 +245,7 @@ export class DiaryComponent implements OnInit {
     loadDiaryEntries(date: Date) {
         this.diaryService.getEntriesByDate(date).subscribe(
             data => {
-                if(data != null)
+                if (data != null)
                     data = data.reverse();
 
                 this.diaryEntries = data;
@@ -274,7 +288,30 @@ export class DiaryComponent implements OnInit {
     }
 
     clearCharts() {
-        this.barChartLabels= [];
+        this.barChartLabels = [];
+    }
+
+    delete(id: number) {
+        this.diaryService.deleteEntry(id).subscribe(
+            () => {
+                console.log("deleted: " + id);
+                this.ngOnInit();
+            }
+        );
+    }
+
+    isValidDate(date: Date) {
+        if (Object.prototype.toString.call(date) === "[object Date]") {
+            if (isNaN(date.getTime())) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
     }
 
 }

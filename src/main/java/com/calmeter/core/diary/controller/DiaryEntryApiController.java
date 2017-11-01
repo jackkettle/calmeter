@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,9 +47,27 @@ public class DiaryEntryApiController {
 
 	@Autowired
 	IFoodItemEntryService foodItemEntryService;
-	
+
 	@Autowired
 	INutritionalInformationService nutritionalInformationService;
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	ResponseEntity<DiaryEntry> get(@RequestParam("id") long id) {
+
+		Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
+		if (!entryWrapper.isPresent())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		Optional<User> userWrapper = userHelper.getLoggedInUser();
+		if (!userWrapper.isPresent())
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+		if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
+				|| userHelper.isAdmin(userWrapper.get())))
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+		return new ResponseEntity<>(entryWrapper.get(), HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/getLast7Days", method = RequestMethod.GET)
 	ResponseEntity<Map<LocalDate, NutritionalInformation>> getLast7Days(@RequestParam("date") String dateString) {
@@ -147,19 +166,36 @@ public class DiaryEntryApiController {
 
 		diaryEntry.applyServingsModifiers();
 		diaryEntry.computeNutritionalInformation();
-
 		diaryEntry.setUser(userWrapper.get());
+
+		diaryEntryService.save(diaryEntry);
 
 		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
 			foodItemEntryService.save(entry);
 		}
 
-		diaryEntryService.save(diaryEntry);
-
-//		nutritionalInformationService.save(diaryEntry.getTotalNutrionalnformation());
-		
 		return new ResponseEntity<String>("Created entry: " + diaryEntry.getId(), HttpStatus.CREATED);
-		
+
+	}
+
+	@RequestMapping(value = "/deleteEntry/{id}", method = RequestMethod.DELETE)
+	ResponseEntity<String> delete(@PathVariable("id") long id) {
+
+		logger.info("Delete diary entry called: {}", id);
+		Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
+		if (!entryWrapper.isPresent())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		Optional<User> userWrapper = userHelper.getLoggedInUser();
+		if (!userWrapper.isPresent())
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+		if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
+				|| userHelper.isAdmin(userWrapper.get())))
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+		diaryEntryService.delete(entryWrapper.get());
+		return new ResponseEntity<String>("Deleted entry: " + id, HttpStatus.OK);
 	}
 
 	public static final Logger logger = LoggerFactory.getLogger(DiaryEntryApiController.class);

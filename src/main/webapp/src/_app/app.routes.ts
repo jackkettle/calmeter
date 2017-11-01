@@ -3,11 +3,11 @@ import { LoginComponent } from "../views/login/login.component";
 import { RegistrationComponent } from "../views/registration/registration.component";
 import { DashboardComponent } from "../views/dashboard/dashboard.component";
 import { FoodComponent } from "../views/food/food.component";
-import { AddRecipeComponent } from "../views/food/add-recipe/add-recipe.component";
+import { MealActionComponent } from "../views/food/meal-action/meal-action.component";
 import { FoodActionComponent } from "../views/food/food-action/food-action.component";
 import { DiaryComponent } from "../views/diary/diary.component";
 import { GoalsComponent } from "../views/goals/goals.component";
-import { AddDiaryEntryComponent } from "../views/diary/add-diary-entry/add-diary-entry.component";
+import { DiaryEntryActionComponent } from "../views/diary/diary-entry-action/diary-entry-action.component";
 import { UserComponent } from "../views/user/user.component";
 import { EditUserComponent } from "../views/user/edit-user/edit-user.component";
 
@@ -24,12 +24,13 @@ export const ROUTES: Routes = [
     // App views
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'food', component: FoodComponent, canActivate: [AuthGuard] },
-    { path: 'food/:action/:id', component: FoodActionComponent },
-    { path: 'food/addRecipe', component: AddRecipeComponent, canActivate: [AuthGuard] },
+    { path: 'food/:action/:id', component: FoodActionComponent, canActivate: [AuthGuard] },
+    { path: 'food/meal/:acton', component: MealActionComponent, canActivate: [AuthGuard] },
     { path: 'goals', component: GoalsComponent, canActivate: [AuthGuard] },
-    { path: 'diary', component: DiaryComponent, canActivate: [AuthGuard] },    
+    { path: 'diary', component: DiaryComponent, canActivate: [AuthGuard] },
     { path: 'diary/:date', component: DiaryComponent, canActivate: [AuthGuard] },
-    // { path: 'diary/add', component: AddDiaryEntryComponent, canActivate: [AuthGuard] },
+    { path: 'diary/add/:date', component: DiaryEntryActionComponent, canActivate: [AuthGuard] },
+    { path: 'diary/edit/:id', component: DiaryEntryActionComponent, canActivate: [AuthGuard] },
     { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
     { path: 'user/edit', component: EditUserComponent, canActivate: [AuthGuard] },
 

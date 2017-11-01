@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from "@angular/platform-browser";
-import { AddRecipeComponent } from './add-recipe.component';
+import { MealActionComponent } from './meal-action.component';
 
 @NgModule({
-    declarations: [AddRecipeComponent],
+    declarations: [MealActionComponent],
     imports: [BrowserModule],
 })
-export class AddRecipeModule { }
+export class MealActionModule { }

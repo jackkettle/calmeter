@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.calmeter.core.account.model.Role;
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.account.model.UserRole;
 import com.calmeter.core.account.service.IUserService;
 import com.calmeter.core.security.model.UserContext;
 
@@ -30,6 +32,14 @@ public class UserHelper {
 			return Optional.empty();
 
 		return Optional.of(userWrapper.get());
+	}
+
+	public boolean isAdmin(User user) {
+		for (UserRole role : user.getRoles()) {
+			if (role.getRole().equals(Role.ADMIN))
+				return true;
+		}
+		return false;
 	}
 
 	public static final Logger logger = LoggerFactory.getLogger(UserHelper.class);

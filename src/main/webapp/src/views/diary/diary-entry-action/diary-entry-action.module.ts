@@ -4,13 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { OnCreate } from '../../../_directives/';
-import { AddDiaryEntryComponent } from "./add-diary-entry.component";
+import { DiaryEntryActionComponent } from "./diary-entry-action.component";
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 @NgModule({
     declarations: [
-        AddDiaryEntryComponent,
+        DiaryEntryActionComponent,
         OnCreate],
     imports: [
         BrowserModule,
@@ -20,4 +20,4 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
         SimpleNotificationsModule]
 })
 
-export class AddDiaryEntryModule { }
+export class DiaryEntryActionModule { }
