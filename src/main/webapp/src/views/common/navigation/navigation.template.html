@@ -42,9 +42,9 @@
                     <li [ngClass]="{active: activeRoute('food/addFood')}">
                         <a [routerLink]="['./food', 'add', '']"><i class="fa fa-plus-square-o"></i> <span class="nav-label">Add Food</span> </a>
                     </li>
-                    <!--<li [ngClass]="{active: activeRoute('food/addRecipe')}">
-                        <a [routerLink]="['./food/addRecipe']"><i class="fa fa-book"></i> <span class="nav-label">Add Recipe</span>  </a>
-                    </li>-->
+                    <li [ngClass]="{active: activeRoute('food/meal/add/')}">
+                        <a [routerLink]="['./food/meal/add']"><i class="fa fa-book"></i> <span class="nav-label">Add meal</span>  </a>
+                    </li>
                 </ul>
             </li>
             <li [ngClass]="{active: activeRoute('user')}">

@@ -29,6 +29,8 @@ public class FoodItemEntry {
 
 	private DiaryEntry diaryEntry;
 
+	private Meal meal;
+	
 	public FoodItemEntry() {
 		this.computedNutritionalInformation = new NutritionalInformation(NutritionalInfoType.READ_ONLY);
 	}
@@ -85,10 +87,21 @@ public class FoodItemEntry {
 		this.diaryEntry = diaryEntry;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "meal_id")
+	public Meal getMeal() {
+		return meal;
+	}
+
+	public void setMeal(Meal meal) {
+		this.meal = meal;
+	}
+
 	@Override
 	public String toString() {
 		return "FoodItemEntry [id=" + id + ", weightInGrams=" + weightInGrams + ", computedNutritionalInformation="
-				+ computedNutritionalInformation + ", foodItem=" + foodItem + "]";
+				+ computedNutritionalInformation + ", foodItem=" + foodItem + ", diaryEntry=" + diaryEntry + ", meal="
+				+ meal + "]";
 	}
 
 	public void applyServingModifier() {

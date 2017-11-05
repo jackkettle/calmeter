@@ -17,13 +17,10 @@ export class DiaryComponent implements OnInit {
     public diaryEntries: Array<any>;
     public totalDiaryNutrition: any;
     public goalProfile: any;
-
     public urlDateFormat: string;
     public urlDateTimeFormat: string;
-
     public currentDate: Date;
     public activeDate: Date;
-
     public nextDate: Date;
     public prevDate: Date;
 
@@ -81,7 +78,8 @@ export class DiaryComponent implements OnInit {
         private notificationsService: NotificationsService,
         private sharedData: SharedData,
         private route: ActivatedRoute,
-        private router: Router) {
+        private router: Router
+    ) {
 
         this.chartMap = new Map<number, number[]>();
         this.chartPercentageMap = new Map<number, number[]>();
@@ -91,7 +89,6 @@ export class DiaryComponent implements OnInit {
     ngOnInit() {
 
         this.notificationOptions = this.config.toastNotificationOptions;
-
         this.urlDateFormat = this.config.urlDateFormat;
         this.urlDateTimeFormat = this.config.urlDateTimeFormat;
 
@@ -101,12 +98,10 @@ export class DiaryComponent implements OnInit {
 
             this.currentDate = new Date();
             this.activeDate = new Date();
-
             let paramDate = params['date'];
 
-            console.log(paramDate)
-
             if (paramDate == null) {
+
                 this.activeDate = new Date();
 
             } else if (paramDate === 'add') {
@@ -114,11 +109,10 @@ export class DiaryComponent implements OnInit {
                 var date = new Date();
                 var formattedDate = moment(date).format(this.urlDateTimeFormat);
 
-                console.log(formattedDate)
                 setTimeout(() => {
                     this.router.navigate(["./" + formattedDate], { relativeTo: this.route });
                 }, 50);
-                
+
             } else {
 
                 let timestamp = new Date(paramDate);
@@ -183,7 +177,7 @@ export class DiaryComponent implements OnInit {
         );
     }
 
-    formatBarData(data) {
+    formatBarData(data: Map<Date, any>) {
 
         var targetCals = this.goalProfile.nutritionalInformation.calories;
         var returnData = [
@@ -191,8 +185,8 @@ export class DiaryComponent implements OnInit {
             { data: [] }
         ];
 
-        Object.keys(data).map(key => {
-
+        var index = 0
+        Object.keys(data).sort().map(key => {
             let item = data[key];
             let calsLeft = targetCals - item.calories;
             let calsLabel = new Number(item.calories).toFixed(0)
@@ -203,11 +197,11 @@ export class DiaryComponent implements OnInit {
             } else {
                 calsLeftLabel = new Number(0);
             }
+            returnData[0].data.push(calsLabel);
+            returnData[1].data.push(calsLeftLabel);
 
-            returnData[0].data.unshift(calsLabel);
-            returnData[1].data.unshift(calsLeftLabel);
+            index++;
         })
-
         return returnData;
 
     }

@@ -15,8 +15,8 @@ export const AppConfig: IAppConfig = {
     apiEndpoint: "http://localhost:8080/api/",
     jwtAccessTokenKey: "id_token",
     jwtRefreshTokenKey: "refresh_token",
-    urlDateTimeFormat: "YYYY-MM-DD HH:mm",
-    urlDateFormat: "YYYY-MM-DD",
+    urlDateTimeFormat: "yyyy-MM-dd HH:mm",
+    urlDateFormat: "yyyy-MM-dd",
     toastNotificationOptions: {
         position: ["top", "right"],
         lastOnBottom: true,

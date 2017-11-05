@@ -3,6 +3,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {RouterModule} from "@angular/router";
 import {NavigationComponent} from "./navigation.component";
 
+
 @NgModule({
     declarations: [NavigationComponent],
     imports     : [BrowserModule, RouterModule],

@@ -27,4 +27,6 @@ public interface IFoodItemService {
 
 	List<FoodItem> search(String query, boolean showDisabled, User user);
 
+	boolean isUsed(FoodItem foodItem);
+
 }

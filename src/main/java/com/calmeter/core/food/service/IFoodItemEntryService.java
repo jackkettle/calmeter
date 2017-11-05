@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemEntry;
+import com.calmeter.core.food.model.Meal;
 
 public interface IFoodItemEntryService {
 
@@ -12,5 +13,7 @@ public interface IFoodItemEntryService {
 	FoodItemEntry save(FoodItemEntry foodItemEntry);
 	
 	boolean isFoodItemUsed(FoodItem foodItem);
+	
+	boolean isMealUsed(Meal foodItem);
 
 }

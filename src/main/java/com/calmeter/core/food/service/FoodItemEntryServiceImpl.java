@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemEntry;
+import com.calmeter.core.food.model.Meal;
 import com.calmeter.core.food.repositroy.IFoodItemEntryRepository;
 
 @Component("foodItemEntryService")
@@ -30,6 +31,11 @@ public class FoodItemEntryServiceImpl implements IFoodItemEntryService {
 	@Override
 	public boolean isFoodItemUsed(FoodItem foodItem) {
 		return foodItemEntryRepository.getByFoodItem(foodItem).size() > 0;
+	}
+
+	@Override
+	public boolean isMealUsed(Meal meal) {
+		return foodItemEntryRepository.getByMeal(meal).size() > 0;
 	}
 	
 }

@@ -2,22 +2,24 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { SharedModule } from '../../../_directives/shared.module';
 
-import { OnCreate } from '../../../_directives/';
 import { DiaryEntryActionComponent } from "./diary-entry-action.component";
 import { SimpleNotificationsModule } from 'angular2-notifications';
-
+import { FoodSelectionModule } from '../../food/food-selection/food-selection.module';
 
 @NgModule({
     declarations: [
-        DiaryEntryActionComponent,
-        OnCreate],
+        DiaryEntryActionComponent
+    ],
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        NgxDatatableModule,
-        SimpleNotificationsModule]
+        SimpleNotificationsModule,
+        SharedModule,
+        FoodSelectionModule
+    ]
 })
 
 export class DiaryEntryActionModule { }

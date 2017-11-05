@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FoodService } from '../../../_services/food.service';
 
 
@@ -35,15 +35,21 @@ export class FoodActionComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private foodService: FoodService,
-        private route: ActivatedRoute) { }
+        private route: ActivatedRoute,
+        private router: Router
+    ) { }
 
     ngOnInit() {
+
+        var editAction = false;
+        if (this.router.url.includes('edit'))
+            editAction = true;
 
         this.route.params.subscribe(params => {
             this.action = params['action'];
             this.id = +params['id'];
 
-            if (this.action === "edit") {
+            if (editAction) {
                 this.loadInitFormValues(this.id);
             }
         });

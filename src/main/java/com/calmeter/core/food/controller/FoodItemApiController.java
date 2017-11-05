@@ -107,8 +107,8 @@ public class FoodItemApiController {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 
-		FoodItem createdFoodItem = foodItemService.save(foodItem);
-		createdFoodItem.setCreator(userWrapper.get());
+		foodItem.setCreator(userWrapper.get());
+		foodItemService.save(foodItem);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
@@ -149,11 +149,11 @@ public class FoodItemApiController {
 		}
 		FoodItem foodItem = originalFoodItemWrapper.get();
 
-		if (!originalFoodItemWrapper.get().getCreator().equals(userWrapper.get())) {
+		if (!foodItem.getCreator().equals(userWrapper.get())) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 
-		if (foodItemEntryService.isFoodItemUsed(foodItem)) {
+		if (foodItemService.isUsed(foodItem)) {
 			foodItem.setDisabled(true);
 			foodItemService.save(foodItem);
 			return new ResponseEntity<String>("FoodItem disabled: " + id, HttpStatus.CREATED);

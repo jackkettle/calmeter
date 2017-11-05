@@ -18,6 +18,9 @@ public class FoodItemServiceImpl implements IFoodItemService {
 
 	@Autowired
 	IFoodItemRepository foodItemRepository;
+	
+	@Autowired
+	IFoodItemEntryService foodItemEntryService;
 
 	@Override
 	public Optional<FoodItem> get(long id) {
@@ -62,6 +65,11 @@ public class FoodItemServiceImpl implements IFoodItemService {
 	@Override
 	public void delete(FoodItem foodItem) {
 		foodItemRepository.delete(foodItem);
+	}
+	
+	@Override
+	public boolean isUsed(FoodItem foodItem) {
+		return foodItemEntryService.isFoodItemUsed(foodItem);
 	}
 
 }

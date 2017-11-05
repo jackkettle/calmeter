@@ -5,3 +5,4 @@ export { AuthService } from "./auth.service";
 export { AuthHttpService } from "./auth-http.service";
 export { UserService } from "./user.service";
 export { GoalsService } from "./goals.service";
+export { MealService } from "./meal.service";

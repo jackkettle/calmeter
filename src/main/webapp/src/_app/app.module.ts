@@ -15,9 +15,12 @@ import { APP_CONFIG, AppConfig } from './app.config';
 import { SharedData } from "../_providers/shared-data.provider";
 
 //Pipes
-import { ReversePipe } from "../_pipes"; 
+import { ReversePipe } from "../_pipes";
 
-// PLugins
+// Directives
+import { SharedModule } from '../_directives/shared.module';
+
+// Plugins
 import { SelectModule } from 'ng2-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
@@ -40,6 +43,8 @@ import { RegistrationModule } from "../views/registration/registration.module";
 import { NavigationModule } from "../views/common/navigation/navigation.module";
 import { FooterModule } from "../views/common/footer/footer.module";
 import { TopnavbarModule } from "../views/common/topnavbar/topnavbar.module";
+
+import { FoodSelectionModule } from "../views/food/food-selection/food-selection.module";
 
 import { AuthGuard } from "../_guards/auth.guard";
 import { AuthService } from "../_services/auth.service";
@@ -73,8 +78,9 @@ export function getAuthHttp(http) {
         NgxDatatableModule,
         SimpleNotificationsModule.forRoot(),
 
+        
         // Views
-        DashboardModule,
+        DashboardModule,    
         FoodModule,
         MealActionModule,
         FoodActionModule,
@@ -85,11 +91,13 @@ export function getAuthHttp(http) {
         EditUserModule,
         LoginModule,
         RegistrationModule,
+        FoodSelectionModule,
 
         // Modules
         NavigationModule,
         FooterModule,
         TopnavbarModule,
+        SharedModule,
 
         RouterModule.forRoot(ROUTES)
     ],

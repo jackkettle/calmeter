@@ -28,7 +28,13 @@ public class Meal implements IFood {
 	private Set<FoodItem> ingredients;
 
 	private User creator;
+	
+	private boolean disabled;
 
+	public Meal() {
+		this.setDisabled(false);
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {
@@ -74,6 +80,14 @@ public class Meal implements IFood {
 
 	public void setCreator(User creator) {
 		this.creator = creator;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 }
