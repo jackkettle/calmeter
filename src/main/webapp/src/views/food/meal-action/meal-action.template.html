@@ -1,27 +1,76 @@
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="text-center m-t-lg">
-                <h1>
-                    This is a recipe food.
-                </h1>
+    <form novalidate [formGroup]="formGroup" (ngSubmit)="save(formGroup)" (keydown.enter)="$event.preventDefault(); updateItems()">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Meal details</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="form-group row" [class.has-error]="(formGroup.controls.name.dirty || formGroup.controls.name.touched) && formGroup.controls.name.invalid" >
+                                <label class="col-sm-2 control-label">
+                                    Name
+                                    <control-messages [control]="formGroup.controls.name"></control-messages>                              
+                                </label>
+                                <div class="date col-sm-10">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input type="text" class="form-control" formControlName="name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label">
+                                    Description
+                                    <small class="text-very-muted">(Optional)</small>
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name" placeholder="Description" formControlName="description">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>Food Selection</h5>
+
+            <div class="col-md-4">
+                <div class="">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5></h5>
+                        </div>
+                        <div class="ibox-content">
+                            <p>
+                                <i class="fa fa-bar-chart fa-3x"></i>
+
+                                imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum
+                                faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget felis eget nunc lobortis
+                                mattis aliquam faucibus purus in massa tempor nec feugiat nisl
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="ibox-content">
-                    <food-selection></food-selection>
-                </div>
-                <div class="ibox-footer">
-                    <div class="pull-right">
-                        <button class="btn btn-white" (click)="backClicked()" type="button">Cancel</button>
-                        <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>Food Selection</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <food-selection [hasError]="formGroup.controls.foodItemFormArray.invalid" (formData)="handleFoodUpdated($event)"></food-selection>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="pull-right">
+                            <button class="btn btn-white" (click)="backClicked()" type="button">Cancel</button>
+                            <button class="btn btn-primary" type="submit" [disabled]="!formGroup.valid">Submit</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>

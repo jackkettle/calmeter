@@ -68,6 +68,11 @@
                             </table>
                         </div>
                     </div>
+
+                    <div *ngIf="hasError" class="alert alert-danger">
+                        At least one food item must be selected.
+                    </div>
+
                 </div>
             </div>
         </div>

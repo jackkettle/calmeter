@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Rx';
 import { NotificationsService } from 'angular2-notifications';
 import { APP_CONFIG, IAppConfig } from '../../../_app/app.config';
 import { SharedData } from '../../../_providers/shared-data.provider';
-import { FoodService } from '../../../_services/food.service';
 import { DiaryService } from '../../../_services/diary.service';
 
 import * as $ from "jquery";
@@ -16,7 +15,7 @@ import * as moment from "moment";
 @Component({
     selector: 'diaryEntryAction',
     templateUrl: 'diary-entry-action.template.html',
-    providers: [FoodService, DiaryService]
+    providers: [DiaryService]
 })
 export class DiaryEntryActionComponent implements OnInit {
 
@@ -35,7 +34,6 @@ export class DiaryEntryActionComponent implements OnInit {
         private router: Router,
         private sharedData: SharedData,
         private formBuilder: FormBuilder,
-        private foodService: FoodService,
         private diaryService: DiaryService,
         private notificationsService: NotificationsService,
         private route: ActivatedRoute,
@@ -75,7 +73,7 @@ export class DiaryEntryActionComponent implements OnInit {
             date: [this.getDateFormat(dateObject)],
             time: [this.getTimeFormat(dateObject)],
             description: [''],
-            foodItemFormArray: this.formBuilder.array([]),
+            foodItemFormArray: this.formBuilder.array([], Validators.required),
         });
 
         $('.datepicker').datepicker({

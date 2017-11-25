@@ -1,6 +1,5 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { FoodService } from '../../../_services/food.service';
 
 import * as $ from "jquery";
@@ -14,6 +13,9 @@ export class FoodSelectionComponent implements OnInit {
 
     @Output()
     public formData = new EventEmitter();
+
+    @Input()
+    public hasError: boolean;
 
     public formGroup: FormGroup;
 
@@ -54,12 +56,13 @@ export class FoodSelectionComponent implements OnInit {
             'pagerRightArrow': 'fa fa-angle-right',
             'pagerPrevious': 'fa fa-angle-double-left',
             'pagerNext': 'fa fa-angle-double-right'
+
         }
     }
 
     ngOnInit() {
         this.formGroup = this.formBuilder.group({
-            foodItemFormArray: this.formBuilder.array([]),
+            foodItemFormArray: this.formBuilder.array([], Validators.required),
         });
         this.setPage({ offset: 0 });
         this.searchField = new FormControl();
@@ -114,13 +117,13 @@ export class FoodSelectionComponent implements OnInit {
         if (controls.length < selected.length) { // Add
             let entry = selected[selected.length - 1];;
             let row = this.formBuilder.group({
-                ngxIndex: [entry.$$index, Validators.required],
-                name: [entry.name, Validators.required],
-                id: [entry.id, Validators.required],
-                source: [entry.source, Validators.required],
-                servingSize: [entry.servingSize, Validators.required],
-                servings: [1.0, Validators.required],
-                weight: ['', Validators.required]
+                ngxIndex: [entry.$$index],
+                name: [entry.name],
+                id: [entry.id],
+                source: [entry.source],
+                servingSize: [entry.servingSize],
+                servings: [1.0],
+                weight: ['']
             });
             controls.push(row);
             this.updateOutput();
