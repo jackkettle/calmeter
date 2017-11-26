@@ -27,7 +27,7 @@ public class FoodItemHelperTests {
 		FoodItemEntry foodItemEntry = new FoodItemEntry();
 		FoodItem foodItem = foodItemService.get("Egg, fried").get();
 
-		foodItemEntry.setFoodItem(foodItem);
+		foodItemEntry.setFoodItemReference(foodItem);
 		foodItemEntry.setWeightInGrams(75.0);
 
 		logger.info("Cals before: {}", foodItem.getNutritionalInformation().getCalories());

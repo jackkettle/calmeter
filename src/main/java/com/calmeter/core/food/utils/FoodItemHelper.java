@@ -18,7 +18,7 @@ public class FoodItemHelper {
 
 	public static void applyServingModifierToValues(FoodItemEntry foodItemEntry) {
 
-		FoodItem foodItem = SerializationUtils.clone(foodItemEntry.getFoodItem());
+		FoodItem foodItem = SerializationUtils.clone(foodItemEntry.getFoodItemReference());
 
 		Double weightInGrams = foodItemEntry.getWeightInGrams();
 		Double modifier = weightInGrams / 100;

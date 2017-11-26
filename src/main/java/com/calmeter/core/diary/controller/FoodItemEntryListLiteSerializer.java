@@ -18,8 +18,8 @@ public class FoodItemEntryListLiteSerializer extends JsonSerializer<List<FoodIte
 		gen.writeStartArray();
 		for (FoodItemEntry foodItemEntry : foodItemEntries) {
 			gen.writeStartObject();
-			gen.writeNumberField("id", foodItemEntry.getFoodItem().getId());
-			gen.writeStringField("name", foodItemEntry.getFoodItem().getName());
+			gen.writeNumberField("id", foodItemEntry.getFoodItemReference().getId());
+			gen.writeStringField("name", foodItemEntry.getFoodItemReference().getName());
 			gen.writeStringField("weightInGrams", foodItemEntry.getWeightInGrams().toString());
 			gen.writeEndObject();
 		}

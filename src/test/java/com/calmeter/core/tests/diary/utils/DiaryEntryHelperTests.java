@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.calmeter.core.food.model.FoodItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,56 +27,62 @@ import com.calmeter.core.food.service.IFoodItemService;
 @SpringBootTest
 public class DiaryEntryHelperTests {
 
-	@Autowired
-	IFoodItemService foodItemService;
+    @Autowired
+    IFoodItemService foodItemService;
 
-	@Autowired
-	IFoodItemEntryService foodItemEntryService;
+    @Autowired
+    IFoodItemEntryService foodItemEntryService;
 
-	@Autowired
-	IDiaryEntryService diaryEntryService;
+    @Autowired
+    IDiaryEntryService diaryEntryService;
 
-	private DiaryEntry diaryEntry;
+    private DiaryEntry diaryEntry;
 
-	@Before
-	public void runBeforeTestMethod() {
+    @Before
+    public void runBeforeTestMethod() throws Exception {
 
-		List<FoodItemEntry> foodItemEntries = new ArrayList<FoodItemEntry>();
-		foodItemEntries.add(new FoodItemEntry(150.0, foodItemService.get("Banana").get()));
-		foodItemEntries.add(new FoodItemEntry(50.0, foodItemService.get("Egg, fried").get()));
+        Optional<FoodItem> bananaWrapper = foodItemService.get("Banana");
+        Optional<FoodItem> eggWrapper = foodItemService.get("Egg, fried");
 
-		for (FoodItemEntry entry : foodItemEntries) {
-			foodItemEntryService.save(entry);
-		}
+        if(!bananaWrapper.isPresent() || !eggWrapper.isPresent())
+            throw new Exception("Initial food items not found");
 
-		DiaryEntry diaryEntry = new DiaryEntry();
-		diaryEntry.setFoodItemEntries(foodItemEntries);
-		diaryEntry.setDateTime(LocalDateTime.now());
-		this.diaryEntry = diaryEntryService.save(diaryEntry);
+        List<FoodItemEntry> foodItemEntries = new ArrayList<>();
+        foodItemEntries.add(new FoodItemEntry(150.0, bananaWrapper.get()));
+        foodItemEntries.add(new FoodItemEntry(50.0, eggWrapper.get()));
 
-	}
+        for (FoodItemEntry entry : foodItemEntries) {
+            foodItemEntryService.save(entry);
+        }
 
-	@Test
-	public void addObjectsTest() throws Exception {
+        DiaryEntry diaryEntry = new DiaryEntry();
+        diaryEntry.setFoodItemEntries(foodItemEntries);
+        diaryEntry.setDateTime(LocalDateTime.now());
+        this.diaryEntry = diaryEntryService.save(diaryEntry);
 
-		diaryEntry.applyServingsModifiers();
-		diaryEntry.computeNutritionalInformation();
+    }
 
-		DiaryEntry diaryEntry = this.diaryEntry;
-		double totalCals = 0.0;
+    @Test
+    public void addObjectsTest() throws Exception {
 
-		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
-			logger.info("Food: {}, cals: {}", entry.getFoodItem().getName(),
-					entry.getComputedNutritionalInformation().getCalories());
-			totalCals += entry.getComputedNutritionalInformation().getCalories();
-		}
+        diaryEntry.applyServingsModifiers();
+        diaryEntry.computeNutritionalInformation();
 
-		logger.info("totalCals: {}, totalNutritionCals: {}", totalCals,
-				diaryEntry.getTotalNutrionalnformation().getCalories());
-		assertEquals(0, Double.compare(totalCals, diaryEntry.getTotalNutrionalnformation().getCalories()));
+        DiaryEntry diaryEntry = this.diaryEntry;
+        double totalCals = 0.0;
 
-	}
+        for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
+            logger.info("Food: {}, cals: {}", entry.getFoodItemReference().getName(),
+                    entry.getComputedNutritionalInformation().getCalories());
+            totalCals += entry.getComputedNutritionalInformation().getCalories();
+        }
 
-	private static Logger logger = LoggerFactory.getLogger(DiaryEntryHelperTests.class);
+        logger.info("totalCals: {}, totalNutritionCals: {}", totalCals,
+                diaryEntry.getTotalNutrionalnformation().getCalories());
+        assertEquals(0, Double.compare(totalCals, diaryEntry.getTotalNutrionalnformation().getCalories()));
+
+    }
+
+    private static Logger logger = LoggerFactory.getLogger(DiaryEntryHelperTests.class);
 
 }

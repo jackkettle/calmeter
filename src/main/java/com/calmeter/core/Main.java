@@ -10,10 +10,8 @@ import com.calmeter.core.spring.ApplicationContextProvider;
 
 @SpringBootApplication
 public class Main {
-	
-	
+
 	public static void main(String[] args) {
-			
 		logger.info("Starting application...");
 		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
 		ApplicationContextProvider.resetApplicationContext (context);

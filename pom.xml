@@ -15,6 +15,7 @@
 		<spring.version>4.3.4.RELEASE</spring.version>
 		<spring-security.version>4.0.2.RELEASE</spring-security.version>
 		<spring-data-jpa.version>1.8.2.RELEASE</spring-data-jpa.version>
+		<start-class>com.calmeter.core.Main</start-class>
 	</properties>
 
 	<parent>

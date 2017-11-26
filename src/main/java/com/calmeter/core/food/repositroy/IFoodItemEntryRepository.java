@@ -12,14 +12,14 @@ import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.model.Meal;
 
 public interface IFoodItemEntryRepository extends JpaRepository<FoodItemEntry, Long> {
-	
+
 	Optional<FoodItemEntry> getById(Long id);
+
+	List<FoodItemEntry> getByFoodItemReference(FoodItem foodItem);
 	
-	List<FoodItemEntry> getByFoodItem(FoodItem foodItem);
+	List<Meal> getByMealReference(Meal foodItem);
 	
-	List<Meal> getByMeal(Meal foodItem);
-	
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM FoodItemEntry f WHERE f.foodItem = :foodItem")
-	boolean existsByFoodItem(@Param("foodItem") FoodItem foodItem);
+    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM FoodItemEntry f WHERE f.foodItemReference = :foodItemReference")
+	boolean existsByFoodItemReference(@Param("foodItemReference") FoodItem foodItemReference);
 
 }

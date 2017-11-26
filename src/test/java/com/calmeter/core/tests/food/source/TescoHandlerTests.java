@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.source.handler.TescoHandler;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TescoHandlerTests {
@@ -28,12 +30,15 @@ public class TescoHandlerTests {
 
 		String query = "egg";
 
-		List<FoodItem> foodItems = tescoHandler.search (query);
+		List<FoodItem> foodItems = tescoHandler.search(query, null);
 		for (FoodItem foodItem : foodItems) {
 			logger.info ("foodItem name: {}", foodItem.getName ());
 		}
 
-	}
+        assertTrue(foodItems.size() > 1);
+
+
+    }
 
 	private static Logger logger = LoggerFactory.getLogger (TescoHandlerTests.class);
 

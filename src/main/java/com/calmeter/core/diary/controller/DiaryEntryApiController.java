@@ -151,15 +151,15 @@ public class DiaryEntryApiController {
 
 		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
 
-			if (entry.getFoodItem().getFoodItemType().equals(FoodItemType.USER_ITEM))
+			if (entry.getFoodItemReference().getFoodItemType().equals(FoodItemType.USER_ITEM))
 				continue;
 
-			if (!foodItemService.existsExternal(entry.getFoodItem().getExternalId(),
-					entry.getFoodItem().getFoodItemType())) {
+			if (!foodItemService.existsExternal(entry.getFoodItemReference().getExternalId(),
+					entry.getFoodItemReference().getFoodItemType())) {
 
-				logger.info("Saving foodItemEntry to db. FoodItem: {}", entry.getFoodItem().getId());
-				foodItemService.save(entry.getFoodItem());
-				logger.info("FoodItemEntry Id: {}", entry.getFoodItem().getId());
+				logger.info("Saving foodItemEntry to db. FoodItem: {}", entry.getFoodItemReference().getId());
+				foodItemService.save(entry.getFoodItemReference());
+				logger.info("FoodItemEntry Id: {}", entry.getFoodItemReference().getId());
 			}
 
 		}

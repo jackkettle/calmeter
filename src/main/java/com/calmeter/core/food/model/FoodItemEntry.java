@@ -37,6 +37,12 @@ public class FoodItemEntry {
         this.computedNutritionalInformation = new NutritionalInformation(NutritionalInfoType.READ_ONLY);
     }
 
+    public FoodItemEntry(Double weightInGrams, FoodItem foodItem) {
+        this();
+        this.weightInGrams = weightInGrams;
+        this.foodItemReference = foodItem;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

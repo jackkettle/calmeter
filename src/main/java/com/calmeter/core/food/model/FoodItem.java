@@ -44,8 +44,6 @@ public class FoodItem implements IFood, Serializable {
 
 	private User creator;
 
-	private Set<Meal> meals;
-
 	private FoodItemType foodItemType;
 	
 	private boolean disabled;
@@ -114,15 +112,6 @@ public class FoodItem implements IFood, Serializable {
 
 	public void setCreator(User creator) {
 		this.creator = creator;
-	}
-
-	@ManyToMany(mappedBy = "ingredients")
-	public Set<Meal> getMeals() {
-		return meals;
-	}
-
-	public void setMeals(Set<Meal> meals) {
-		this.meals = meals;
 	}
 
 	@Enumerated(EnumType.STRING)

@@ -23,14 +23,16 @@ import java.util.Optional;
 @Component
 public class DeserializeHelper {
 
-    @Autowired
-    IFoodSourceService foodSourceService;
+    private IFoodSourceService foodSourceService;
+    private FoodSourceHelper foodSourceHelper;
+    private IFoodItemService foodItemService;
 
     @Autowired
-    FoodSourceHelper foodSourceHelper;
-
-    @Autowired
-    IFoodItemService foodItemService;
+    public DeserializeHelper(IFoodSourceService foodSourceService, FoodSourceHelper foodSourceHelper, IFoodItemService foodItemService) {
+        this.foodSourceService = foodSourceService;
+        this.foodSourceHelper = foodSourceHelper;
+        this.foodItemService = foodItemService;
+    }
 
     public List<FoodItemEntry> getFoodItemEntries(Iterator<JsonNode> foodItemsNodes, DiaryEntry diaryEntry) {
         return getFoodItemEntries(foodItemsNodes, diaryEntry, null);
@@ -75,13 +77,13 @@ public class DeserializeHelper {
             }
 
             FoodItemEntry foodItemEntry = new FoodItemEntry();
-            foodItemEntry.setFoodItem(foodItem);
+            foodItemEntry.setFoodItemReference(foodItem);
             foodItemEntry.setWeightInGrams(weightInGrams);
 
-            if(diaryEntry != null)
+            if (diaryEntry != null)
                 foodItemEntry.setDiaryEntry(diaryEntry);
 
-            if(diaryEntry != null)
+            if (diaryEntry != null)
                 foodItemEntry.setMeal(meal);
 
             foodItemEntries.add(foodItemEntry);
