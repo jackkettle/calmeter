@@ -1,6 +1,6 @@
 package com.calmeter.core.food.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,80 +14,83 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.calmeter.core.account.model.User;
+import com.calmeter.core.food.controller.MealDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "meal")
+@JsonDeserialize(using = MealDeserializer.class)
 public class Meal implements IFood {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Set<FoodItem> ingredients;
+    private List<FoodItemEntry> foodItemEntries;
 
-	private User creator;
-	
-	private boolean disabled;
+    private User creator;
 
-	public Meal() {
-		this.setDisabled(false);
-	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    private boolean disabled;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Meal() {
+        this.setDisabled(false);
+    }
 
-	@Column(name = "name", nullable = false, unique = true)
-	public String getName() {
-		return name;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "description", nullable = true, length = 2000)
-	public String getDescription() {
-		return description;
-	}
+    @Column(name = "name", nullable = false, unique = true)
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@ManyToMany
-	@JoinTable(name = "meal_ingredient", joinColumns = @JoinColumn(name = "meal_id") , inverseJoinColumns = @JoinColumn(name = "food_item_id") )
-	public Set<FoodItem> getIngredients() {
-		return ingredients;
-	}
+    @Column(name = "description", length = 2000)
+    public String getDescription() {
+        return description;
+    }
 
-	public void setIngredients(Set<FoodItem> ingrediants) {
-		this.ingredients = ingrediants;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@ManyToOne
-	public User getCreator() {
-		return creator;
-	}
+    @ManyToMany
+    @JoinTable(name = "meal_ingredient", joinColumns = @JoinColumn(name = "meal_id"), inverseJoinColumns = @JoinColumn(name = "food_item_entry_id"))
+    public List<FoodItemEntry> getFoodItemEntries() {
+        return foodItemEntries;
+    }
 
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    public void setFoodItemEntries(List<FoodItemEntry> foodItemEntries) {
+        this.foodItemEntries = foodItemEntries;
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    @ManyToOne
+    public User getCreator() {
+        return creator;
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
 }

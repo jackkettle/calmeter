@@ -19,92 +19,106 @@ import com.calmeter.core.food.utils.FoodItemHelper;
 @Table(name = "food_item_entry")
 public class FoodItemEntry {
 
-	private Long id;
+    private Long id;
 
-	private Double weightInGrams;
+    private Double weightInGrams;
 
-	private NutritionalInformation computedNutritionalInformation;
+    private NutritionalInformation computedNutritionalInformation;
 
-	private FoodItem foodItem;
+    private FoodItem foodItemReference;
 
-	private DiaryEntry diaryEntry;
+    private Meal mealReference;
 
-	private Meal meal;
-	
-	public FoodItemEntry() {
-		this.computedNutritionalInformation = new NutritionalInformation(NutritionalInfoType.READ_ONLY);
-	}
+    private DiaryEntry diaryEntry;
 
-	public FoodItemEntry(Double weightInGrams, FoodItem foodItem) {
-		this.weightInGrams = weightInGrams;
-		this.foodItem = foodItem;
-	}
+    private Meal meal;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    public FoodItemEntry() {
+        this.computedNutritionalInformation = new NutritionalInformation(NutritionalInfoType.READ_ONLY);
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public Double getWeightInGrams() {
-		return weightInGrams;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setWeightInGrams(Double weightInGrams) {
-		this.weightInGrams = weightInGrams;
-	}
+    public Double getWeightInGrams() {
+        return weightInGrams;
+    }
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "food_item_id")
-	public FoodItem getFoodItem() {
-		return foodItem;
-	}
+    public void setWeightInGrams(Double weightInGrams) {
+        this.weightInGrams = weightInGrams;
+    }
 
-	public void setFoodItem(FoodItem foodItem) {
-		this.foodItem = foodItem;
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "meal_reference_id")
+    public Meal getMealReference() {
+        return mealReference;
+    }
 
-	@Transient
-	public NutritionalInformation getComputedNutritionalInformation() {
-		return computedNutritionalInformation;
-	}
+    public void setMealReference(Meal mealReference) {
+        this.mealReference = mealReference;
+    }
 
-	public void setComputedNutritionalInformation(NutritionalInformation computedNutritionalInformation) {
-		this.computedNutritionalInformation = computedNutritionalInformation;
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "food_item_reference_id")
+    public FoodItem getFoodItemReference() {
+        return foodItemReference;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "diary_entry_id")
-	public DiaryEntry getDiaryEntry() {
-		return diaryEntry;
-	}
+    public void setFoodItemReference(FoodItem foodItemReference) {
+        this.foodItemReference = foodItemReference;
+    }
 
-	public void setDiaryEntry(DiaryEntry diaryEntry) {
-		this.diaryEntry = diaryEntry;
-	}
+    @Transient
+    public NutritionalInformation getComputedNutritionalInformation() {
+        return computedNutritionalInformation;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "meal_id")
-	public Meal getMeal() {
-		return meal;
-	}
+    public void setComputedNutritionalInformation(NutritionalInformation computedNutritionalInformation) {
+        this.computedNutritionalInformation = computedNutritionalInformation;
+    }
 
-	public void setMeal(Meal meal) {
-		this.meal = meal;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diary_entry_id")
+    public DiaryEntry getDiaryEntry() {
+        return diaryEntry;
+    }
 
-	@Override
-	public String toString() {
-		return "FoodItemEntry [id=" + id + ", weightInGrams=" + weightInGrams + ", computedNutritionalInformation="
-				+ computedNutritionalInformation + ", foodItem=" + foodItem + ", diaryEntry=" + diaryEntry + ", meal="
-				+ meal + "]";
-	}
+    public void setDiaryEntry(DiaryEntry diaryEntry) {
+        this.diaryEntry = diaryEntry;
+    }
 
-	public void applyServingModifier() {
-		FoodItemHelper.applyServingModifierToValues(this);
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meal_id")
+    public Meal getMeal() {
+        return meal;
+    }
+
+    public void setMeal(Meal meal) {
+        this.meal = meal;
+    }
+
+    @Override
+    public String toString() {
+        return "FoodItemEntry{" +
+                "id=" + id +
+                ", weightInGrams=" + weightInGrams +
+                ", computedNutritionalInformation=" + computedNutritionalInformation +
+                ", foodItemReference=" + foodItemReference +
+                ", mealReference=" + mealReference +
+                ", diaryEntry=" + diaryEntry +
+                ", meal=" + meal +
+                '}';
+    }
+
+    public void applyServingModifier() {
+        FoodItemHelper.applyServingModifierToValues(this);
+    }
+
 }

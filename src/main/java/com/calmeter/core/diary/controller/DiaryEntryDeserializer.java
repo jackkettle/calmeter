@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.calmeter.core.utils.DeserializeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 	@Autowired
 	FoodSourceHelper foodSourceHelper;
 
+	@Autowired
+	DeserializeHelper deserializeHelper;
+
 	@Override
 	public DiaryEntry deserialize(JsonParser jsonParser, DeserializationContext context)
 			throws IOException, JsonProcessingException {
@@ -57,47 +61,7 @@ public class DiaryEntryDeserializer extends JsonDeserializer<DiaryEntry> {
 		diaryEntry.setDateTime(dateTime);
 
 		Iterator<JsonNode> foodItemsNodes = rootNode.get("foodItemFormArray").elements();
-
-		List<FoodItemEntry> foodItemEntries = new ArrayList<>();
-		while (foodItemsNodes.hasNext()) {
-			JsonNode foodItemNode = foodItemsNodes.next();
-
-			Double servings = foodItemNode.get("servings").asDouble();
-
-			Integer id = foodItemNode.get("id").asInt();
-			String foodSourceString = foodItemNode.get("source").asText();
-
-			Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName(foodSourceString);
-			if (!foodSourceWrapper.isPresent()) {
-				logger.error("Unable to get food source: {}", foodSourceString);
-				continue;
-			}
-
-			IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSourceWrapper.get());
-			logger.info("Getting foodItem using source and Id: {}, {}", foodSourceHandler.getClass(), id.longValue());
-			Optional<FoodItem> foodItemWrapper = foodSourceHandler.getItemFromID(Long.valueOf(id.longValue()));
-
-			if (!foodItemWrapper.isPresent()) {
-				logger.error("Unable to get FoodItem from ID: {}, source: {}", id.longValue(), foodSourceString);
-				continue;
-			}
-
-			FoodItem foodItem = foodItemWrapper.get();
-			Double weightInGrams = servings * foodItem.getNutritionalInformation().getServingSize();
-
-			if (foodItem.getId() == null && foodItem.getExternalId() == null) {
-				logger.info("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId());
-				foodItemService.save(foodItem);
-			}
-
-			FoodItemEntry foodItemEntry = new FoodItemEntry();
-			foodItemEntry.setFoodItem(foodItem);
-			foodItemEntry.setWeightInGrams(weightInGrams);
-			foodItemEntry.setDiaryEntry(diaryEntry);
-
-			foodItemEntries.add(foodItemEntry);
-		}
-		diaryEntry.setFoodItemEntries(foodItemEntries);
+		diaryEntry.setFoodItemEntries(deserializeHelper.getFoodItemEntries(foodItemsNodes, diaryEntry));
 
 		return diaryEntry;
 	}
