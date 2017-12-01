@@ -2,20 +2,17 @@ package com.calmeter.core.security.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import com.calmeter.core.account.model.*;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.calmeter.core.account.model.Role;
-import com.calmeter.core.account.model.Sex;
-import com.calmeter.core.account.model.User;
-import com.calmeter.core.account.model.UserProfile;
-import com.calmeter.core.account.model.UserRole;
 import com.calmeter.core.account.repository.IUserRoleRepository;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -67,7 +64,16 @@ public class UserDeserializer extends JsonDeserializer<User> {
 
 		JsonNode weightNode = rootNode.get("weight");
 		if (weightNode != null) {
-			userProfile.setWeight(weightNode.asDouble());
+
+			JsonNode weightInGramsNode = weightNode.get("weightInGrams");
+			Double weightInGrams = weightInGramsNode.doubleValue();
+
+			JsonNode dateTimeNode = weightNode.get("dateTime");
+			logger.info("DateTime value: {}", dateTimeNode.asText());
+
+			WeightLogEntry weightLogEntry = new WeightLogEntry();
+			weightLogEntry.setWeightInGrams(weightInGrams);
+			weightLogEntry.setDateTime(LocalDateTime.now());
 		}
 
 		JsonNode heightNode = rootNode.get("height");
