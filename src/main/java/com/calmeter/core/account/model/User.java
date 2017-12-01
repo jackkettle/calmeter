@@ -2,7 +2,7 @@ package com.calmeter.core.account.model;
 
 import javax.persistence.*;
 
-import com.calmeter.core.security.controller.UserDeserializer;
+import com.calmeter.core.account.controller.UserDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -115,7 +115,7 @@ public class User implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role_map", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	public Set<UserRole> getRoles() {
 		return roles;

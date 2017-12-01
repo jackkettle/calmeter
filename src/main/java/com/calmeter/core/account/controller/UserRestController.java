@@ -1,12 +1,18 @@
 package com.calmeter.core.account.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.calmeter.core.account.model.WeightLogEntry;
+import com.calmeter.core.account.service.IUserService;
+import com.calmeter.core.account.service.IWeightLogEntryService;
+import com.calmeter.core.account.utils.UserHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,57 +28,59 @@ import com.google.common.base.Strings;
 @RequestMapping("/api/user")
 public class UserRestController {
 
-	@Autowired
-	private IUserRepository userRepository;
+    @Autowired
+    private UserHelper userHelper;
+    private IUserService userService;
+    private BCryptPasswordEncoder encoder;
 
-	@RequestMapping(value = "/getThisUser", method = RequestMethod.GET)
-	ResponseEntity<User> getThisUser() {
+    @Autowired
+    public UserRestController(IUserService userService, UserHelper userHelper, BCryptPasswordEncoder encoder) {
+        this.userService = userService;
+        this.userHelper = userHelper;
+        this.encoder = encoder;
+    }
 
-		UserContext loggedInUserContext = (UserContext) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-		if (loggedInUserContext == null) {
-			return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/getThisUser", method = RequestMethod.GET)
+    ResponseEntity<User> getThisUser() {
 
-		Optional<User> userWrapper = userRepository.findByUsername(loggedInUserContext.getUsername());
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-		}
-		return new ResponseEntity<User>(userWrapper.get(), HttpStatus.OK);
-	}
+        UserContext loggedInUserContext = (UserContext) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if (loggedInUserContext == null) {
+            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+        }
 
-	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	ResponseEntity<String> update(@RequestBody User user) {
+        Optional<User> userWrapper = userService.findByUsername(loggedInUserContext.getUsername());
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<User>(userWrapper.get(), HttpStatus.OK);
+    }
 
-		UserContext loggedInUserContext = (UserContext) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-		if (loggedInUserContext == null) {
-			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    ResponseEntity<String> update(@RequestBody User user) {
 
-		Optional<User> userWrapper = userRepository.findByUsername(loggedInUserContext.getUsername());
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		User loggedInUser = userWrapper.get();
+        User loggedInUser = userWrapper.get();
+        loggedInUser.setEmail(user.getEmail());
+        loggedInUser.setFirstname(user.getFirstname());
+        loggedInUser.setLastname(user.getLastname());
 
-		user.setUsername(loggedInUser.getUsername());
-		user.setId(loggedInUser.getId());
-		user.setRoles(loggedInUser.getRoles());
-		user.setIsUserProfileSet(true);
+        if (loggedInUser.getIsUserProfileSet()) {
+            user.getUserProfile().setId(loggedInUser.getUserProfile().getId());
+            user.getUserProfile().getWeightLog().addAll(loggedInUser.getUserProfile().getWeightLog());
+        }
 
-		if (Strings.isNullOrEmpty(user.getPassword())) {
-			user.setPassword(loggedInUser.getPassword());
-		}
+        loggedInUser.setIsUserProfileSet(true);
+        loggedInUser.setUserProfile(user.getUserProfile());
+        User updatedUser = userService.save(loggedInUser);
+        logger.info("Updated user: {}", updatedUser.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-		logger.info("user profile: {}", user.getUserProfile().toString());
-
-		User updatedUser = userRepository.save(user);
-		logger.info("Updated user: {}", updatedUser.getId());
-		return new ResponseEntity<String>(HttpStatus.OK);
-	}
-
-	public static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
+    public static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
 
 }

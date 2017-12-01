@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
+import com.calmeter.core.account.model.WeightLogEntry;
+import com.calmeter.core.account.utils.UserHelper;
 import com.calmeter.core.utils.ClassHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,11 +24,13 @@ public class GoalProfileHelper {
 
     private IGoalProfileService goalProfileService;
     private INutritionalInformationService nutritionalInformationService;
+    private UserHelper userHelper;
 
     @Autowired
-    public GoalProfileHelper(IGoalProfileService goalProfileService, INutritionalInformationService nutritionalInformationService) {
+    public GoalProfileHelper(IGoalProfileService goalProfileService, INutritionalInformationService nutritionalInformationService, UserHelper userHelper) {
         this.goalProfileService = goalProfileService;
         this.nutritionalInformationService = nutritionalInformationService;
+        this.userHelper = userHelper;
     }
 
     public int getUserBMR(User user) {
@@ -35,8 +39,13 @@ public class GoalProfileHelper {
             return 0;
         }
 
-        Double weight = user.getUserProfile().getWeight();
+        Optional<WeightLogEntry> weightWrapper = userHelper.getCurrentWeight(user);
+
         Double height = user.getUserProfile().getHeight();
+        Double weight = 0.0;
+        if (weightWrapper.isPresent())
+            weight = weightWrapper.get().getWeightInKgs();
+
         int age = Period.between(user.getUserProfile().getDateOfBirth(), LocalDate.now()).getYears();
 
         if (user.getUserProfile().getSex().equals(Sex.MALE)) {

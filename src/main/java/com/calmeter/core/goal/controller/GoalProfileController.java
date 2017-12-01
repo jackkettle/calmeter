@@ -59,7 +59,7 @@ public class GoalProfileController {
 		}
 
 		int bmr = goalProfileHelper.getUserBMR(userWrapper.get());
-		return new ResponseEntity<Integer>(bmr, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(bmr, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/getActivityLevels", method = RequestMethod.GET)
@@ -67,8 +67,7 @@ public class GoalProfileController {
 
 		List<String> activities = Arrays.stream(ActivityLevel.values()).map(ActivityLevel::toString)
 				.collect(Collectors.toList());
-		;
-		return new ResponseEntity<List<String>>(activities, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(activities, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/getWeightGoals", method = RequestMethod.GET)
@@ -76,8 +75,7 @@ public class GoalProfileController {
 
 		List<String> weightGoals = Arrays.stream(WeightGoal.values()).map(WeightGoal::toString)
 				.collect(Collectors.toList());
-		;
-		return new ResponseEntity<List<String>>(weightGoals, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(weightGoals, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/getRatios", method = RequestMethod.GET)

@@ -1,4 +1,4 @@
-import { OpaqueToken } from "@angular/core";
+import {OpaqueToken} from "@angular/core";
 
 export let APP_CONFIG = new OpaqueToken("app.config");
 
@@ -12,14 +12,14 @@ export interface IAppConfig {
 }
 
 export const AppConfig: IAppConfig = {
-    apiEndpoint: "http://localhost:8080/api/",
+    apiEndpoint: "http://localhost:8888/api/",
     jwtAccessTokenKey: "id_token",
     jwtRefreshTokenKey: "refresh_token",
     urlDateTimeFormat: "yyyy-MM-dd HH:mm",
     urlDateFormat: "yyyy-MM-dd",
     toastNotificationOptions: {
         position: ["top", "right"],
-        lastOnBottom: true,
-        timeOut: 3000
+        lastOnBottom: false,
+        timeOut: 2000
     }
 };

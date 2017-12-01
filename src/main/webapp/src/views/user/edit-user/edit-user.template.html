@@ -104,11 +104,11 @@
                             </div>
                         </div>
                         <div class="custom-slider-well">
-                            <div class="row p-sm">
+                            <div class="row p-sm" formGroupName="weight">
                                 <label class="col-sm-12 m-b-sm text-center">Weight</label>
                                 <div class="col-sm-2 slider-input">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" (keyup)="onWeightKey($event)" formControlName="weight">
+                                        <input type="text" class="form-control" (keyup)="onWeightKey($event)" formControlName="weightInKgs">
                                         <span class="input-group-addon">kg</span>
                                     </div>
                                 </div>

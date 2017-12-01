@@ -37,10 +37,11 @@ export class EditUserComponent implements OnInit {
             dateOfBirth: [''],
             sex: [''],
             height: [''],
-            weight: ['']
+            weight: this.formBuilder.group({
+                weightInKgs: [''],
+                dateTime: [new Date()]
+            })
         });
-
-        console.log(this.formGroup);
 
         var heightSelector = $(".height-slider");
         heightSelector.ionRangeSlider({
@@ -60,7 +61,11 @@ export class EditUserComponent implements OnInit {
                 var value = data.from_value;
                 value = value.substring(0, value.indexOf("kgs"));
                 value = value.trim();
-                this.formGroup.controls["weight"].setValue(value);
+                this.formGroup.patchValue({
+                    weight: {
+                        weightInKgs: value
+                    }
+                });
             }).bind(this)
         });
 
@@ -94,7 +99,6 @@ export class EditUserComponent implements OnInit {
 
         if (data.isUserProfileSet) {
             var dob: Date = new Date(data.userProfile.dateOfBirth * 1000);
-            console.log(this.getDateFormat(dob));
             this.formGroup.controls["dateOfBirth"].setValue(this.getDateFormat(dob));
             var sex: string = data.userProfile.sex;
             sex = sex.toLocaleLowerCase();
@@ -105,9 +109,15 @@ export class EditUserComponent implements OnInit {
             $(".height-slider").data("ionRangeSlider").update({
                 from: data.userProfile.height - 1
             });
-            this.formGroup.controls["weight"].setValue(data.userProfile.weight);
+
+            let userWeight = this.getCurrentWeight(data.userProfile.weightLog)
+            this.formGroup.patchValue({
+                weight: {
+                    weightInKgs: userWeight
+                }
+            });
             $(".weight-slider").data("ionRangeSlider").update({
-                from: (data.userProfile.weight * 10) - 10
+                from: (userWeight * 10) - 10
             });
         }
     }
@@ -172,6 +182,23 @@ export class EditUserComponent implements OnInit {
         slider.update({
             from: newValue
         });
+    }
+
+    getCurrentWeight(weightList: Array<any>){
+
+        if(weightList == null || weightList.length < 1)
+            return 0;
+
+        let mostRecentWeight: any = weightList[0];
+        for(var i = 1; i < weightList.length; i ++) {
+            let mostRecentDate: Date =  new Date(mostRecentWeight.dateTime);
+            let entryDate : Date =  new Date(weightList[i].dateTime);
+
+            if(entryDate > mostRecentDate){
+                mostRecentWeight = weightList[i];
+            }
+        }
+        return mostRecentWeight.weightInKgs;
     }
 
     save(data) {

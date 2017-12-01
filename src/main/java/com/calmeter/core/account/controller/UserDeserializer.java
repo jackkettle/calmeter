@@ -1,4 +1,4 @@
-package com.calmeter.core.security.controller;
+package com.calmeter.core.account.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,87 +22,85 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class UserDeserializer extends JsonDeserializer<User> {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private IUserRoleRepository roleRepository;
+    @Autowired
+    private IUserRoleRepository roleRepository;
 
-	@Override
-	public User deserialize(JsonParser jsonParser, DeserializationContext ctxt)
-			throws IOException, JsonProcessingException {
+    @Override
+    public User deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+            throws IOException, JsonProcessingException {
 
-		JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
-		User user = new User();
+        JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
+        User user = new User();
 
-		JsonNode usernameNode = rootNode.get("username");
-		if (usernameNode != null) {
-			user.setUsername(usernameNode.asText());
-		}
+        JsonNode usernameNode = rootNode.get("username");
+        if (usernameNode != null) {
+            user.setUsername(usernameNode.asText());
+        }
 
-		user.setFirstname(rootNode.get("firstname").asText());
-		user.setLastname(rootNode.get("lastname").asText());
-		user.setEmail(rootNode.get("email").asText());
+        user.setFirstname(rootNode.get("firstname").asText());
+        user.setLastname(rootNode.get("lastname").asText());
+        user.setEmail(rootNode.get("email").asText());
 
-		UserProfile userProfile = new UserProfile();
-		JsonNode dateOfBirthNode = rootNode.get("dateOfBirth");
-		if (dateOfBirthNode != null) {
+        UserProfile userProfile = new UserProfile();
+        JsonNode dateOfBirthNode = rootNode.get("dateOfBirth");
+        if (dateOfBirthNode != null) {
 
-			String dobString = dateOfBirthNode.asText();
-			if (!Strings.isNullOrEmpty(dobString)) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				formatter = formatter.withLocale(Locale.UK);
-				LocalDate date = LocalDate.parse(dateOfBirthNode.asText(), formatter);
-				userProfile.setDateOfBirth(date);
-			}
-		}
+            String dobString = dateOfBirthNode.asText();
+            if (!Strings.isNullOrEmpty(dobString)) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                formatter = formatter.withLocale(Locale.UK);
+                LocalDate date = LocalDate.parse(dateOfBirthNode.asText(), formatter);
+                userProfile.setDateOfBirth(date);
+            }
+        }
 
-		JsonNode sexNode = rootNode.get("sex");
-		if (sexNode != null) {
-			userProfile.setSex(Sex.valueOf(sexNode.asText().toUpperCase()));
-		}
+        JsonNode sexNode = rootNode.get("sex");
+        if (sexNode != null) {
+            userProfile.setSex(Sex.valueOf(sexNode.asText().toUpperCase()));
+        }
 
-		JsonNode weightNode = rootNode.get("weight");
-		if (weightNode != null) {
+        JsonNode weightNode = rootNode.get("weight");
+        if (weightNode != null) {
 
-			JsonNode weightInGramsNode = weightNode.get("weightInGrams");
-			Double weightInGrams = weightInGramsNode.doubleValue();
+            JsonNode weightInKgsNode = weightNode.get("weightInKgs");
+            Double weightInKgs = weightInKgsNode.asDouble();
+            JsonNode dateTimeNode = weightNode.get("dateTime");
+            WeightLogEntry weightLogEntry = new WeightLogEntry();
+            weightLogEntry.setWeightInKgs(weightInKgs);
+            weightLogEntry.setDateTime(LocalDateTime.now());
+            userProfile.getWeightLog().add(weightLogEntry);
+        }
 
-			JsonNode dateTimeNode = weightNode.get("dateTime");
-			logger.info("DateTime value: {}", dateTimeNode.asText());
+        JsonNode heightNode = rootNode.get("height");
+        if (heightNode != null) {
+            userProfile.setHeight(heightNode.asDouble());
+        }
 
-			WeightLogEntry weightLogEntry = new WeightLogEntry();
-			weightLogEntry.setWeightInGrams(weightInGrams);
-			weightLogEntry.setDateTime(LocalDateTime.now());
-		}
+        JsonNode passwordsNode = rootNode.get("passwords");
+        if (passwordsNode != null) {
+            String rawPassword = passwordsNode.get("password").asText();
+            user.setPassword(passwordEncoder.encode(rawPassword));
 
-		JsonNode heightNode = rootNode.get("height");
-		if (heightNode != null) {
-			userProfile.setHeight(heightNode.asDouble());
-		}
+        }
 
-		JsonNode passwordsNode = rootNode.get("passwords");
-		if (passwordsNode != null) {
-			String rawPassword = passwordsNode.get("password").asText();
-			user.setPassword(passwordEncoder.encode(rawPassword));
+        JsonNode passwordNode = rootNode.get("password");
+        if (passwordsNode != null) {
+            String rawPassword = passwordNode.asText();
+            user.setPassword(passwordEncoder.encode(rawPassword));
 
-		}
+        }
 
-		JsonNode passwordNode = rootNode.get("password");
-		if (passwordsNode != null) {
-			String rawPassword = passwordNode.asText();
-			user.setPassword(passwordEncoder.encode(rawPassword));
+        UserRole memberRole = roleRepository.findByRole(Role.MEMBER).get();
+        user.getRoles().add(memberRole);
 
-		}
+        user.setUserProfile(userProfile);
+        user.setEnabled(true);
+        return user;
+    }
 
-		UserRole memberRole = roleRepository.findByRole(Role.MEMBER).get();
-		user.getRoles().add(memberRole);
-
-		user.setUserProfile(userProfile);
-		user.setEnabled(true);
-		return user;
-	}
-
-	public static final Logger logger = LoggerFactory.getLogger(UserDeserializer.class);
+    public static final Logger logger = LoggerFactory.getLogger(UserDeserializer.class);
 
 }

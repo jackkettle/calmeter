@@ -1,4 +1,8 @@
 package com.calmeter.core.account.repository;
 
-public interface IWeightLogEntryRepository {
+import com.calmeter.core.account.model.WeightLogEntry;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface IWeightLogEntryRepository extends JpaRepository<WeightLogEntry, Long> {
+
 }

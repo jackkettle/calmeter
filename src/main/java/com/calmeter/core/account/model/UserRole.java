@@ -1,5 +1,6 @@
 package com.calmeter.core.account.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,48 +17,51 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "user_role")
-public class UserRole {
+public class UserRole implements Serializable {
 
-	private Long id;
+    private static final long serialVersionUID = 1L;
 
-	protected Role role;
+    private Long id;
 
-	private Set<User> users;
-	
-	public UserRole(){}
-	
-	public UserRole(Role role){
-		this.role = role;
-	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    protected Role role;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private Set<User> users;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "role")
-	public Role getRole() {
-		return role;
-	}
+    public UserRole() {
+    }
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
+    public UserRole(Role role) {
+        this.role = role;
+    }
 
-	@JsonIgnore
-	@ManyToMany(mappedBy = "roles")
-	public Set<User> getUsers() {
-		return users;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
 }

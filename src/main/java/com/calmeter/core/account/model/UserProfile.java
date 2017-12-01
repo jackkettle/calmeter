@@ -2,14 +2,10 @@ package com.calmeter.core.account.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.calmeter.core.json.LocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -18,60 +14,65 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "user_profile")
 public class UserProfile implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected Long id;
-	
-	private Double weight;
-	
-	private Double height;
-	
-	private Sex sex;
-	
-	private LocalDate dateOfBirth;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    protected Long id;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private List<WeightLogEntry> weightLog;
 
-	public Double getWeight () {
-		return weight;
-	}
+    private Double height;
 
-	public void setWeight (Double weight) {
-		this.weight = weight;
-	}
-	
-	public Double getHeight () {
-		return height;	
-	}
-	
-	public void setHeight (Double height) {
-		this.height = height;
-	}
+    private Sex sex;
 
-	@Enumerated(EnumType.STRING)
-	public Sex getSex () {
-		return sex;
-	}
+    private LocalDate dateOfBirth;
 
-	public void setSex (Sex sex) {
-		this.sex = sex;
-	}
+    public UserProfile(){
+        this.weightLog = new ArrayList<>();
+    }
 
-	@JsonSerialize(using = LocalDateSerializer.class)
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    public List<WeightLogEntry> getWeightLog() {
+        return weightLog;
+    }
+
+    public void setWeightLog(List<WeightLogEntry> weightLog) {
+        this.weightLog = weightLog;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
+
+    @JsonSerialize(using = LocalDateSerializer.class)
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
 }

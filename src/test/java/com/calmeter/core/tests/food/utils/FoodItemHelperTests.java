@@ -2,24 +2,38 @@ package com.calmeter.core.tests.food.utils;
 
 import static org.junit.Assert.*;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.calmeter.core.ApplicationConfig;
+import com.calmeter.core.Main;
+import com.calmeter.core.custom.TestValueLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemEntry;
 import com.calmeter.core.food.service.IFoodItemService;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class FoodItemHelperTests {
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.AUTO_CONFIGURED)
+@ContextConfiguration(classes =  {Main.class, ApplicationConfig.class})
+public class FoodItemHelperTests extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	IFoodItemService foodItemService;
+
+	@Autowired
+	TestValueLoader testValueLoader;
+
+	@BeforeClass
+	public void setUp(){
+		testValueLoader.loadValues();
+	}
 
 	@Test
 	public void applyServingModifierTest() throws Exception {

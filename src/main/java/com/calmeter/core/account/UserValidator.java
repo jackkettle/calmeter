@@ -1,5 +1,6 @@
-package com.calmeter.core.account.service;
+package com.calmeter.core.account;
 
+import com.calmeter.core.account.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

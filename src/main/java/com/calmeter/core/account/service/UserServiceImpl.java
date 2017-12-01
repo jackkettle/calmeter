@@ -19,16 +19,8 @@ public class UserServiceImpl
 	@Autowired
 	private IUserRepository userRepository;
 
-	@Autowired
-	private IUserRoleRepository roleRepository;
-
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	public void save (User user) {
-		user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
-		user.setRoles (new HashSet<UserRole> (roleRepository.findAll ()));
-		userRepository.save (user);
+	public User save (User user) {
+		return userRepository.save (user);
 	}
 
 	public Optional<User> findByUsername (String username) {
