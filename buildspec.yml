@@ -2,7 +2,6 @@ version: 0.1
 
 env:
   variables:
-    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
 
 phases:
   install:
@@ -22,3 +21,8 @@ phases:
     commands:
       - echo Entered the post_build phase...
       - echo Build completed on `date`
+
+artifacts:
+  files:
+    - build/libs/calmeter-0.0.1.jar
+  discard-paths: yes
