@@ -80,7 +80,3 @@ dependencies {
 jar {
     baseName = 'calmeter'
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
-}
