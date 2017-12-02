@@ -3,6 +3,7 @@ package com.calmeter.core.utils;
 import com.calmeter.core.diary.model.DiaryEntry;
 import com.calmeter.core.food.model.FoodItem;
 import com.calmeter.core.food.model.FoodItemEntry;
+import com.calmeter.core.food.model.FoodItemType;
 import com.calmeter.core.food.model.Meal;
 import com.calmeter.core.food.service.IFoodItemService;
 import com.calmeter.core.food.source.handler.IFoodSourceHandler;
@@ -42,7 +43,6 @@ public class DeserializeHelper {
         return getFoodItemEntries(foodItemsNodes, null, meal);
     }
 
-
     private List<FoodItemEntry> getFoodItemEntries(Iterator<JsonNode> foodItemsNodes, DiaryEntry diaryEntry, Meal meal) {
         List<FoodItemEntry> foodItemEntries = new ArrayList<>();
         while (foodItemsNodes.hasNext()) {
@@ -71,7 +71,11 @@ public class DeserializeHelper {
             FoodItem foodItem = foodItemWrapper.get();
             Double weightInGrams = servings * foodItem.getNutritionalInformation().getServingSize();
 
-            if (foodItem.getId() == null && foodItem.getExternalId() == null) {
+            Optional<FoodItem> externalFoodItemWrapper = handleExternalFoodItem(foodItem);
+            if(foodItemWrapper.isPresent())
+                foodItem = externalFoodItemWrapper.get();
+
+            if (foodItem.getId() == null) {
                 logger.info("Adding foodItem to db as it does not already exist: {}", foodItem.getExternalId());
                 foodItemService.save(foodItem);
             }
@@ -90,6 +94,18 @@ public class DeserializeHelper {
         }
 
         return foodItemEntries;
+    }
+
+    public Optional<FoodItem> handleExternalFoodItem(FoodItem foodItem) {
+
+        if (!foodItem.getFoodItemType().equals(FoodItemType.TESCO_ITEM))
+            return Optional.empty();
+
+        Optional<FoodItem> foodItemWrapper = foodItemService.getExternal(foodItem.getExternalId(), foodItem.getFoodItemType());
+        if (foodItemWrapper.isPresent())
+            return foodItemWrapper;
+
+        return Optional.of(foodItemService.save(foodItem));
     }
 
     public static final Logger logger = LoggerFactory.getLogger(DeserializeHelper.class);

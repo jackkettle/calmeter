@@ -31,140 +31,138 @@ import javax.persistence.JoinColumn;
 @Table(name = "nutritional_info")
 public class NutritionalInformation implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected Long id;
+    protected Long id;
 
-	@Column(precision = 10, scale = 2)
-	private Double calories;
+    @Column(precision = 10, scale = 2)
+    private Double calories;
 
-	@Column(precision = 10, scale = 2)
-	private Double servingSize;
+    @Column(precision = 10, scale = 2)
+    private Double servingSize;
 
-	ConsolidatedCarbs consolidatedCarbs;
+    ConsolidatedCarbs consolidatedCarbs;
 
-	ConsolidatedFats consolidatedFats;
+    ConsolidatedFats consolidatedFats;
 
-	ConsolidatedProteins consolidatedProteins;
+    ConsolidatedProteins consolidatedProteins;
 
-	private Map<VitaminLabel, Double> vitaminMap;
+    private Map<VitaminLabel, Double> vitaminMap;
 
-	private Map<MineralLabel, Double> mineralMap;
+    private Map<MineralLabel, Double> mineralMap;
 
-	private Integer caffeine;
+    private Integer caffeine;
 
-	private NutritionalInfoType type;
+    private NutritionalInfoType type;
 
-	
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public double getCalories() {
-		return calories;
-	}
+    public double getCalories() {
+        return calories;
+    }
 
-	public void setCalories(Double calories) {
-		this.calories = calories;
-	}
+    public void setCalories(Double calories) {
+        this.calories = calories;
+    }
 
-	public Double getServingSize() {
-		return servingSize;
-	}
+    public Double getServingSize() {
+        return servingSize;
+    }
 
-	public void setServingSize(Double servingSize) {
-		this.servingSize = servingSize;
-	}
+    public void setServingSize(Double servingSize) {
+        this.servingSize = servingSize;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "consolidated_carbs_id")
-	public ConsolidatedCarbs getConsolidatedCarbs() {
-		return consolidatedCarbs;
-	}
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "consolidated_carbs_id")
+    public ConsolidatedCarbs getConsolidatedCarbs() {
+        return consolidatedCarbs;
+    }
 
-	public void setConsolidatedCarbs(ConsolidatedCarbs consolidatedCarbs) {
-		this.consolidatedCarbs = consolidatedCarbs;
-	}
+    public void setConsolidatedCarbs(ConsolidatedCarbs consolidatedCarbs) {
+        this.consolidatedCarbs = consolidatedCarbs;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "consolidated_fats_id")
-	public ConsolidatedFats getConsolidatedFats() {
-		return consolidatedFats;
-	}
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "consolidated_fats_id")
+    public ConsolidatedFats getConsolidatedFats() {
+        return consolidatedFats;
+    }
 
-	public void setConsolidatedFats(ConsolidatedFats consolidatedFats) {
-		this.consolidatedFats = consolidatedFats;
-	}
+    public void setConsolidatedFats(ConsolidatedFats consolidatedFats) {
+        this.consolidatedFats = consolidatedFats;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "consolidated_proteins_id")
-	public ConsolidatedProteins getConsolidatedProteins() {
-		return consolidatedProteins;
-	}
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "consolidated_proteins_id")
+    public ConsolidatedProteins getConsolidatedProteins() {
+        return consolidatedProteins;
+    }
 
-	public void setConsolidatedProteins(ConsolidatedProteins consolidatedProteins) {
-		this.consolidatedProteins = consolidatedProteins;
-	}
+    public void setConsolidatedProteins(ConsolidatedProteins consolidatedProteins) {
+        this.consolidatedProteins = consolidatedProteins;
+    }
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
-	@MapKeyEnumerated(EnumType.STRING)
-	@Column(name = "value")
-	public Map<VitaminLabel, Double> getVitaminMap() {
-		return vitaminMap;
-	}
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "vitamin_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "value")
+    public Map<VitaminLabel, Double> getVitaminMap() {
+        return vitaminMap;
+    }
 
-	public void setVitaminMap(Map<VitaminLabel, Double> vitaminMap) {
-		this.vitaminMap = vitaminMap;
-	}
+    public void setVitaminMap(Map<VitaminLabel, Double> vitaminMap) {
+        this.vitaminMap = vitaminMap;
+    }
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
-	@MapKeyEnumerated(EnumType.STRING)
-	@Column(name = "value")
-	public Map<MineralLabel, Double> getMineralMap() {
-		return mineralMap;
-	}
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "mineral_values", joinColumns = @JoinColumn(name = "nutritional_info_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "value")
+    public Map<MineralLabel, Double> getMineralMap() {
+        return mineralMap;
+    }
 
-	public void setMineralMap(Map<MineralLabel, Double> mineralMap) {
-		this.mineralMap = mineralMap;
-	}
+    public void setMineralMap(Map<MineralLabel, Double> mineralMap) {
+        this.mineralMap = mineralMap;
+    }
 
-	public Integer getCaffeine() {
-		return caffeine;
-	}
+    public Integer getCaffeine() {
+        return caffeine;
+    }
 
-	public void setCaffeine(Integer caffeine) {
-		this.caffeine = caffeine;
-	}
+    public void setCaffeine(Integer caffeine) {
+        this.caffeine = caffeine;
+    }
 
-	@Enumerated(EnumType.STRING)
-	public NutritionalInfoType getType() {
-		return type;
-	}
+    @Enumerated(EnumType.STRING)
+    public NutritionalInfoType getType() {
+        return type;
+    }
 
-	public void setType(NutritionalInfoType type) {
-		this.type = type;
-	}
+    public void setType(NutritionalInfoType type) {
+        this.type = type;
+    }
 
-	public NutritionalInformation() {
-		this.calories = 0.0;
-		this.consolidatedCarbs = new ConsolidatedCarbs();
-		this.consolidatedFats = new ConsolidatedFats();
-		this.consolidatedProteins = new ConsolidatedProteins();
-		this.vitaminMap = new HashMap<VitaminLabel, Double>();
-		this.mineralMap = new HashMap<MineralLabel, Double>();
-	}
+    public NutritionalInformation() {
+        this.calories = 0.0;
+        this.consolidatedCarbs = new ConsolidatedCarbs();
+        this.consolidatedFats = new ConsolidatedFats();
+        this.consolidatedProteins = new ConsolidatedProteins();
+        this.vitaminMap = new HashMap<VitaminLabel, Double>();
+        this.mineralMap = new HashMap<MineralLabel, Double>();
+    }
 
-	public NutritionalInformation(NutritionalInfoType nutrionalProfile) {
-		this();
-		this.setType(nutrionalProfile);
-	}
+    public NutritionalInformation(NutritionalInfoType nutrionalProfile) {
+        this();
+        this.setType(nutrionalProfile);
+    }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.calmeter.core.food.model.nutrient.NutritionalInfoType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,160 +23,183 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TescoHandlerHelper {
 
-	public static Collection<String> getTescoProductNumbersFromJson(String json) {
+    public static Collection<String> getTescoProductNumbersFromJson(String json) {
 
-		final ObjectMapper mapper = new ObjectMapper();
-		Collection<String> productNumbers = new HashSet<>();
+        final ObjectMapper mapper = new ObjectMapper();
+        Collection<String> productNumbers = new HashSet<>();
 
-		JsonNode jsonRootNode;
-		try {
-			jsonRootNode = mapper.readTree(json);
-		} catch (IOException e) {
-			logger.error("Unable to read in response as json", e);
-			return productNumbers;
-		}
-		JsonNode jsonResultsNode = jsonRootNode.at("/uk/ghs/products/results");
-		for (final JsonNode objNode : jsonResultsNode) {
-			productNumbers.add(objNode.get("tpnb").asText());
-		}
-		return productNumbers;
+        JsonNode jsonRootNode;
+        try {
+            jsonRootNode = mapper.readTree(json);
+        } catch (IOException e) {
+            logger.error("Unable to read in response as json", e);
+            return productNumbers;
+        }
+        JsonNode jsonResultsNode = jsonRootNode.at("/uk/ghs/products/results");
+        for (final JsonNode objNode : jsonResultsNode) {
+            productNumbers.add(objNode.get("tpnb").asText());
+        }
+        return productNumbers;
 
-	}
+    }
 
-	public static List<FoodItem> getFoodItemsFromResponse(String json) {
+    public static List<FoodItem> getFoodItemsFromResponse(String json) {
 
-		final ObjectMapper mapper = new ObjectMapper();
-		List<FoodItem> productNumbers = new ArrayList<>();
+        final ObjectMapper mapper = new ObjectMapper();
+        List<FoodItem> productNumbers = new ArrayList<>();
 
-		JsonNode jsonRootNode;
-		try {
-			jsonRootNode = mapper.readTree(json);
-		} catch (IOException e) {
-			logger.error("Unable to read in response as json", e);
-			return productNumbers;
-		}
-		JsonNode jsonResultsNode = jsonRootNode.at("/products");
-		for (final JsonNode objNode : jsonResultsNode) {
+        JsonNode jsonRootNode;
+        try {
+            jsonRootNode = mapper.readTree(json);
+        } catch (IOException e) {
+            logger.error("Unable to read in response as json");
+            return productNumbers;
+        }
+        JsonNode jsonResultsNode = jsonRootNode.at("/products");
+        for (final JsonNode objNode : jsonResultsNode) {
 
-			Optional<FoodItem> itemWrapper = getFoodItem(objNode);
-			if (!itemWrapper.isPresent())
-				continue;
+            Optional<FoodItem> itemWrapper = getFoodItem(objNode);
+            if (!itemWrapper.isPresent())
+                continue;
 
-			if (containsName(productNumbers, itemWrapper.get().getName()))
-				continue;
+            if (containsName(productNumbers, itemWrapper.get().getName()))
+                continue;
 
-			productNumbers.add(itemWrapper.get());
-		}
-		return productNumbers;
+            productNumbers.add(itemWrapper.get());
+        }
+        return productNumbers;
 
-	}
+    }
 
-	public static Optional<FoodItem> getFoodItem(JsonNode productNode) {
+    private static Optional<FoodItem> getFoodItem(JsonNode productNode) {
 
-		logger.debug("Getting foodItem");
-		try {
+        try {
 
-			NutritionalInformation nutritionalInformation = new NutritionalInformation();
-			FoodItem foodItem = new FoodItem();
+            NutritionalInformation nutritionalInformation = new NutritionalInformation(NutritionalInfoType.READ_ONLY);
+            FoodItem foodItem = new FoodItem(FoodItemType.TESCO_ITEM);
+            foodItem.setExternalId(productNode.get("tpnb").asLong());
+            logger.debug("Getting foodItem: ID; {}", foodItem.getExternalId());
 
-			Boolean isFood = productNode.at("/productCharacteristics/isFood").asBoolean();
-			Boolean isDrink = productNode.at("/productCharacteristics/isDrink").asBoolean();
+            Boolean isFood = productNode.at("/productCharacteristics/isFood").asBoolean();
+            Boolean isDrink = productNode.at("/productCharacteristics/isDrink").asBoolean();
 
-			if (!isFood && !isDrink) {
-				logger.info("The found product is not classified as food or drink. ID: {}",
-						productNode.get("tpnb").asLong());
-				return Optional.empty();
-			}
+            if (!isFood && !isDrink) {
+                logger.debug("The found product is not classified as food or drink. ID: {}", productNode.get("tpnb").asLong());
+                return Optional.empty();
+            }
 
-			JsonNode nutritionNode = productNode.get("calcNutrition");
+            if (!productNode.has("calcNutrition")) {
+                logger.debug("No calcNutrition node for id: {}", foodItem.getExternalId());
+                return Optional.empty();
+            }
 
-			boolean foundServingSize = false;
-			if (nutritionNode.has("perServingHeader")) {
-				
-				Optional<Double> servingSizeWrapper = getServingSizeFromString(
-						nutritionNode.get("perServingHeader").asText());
-				if (!servingSizeWrapper.isPresent()) {
-					logger.debug("Unable to get serving size from item");
-					nutritionalInformation.setServingSize(100.0);
-				} else {
-					foundServingSize = true;
-					nutritionalInformation.setServingSize(servingSizeWrapper.get());
-				}
-				
-			} else {
-				logger.debug("Unable to get serving size from item");
-				nutritionalInformation.setServingSize(100.0);
-			}
+            JsonNode nutritionNode = productNode.get("calcNutrition");
 
-			JsonNode nutrientsNode = nutritionNode.get("calcNutrients");
+            boolean foundServingSize = false;
+            if (nutritionNode.has("perServingHeader")) {
 
-			Double calories = nutrientsNode.get(1).get("valuePer100").asDouble();
-			nutritionalInformation.setCalories(calories);
+                Optional<Double> servingSizeWrapper = getServingSizeFromString(
+                        nutritionNode.get("perServingHeader").asText());
+                if (!servingSizeWrapper.isPresent()) {
+                    logger.debug("Unable to get serving size from item");
+                    nutritionalInformation.setServingSize(100.0);
+                } else {
+                    foundServingSize = true;
+                    nutritionalInformation.setServingSize(servingSizeWrapper.get());
+                }
 
-			if (!foundServingSize) {
-				double caloriesPerServing = nutrientsNode.get(1).get("valuePerServing").asDouble();
-				double newServingSize = DoubleHelper.round((caloriesPerServing / calories) * 100, 0);
+            } else {
+                logger.debug("Unable to get serving size from item");
+                nutritionalInformation.setServingSize(100.0);
+            }
 
-				logger.info("New serving size: {}", newServingSize);
+            if (!nutritionNode.has("calcNutrients")) {
+                logger.debug("No calcNutrients node for id: {}", foodItem.getExternalId());
+                return Optional.empty();
+            }
 
-				if (caloriesPerServing != 0) {
-					nutritionalInformation.setServingSize(newServingSize);
-				}
-			}
+            JsonNode nutrientsNode = nutritionNode.get("calcNutrients");
 
-			Double totalFat = nutrientsNode.get(2).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedFats().setTotalFat(totalFat);
+            Double calories = nutrientsNode.get(1).get(VALUE_PER_100_KEY).asDouble();
+            nutritionalInformation.setCalories(calories);
 
-			Double saturatedFat = nutrientsNode.get(3).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedFats().setSaturatedFat(saturatedFat);
+            if (!foundServingSize) {
+                JsonNode calNode = nutrientsNode.get(1).get("valuePerServing");
+                double caloriesPerServing = 0;
+                double newServingSize = 0;
+                if (nutrientsNode.get(1).get("valuePerServing") != null) {
+                    caloriesPerServing = calNode.asDouble();
+                    newServingSize = DoubleHelper.round((caloriesPerServing / calories) * 100, 0);
+                    logger.info("New serving size: {}", newServingSize);
+                }
 
-			Double totalCarbs = nutrientsNode.get(4).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedCarbs().setTotal(totalCarbs);
+                if (caloriesPerServing != 0) {
+                    nutritionalInformation.setServingSize(newServingSize);
+                }
+            }
 
-			Double sugars = nutrientsNode.get(5).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedCarbs().setSugar(sugars);
+            Optional<Double> totalFatWrapper = getNodeDouble(nutrientsNode, 2, VALUE_PER_100_KEY);
+            totalFatWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedFats().setTotalFat(aDouble));
 
-			Double fiber = nutrientsNode.get(6).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedCarbs().setFiber(fiber);
+            Optional<Double> saturatedFatWrapper = getNodeDouble(nutrientsNode, 3, VALUE_PER_100_KEY);
+            saturatedFatWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedFats().setSaturatedFat(aDouble));
 
-			Double protein = nutrientsNode.get(7).get("valuePer100").asDouble();
-			nutritionalInformation.getConsolidatedProteins().setProtein(protein);
+            Optional<Double> totalCarbsWrapper = getNodeDouble(nutrientsNode, 4, VALUE_PER_100_KEY);
+            totalCarbsWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedCarbs().setTotal(aDouble));
 
-			Double sodium = nutrientsNode.get(8).get("valuePer100").asDouble();
-			nutritionalInformation.getMineralMap().put(MineralLabel.SODIUM, sodium);
+            Optional<Double> sugarsWrapper = getNodeDouble(nutrientsNode, 5, VALUE_PER_100_KEY);
+            sugarsWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedCarbs().setSugar(aDouble));
 
-			foodItem.setName(productNode.get("description").asText());
-			foodItem.setExternalId(productNode.get("tpnb").asLong());
-			foodItem.setNutritionalInformation(nutritionalInformation);
-			foodItem.setFoodItemType(FoodItemType.TESCO_ITEM);
+            Optional<Double> fiberWrapper = getNodeDouble(nutrientsNode, 6, VALUE_PER_100_KEY);
+            fiberWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedCarbs().setFiber(aDouble));
 
-			return Optional.of(foodItem);
-			
-		} catch (Exception e) {
-			logger.error("productNode: {}", productNode.toString());
-			logger.error("Unable to get foodItem from JSON. {}", e.getMessage());
-			return Optional.empty();
-		}
-	}
+            Optional<Double> proteinWrapper = getNodeDouble(nutrientsNode, 7, VALUE_PER_100_KEY);
+            proteinWrapper.ifPresent(aDouble -> nutritionalInformation.getConsolidatedProteins().setProtein(aDouble));
 
-	private static boolean containsName(List<FoodItem> productNumbers, String name) {
-		for (FoodItem item : productNumbers) {
-			if (item.getName().equals(name))
-				return true;
-		}
-		return false;
-	}
+            Optional<Double> sodiumWrapper = getNodeDouble(nutrientsNode, 8, VALUE_PER_100_KEY);
+            sodiumWrapper.ifPresent(aDouble -> nutritionalInformation.getMineralMap().put(MineralLabel.SODIUM, aDouble));
 
-	private static Optional<Double> getServingSizeFromString(String inputString) {
-		Matcher m = Pattern.compile("\\((.*?)\\)").matcher(inputString);
-		while (m.find()) {
-			String result = m.group(1);
-			result = result.replaceAll("[^0-9\\.]", "");
-			return Optional.of(Double.parseDouble(result));
-		}
-		return Optional.empty();
-	}
+            foodItem.setName(productNode.get("description").asText());
+            foodItem.setNutritionalInformation(nutritionalInformation);
+            foodItem.setFoodItemType(FoodItemType.TESCO_ITEM);
 
-	private static Logger logger = LoggerFactory.getLogger(TescoHandlerHelper.class);
+            return Optional.of(foodItem);
+
+        } catch (Exception e) {
+            logger.error("Unable to get foodItem from JSON. {}", e);
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<Double> getNodeDouble(JsonNode nutrientsNode, int index, String key) {
+        try {
+            return Optional.of(nutrientsNode.get(index).get(key).asDouble());
+        } catch (Exception e) {
+            logger.warn("Unable to get node. Index; {}, Key; {}", index, key);
+            return Optional.empty();
+        }
+    }
+
+    private static boolean containsName(List<FoodItem> productNumbers, String name) {
+        for (FoodItem item : productNumbers) {
+            if (item.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    private static Optional<Double> getServingSizeFromString(String inputString) {
+        Matcher m = Pattern.compile("\\((.*?)\\)").matcher(inputString);
+        if (m.find()) {
+            String result = m.group(1);
+            result = result.replaceAll("[^0-9.]", "");
+            return Optional.of(Double.parseDouble(result));
+        }
+        return Optional.empty();
+    }
+
+    private static String VALUE_PER_100_KEY = "valuePer100";
+
+    private static Logger logger = LoggerFactory.getLogger(TescoHandlerHelper.class);
 
 }

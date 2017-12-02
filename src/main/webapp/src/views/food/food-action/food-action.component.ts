@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FoodService } from '../../../_services/food.service';
+import {Component, OnInit, Inject} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, FormArray, Validators} from '@angular/forms';
+import {Router, ActivatedRoute} from '@angular/router';
+import {FoodService} from '../../../_services/food.service';
 
 import * as $ from "jquery";
 
@@ -21,8 +21,8 @@ export class FoodActionComponent implements OnInit {
     vitaminFormArray: FormArray;
     mineralFormArray: FormArray;
 
-    vitaminSelectArrayRemoved: Array<any> = [];;
-    mineralSelectArrayRemoved: Array<any> = [];;
+    vitaminSelectArrayRemoved: Array<any> = [];
+    mineralSelectArrayRemoved: Array<any> = [];
 
     vitaminArray: Array<any> = [];
     mineralArray: Array<any> = [];
@@ -30,12 +30,11 @@ export class FoodActionComponent implements OnInit {
     vitaminSelectArray: Array<any> = [];
     mineralSelectArray: Array<any> = [];
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private foodService: FoodService,
-        private route: ActivatedRoute,
-        private router: Router
-    ) { }
+    constructor(private formBuilder: FormBuilder,
+                private foodService: FoodService,
+                private route: ActivatedRoute,
+                private router: Router) {
+    }
 
     ngOnInit() {
 
@@ -127,7 +126,7 @@ export class FoodActionComponent implements OnInit {
     }
 
     loadInitFormValues(id: number) {
-        this.foodService.getFood(id).subscribe(
+        this.foodService.get(id).subscribe(
             data => {
                 this.applyData(data);
             },
@@ -206,7 +205,7 @@ export class FoodActionComponent implements OnInit {
     save(model) {
 
         if (this.action === "edit") {
-            this.foodService.updateFoodItem(this.id, model).subscribe(
+            this.foodService.update(this.id, model).subscribe(
                 res => {
                     console.log(res);
                 }, err => {
@@ -216,7 +215,7 @@ export class FoodActionComponent implements OnInit {
         }
 
         if (this.action === "add") {
-            this.foodService.createFoodItem(model).subscribe(
+            this.foodService.create(model).subscribe(
                 res => {
                     console.log(res);
                 }, err => {
@@ -237,7 +236,6 @@ export class FoodActionComponent implements OnInit {
             this.vitaminSelectArrayRemoved.push(this.vitaminSelectArray[index]);
             this.vitaminSelectArray.splice(index, 1);
             this.addVitaminRow();
-
         }
 
         if (this.mineralArray.includes(item.value)) {
@@ -249,10 +247,6 @@ export class FoodActionComponent implements OnInit {
             this.mineralSelectArray.splice(index, 1);
             this.addMineralRow();
         }
-
-    }
-
-    onDeselected(item) {
 
     }
 

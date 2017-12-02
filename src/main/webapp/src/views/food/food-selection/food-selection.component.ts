@@ -82,7 +82,7 @@ export class FoodSelectionComponent implements OnInit {
 
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
-        this.foodService.getAllFoodUsingQuery("", this.searchOption).subscribe(response => {
+        this.foodService.getAllUsingQuery("", this.searchOption).subscribe(response => {
             this.rows = this.transformData(response);
             this.page.totalElements = this.rows.length;
             this.loadingIndicator = false;
@@ -159,7 +159,7 @@ export class FoodSelectionComponent implements OnInit {
     }
 
     getRowDataUsingQuery(query: string) {
-        this.foodService.getAllFoodUsingQuery(query, this.searchOption)
+        this.foodService.getAllUsingQuery(query, this.searchOption)
             .subscribe(response => {
                 this.rows = this.transformData(response);
                 this.page.totalElements = this.rows.length;
@@ -173,7 +173,7 @@ export class FoodSelectionComponent implements OnInit {
 
     getRowData(): void {
         this.loadingIndicator = true;
-        this.foodService.getAllFoodByUser().subscribe(
+        this.foodService.getAll().subscribe(
             response => {
                 this.rows = this.transformData(response)
                 this.loadingIndicator = false;

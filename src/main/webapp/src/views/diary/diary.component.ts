@@ -253,9 +253,9 @@ export class DiaryComponent implements OnInit {
             return;
 
         for (let entry of data) {
-            let carbs: number = entry.totalNutrionalnformation.consolidatedCarbs.total;
-            let fats: number = entry.totalNutrionalnformation.consolidatedFats.totalFat;
-            let protein: number = entry.totalNutrionalnformation.consolidatedProteins.protein;
+            let carbs: number = entry.totalNutritionalInformation.consolidatedCarbs.total;
+            let fats: number = entry.totalNutritionalInformation.consolidatedFats.totalFat;
+            let protein: number = entry.totalNutritionalInformation.consolidatedProteins.protein;
             let chartData: number[] = [carbs, fats, protein];
             this.chartMap.set(entry.id, chartData);
 

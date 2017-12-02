@@ -82,8 +82,8 @@ public class DiaryEntryHelperTests extends AbstractTestNGSpringContextTests {
         }
 
         logger.info("totalCals: {}, totalNutritionCals: {}", totalCals,
-                diaryEntry.getTotalNutrionalnformation().getCalories());
-        assertEquals(0, Double.compare(totalCals, diaryEntry.getTotalNutrionalnformation().getCalories()));
+                diaryEntry.getTotalNutritionalInformation().getCalories());
+        assertEquals(0, Double.compare(totalCals, diaryEntry.getTotalNutritionalInformation().getCalories()));
 
     }
 

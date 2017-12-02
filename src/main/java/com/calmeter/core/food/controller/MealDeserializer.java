@@ -29,14 +29,12 @@ public class MealDeserializer extends JsonDeserializer<Meal> {
 
         Meal meal = new Meal();
         meal.setName(rootNode.get("name").asText());
-
         meal.setDescription(rootNode.get("description").asText());
 
         Iterator<JsonNode> foodItemsNodes = rootNode.get("foodItemFormArray").elements();
         meal.setFoodItemEntries(deserializeHelper.getFoodItemEntries(foodItemsNodes, meal));
 
         return meal;
-
     }
 
     @SuppressWarnings("unused")

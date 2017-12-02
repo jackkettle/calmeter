@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.calmeter.core.food.model.nutrient.NutritionalInfoType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,168 +37,168 @@ import com.calmeter.core.food.service.INutritionalInformationService;
 @RequestMapping("/api/diary")
 public class DiaryEntryApiController {
 
-	@Autowired
-	UserHelper userHelper;
+    @Autowired
+    UserHelper userHelper;
 
-	@Autowired
-	IDiaryEntryService diaryEntryService;
+    @Autowired
+    IDiaryEntryService diaryEntryService;
 
-	@Autowired
-	IFoodItemService foodItemService;
+    @Autowired
+    IFoodItemService foodItemService;
 
-	@Autowired
-	IFoodItemEntryService foodItemEntryService;
+    @Autowired
+    IFoodItemEntryService foodItemEntryService;
 
-	@Autowired
-	INutritionalInformationService nutritionalInformationService;
+    @Autowired
+    INutritionalInformationService nutritionalInformationService;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	ResponseEntity<DiaryEntry> get(@RequestParam("id") long id) {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    ResponseEntity<DiaryEntry> get(@RequestParam("id") long id) {
 
-		Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
-		if (!entryWrapper.isPresent())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
+        if (!entryWrapper.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent())
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent())
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-		if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
-				|| userHelper.isAdmin(userWrapper.get())))
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
+                || userHelper.isAdmin(userWrapper.get())))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-		return new ResponseEntity<>(entryWrapper.get(), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(entryWrapper.get(), HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/getLast7Days", method = RequestMethod.GET)
-	ResponseEntity<Map<LocalDate, NutritionalInformation>> getLast7Days(@RequestParam("date") String dateString) {
+    @RequestMapping(value = "/getLast7Days", method = RequestMethod.GET)
+    ResponseEntity<Map<LocalDate, NutritionalInformation>> getLast7Days(@RequestParam("date") String dateString) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
-		LocalDate day = zonedDateTime.toLocalDate();
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
+        LocalDate day = zonedDateTime.toLocalDate();
 
-		Map<LocalDate, NutritionalInformation> days = new HashMap<>();
+        Map<LocalDate, NutritionalInformation> days = new HashMap<>();
 
-		for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
 
-			List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(), day);
+            List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(), day);
 
-			if (entries.size() < 1) {
-				days.put(day, new NutritionalInformation());
-				day = day.minusDays(1);
-				continue;
-			}
+            if (entries.size() < 1) {
+                days.put(day, new NutritionalInformation());
+                day = day.minusDays(1);
+                continue;
+            }
 
-			NutritionalInformation nutritionalInformation = DiaryEntryHelper.computeNutritionalInformation(entries);
-			days.put(day, nutritionalInformation);
-			day = day.minusDays(1);
-		}
+            NutritionalInformation nutritionalInformation = DiaryEntryHelper.computeNutritionalInformation(entries, NutritionalInfoType.READ_ONLY);
+            days.put(day, nutritionalInformation);
+            day = day.minusDays(1);
+        }
 
-		return new ResponseEntity<>(days, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(days, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/getTotalDiaryNutritionByDate", method = RequestMethod.GET)
-	ResponseEntity<NutritionalInformation> getTotalDiaryNutritionByDate(@RequestParam("date") String dateString) {
+    @RequestMapping(value = "/getTotalDiaryNutritionByDate", method = RequestMethod.GET)
+    ResponseEntity<NutritionalInformation> getTotalDiaryNutritionByDate(@RequestParam("date") String dateString) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
 
-		List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(),
-				zonedDateTime.toLocalDate());
+        List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(),
+                zonedDateTime.toLocalDate());
 
-		if (entries.size() < 1) {
-			return new ResponseEntity<NutritionalInformation>(new NutritionalInformation(), HttpStatus.OK);
-		}
+        if (entries.size() < 1) {
+            return new ResponseEntity<NutritionalInformation>(new NutritionalInformation(), HttpStatus.OK);
+        }
 
-		NutritionalInformation nutritionalInformation = DiaryEntryHelper.computeNutritionalInformation(entries);
-		return new ResponseEntity<>(nutritionalInformation, HttpStatus.OK);
+        NutritionalInformation nutritionalInformation = DiaryEntryHelper.computeNutritionalInformation(entries, NutritionalInfoType.READ_ONLY);
+        return new ResponseEntity<>(nutritionalInformation, HttpStatus.OK);
 
-	}
+    }
 
-	@RequestMapping(value = "/getEntriesByDate", method = RequestMethod.GET)
-	ResponseEntity<Collection<DiaryEntry>> getEntriesByDate(@RequestParam("date") String dateString) {
+    @RequestMapping(value = "/getEntriesByDate", method = RequestMethod.GET)
+    ResponseEntity<Collection<DiaryEntry>> getEntriesByDate(@RequestParam("date") String dateString) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
 
-		List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(),
-				zonedDateTime.toLocalDate());
+        List<DiaryEntry> entries = diaryEntryService.getDiaryEntriesByDay(userWrapper.get(),
+                zonedDateTime.toLocalDate());
 
-		if (entries.size() < 1) {
-			return new ResponseEntity<Collection<DiaryEntry>>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<Collection<DiaryEntry>>(entries, HttpStatus.OK);
-	}
+        if (entries.size() < 1) {
+            return new ResponseEntity<Collection<DiaryEntry>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<DiaryEntry>>(entries, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/createEntry", method = RequestMethod.POST)
-	ResponseEntity<?> createEntry(@RequestBody DiaryEntry diaryEntry) {
+    @RequestMapping(value = "/createEntry", method = RequestMethod.POST)
+    ResponseEntity<?> createEntry(@RequestBody DiaryEntry diaryEntry) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
+//        for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
+//
+//            if (!entry.getFoodItemReference().getFoodItemType().equals(FoodItemType.TESCO_ITEM))
+//                continue;
+//
+//            if (!foodItemService.existsExternal(entry.getFoodItemReference().getExternalId(),
+//                    entry.getFoodItemReference().getFoodItemType())) {
+//
+//                logger.info("Saving foodItemEntry to db. FoodItem: {}", entry.getFoodItemReference().getId());
+//                foodItemService.save(entry.getFoodItemReference());
+//                logger.info("FoodItemEntry Id: {}", entry.getFoodItemReference().getId());
+//            }
+//
+//        }
 
-			if (entry.getFoodItemReference().getFoodItemType().equals(FoodItemType.USER_ITEM))
-				continue;
+        diaryEntry.applyServingsModifiers();
+        diaryEntry.computeNutritionalInformation();
+        diaryEntry.setUser(userWrapper.get());
 
-			if (!foodItemService.existsExternal(entry.getFoodItemReference().getExternalId(),
-					entry.getFoodItemReference().getFoodItemType())) {
+        diaryEntryService.save(diaryEntry);
 
-				logger.info("Saving foodItemEntry to db. FoodItem: {}", entry.getFoodItemReference().getId());
-				foodItemService.save(entry.getFoodItemReference());
-				logger.info("FoodItemEntry Id: {}", entry.getFoodItemReference().getId());
-			}
+        for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
+            foodItemEntryService.save(entry);
+        }
 
-		}
+        return new ResponseEntity<String>("Created entry: " + diaryEntry.getId(), HttpStatus.CREATED);
 
-		diaryEntry.applyServingsModifiers();
-		diaryEntry.computeNutritionalInformation();
-		diaryEntry.setUser(userWrapper.get());
+    }
 
-		diaryEntryService.save(diaryEntry);
+    @RequestMapping(value = "/deleteEntry/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<String> delete(@PathVariable("id") long id) {
 
-		for (FoodItemEntry entry : diaryEntry.getFoodItemEntries()) {
-			foodItemEntryService.save(entry);
-		}
+        logger.info("Delete diary entry called: {}", id);
+        Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
+        if (!entryWrapper.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<String>("Created entry: " + diaryEntry.getId(), HttpStatus.CREATED);
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent())
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-	}
+        if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
+                || userHelper.isAdmin(userWrapper.get())))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-	@RequestMapping(value = "/deleteEntry/{id}", method = RequestMethod.DELETE)
-	ResponseEntity<String> delete(@PathVariable("id") long id) {
+        diaryEntryService.delete(entryWrapper.get());
+        return new ResponseEntity<String>("Deleted entry: " + id, HttpStatus.OK);
+    }
 
-		logger.info("Delete diary entry called: {}", id);
-		Optional<DiaryEntry> entryWrapper = diaryEntryService.get(id);
-		if (!entryWrapper.isPresent())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent())
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-		if (!(entryWrapper.get().getUser().getId().equals(userWrapper.get().getId())
-				|| userHelper.isAdmin(userWrapper.get())))
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-		diaryEntryService.delete(entryWrapper.get());
-		return new ResponseEntity<String>("Deleted entry: " + id, HttpStatus.OK);
-	}
-
-	public static final Logger logger = LoggerFactory.getLogger(DiaryEntryApiController.class);
+    public static final Logger logger = LoggerFactory.getLogger(DiaryEntryApiController.class);
 
 }

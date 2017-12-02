@@ -50,13 +50,11 @@ export class MealService {
     create(body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/create`, bodyString)
-            .map((res: Response) => res.json())
     }
 
     update(id: number, body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/update/${id}`, bodyString)
-            .map((res: Response) => res.json())
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.calmeter.core.food.utils.MealHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,111 +25,126 @@ import com.calmeter.core.food.service.IMealService;
 @RequestMapping("/api/meal")
 public class MealApiController {
 
-	@Autowired
-	UserHelper userHelper;
+    UserHelper userHelper;
+    MealHelper mealHelper;
+    IMealService mealService;
 
-	@Autowired
-	IMealService mealService;
+    @Autowired
+    public MealApiController(UserHelper userHelper, MealHelper mealHelper, IMealService mealService) {
+        this.userHelper = userHelper;
+        this.mealHelper = mealHelper;
+        this.mealService = mealService;
+    }
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	ResponseEntity<Meal> getFoodItem(@PathVariable Long id) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    ResponseEntity<Meal> get(@PathVariable Long id) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		Optional<Meal> mealWrapper = mealService.get(id);
-		if (!mealWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+        Optional<Meal> mealWrapper = mealService.get(id);
+        if (!mealWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-		Meal meal = mealWrapper.get();
+        Meal meal = mealWrapper.get();
 
-		if (!meal.getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        if (!meal.getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		return new ResponseEntity<>(meal, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(meal, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
-	ResponseEntity<Collection<Meal>> getAll() {
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    ResponseEntity<Collection<Meal>> getAll() {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		List<Meal> meals = mealService.getAll(userWrapper.get());
-		return new ResponseEntity<>(meals, HttpStatus.OK);
+        List<Meal> meals = mealService.getAll(userWrapper.get());
+        return new ResponseEntity<>(meals, HttpStatus.OK);
 
-	}
+    }
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	ResponseEntity<String> create(@RequestBody Meal meal) {
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    ResponseEntity<String> create(@RequestBody Meal meal) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		meal.setCreator(userWrapper.get());
-		mealService.save(meal);
-		return new ResponseEntity<String>(HttpStatus.CREATED);
-	}
+        if (!mealHelper.isValid(meal)) {
+            logger.info("Meal is invalid");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-	ResponseEntity<Meal> updateFoodItem(@PathVariable("id") Long id, @RequestBody Meal meal) {
+        if(mealService.existsByName(meal.getName()))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        meal.computeNutritionalInformation();
 
-		Optional<Meal> mealWrapper = mealService.get(id);
-		if (!mealWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+        meal.setCreator(userWrapper.get());
+        mealService.save(meal);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
-		if (!mealWrapper.get().getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    ResponseEntity<Meal> updateFoodItem(@PathVariable("id") Long id, @RequestBody Meal meal) {
 
-		meal.setId(id);
-		meal.setCreator(userWrapper.get());
-		Meal updatedMeal = mealService.save(meal);
-		return new ResponseEntity<>(updatedMeal, HttpStatus.OK);
-	}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-	ResponseEntity<String> delete(@PathVariable("id") Long id) {
+        Optional<Meal> mealWrapper = mealService.get(id);
+        if (!mealWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        if (!mealWrapper.get().getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		Optional<Meal> mealWrapper = mealService.get(id);
-		if (!mealWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		Meal meal = mealWrapper.get();
+        meal.setId(id);
+        meal.setCreator(userWrapper.get());
+        Meal updatedMeal = mealService.save(meal);
+        return new ResponseEntity<>(updatedMeal, HttpStatus.OK);
+    }
 
-		if (!meal.getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<String> delete(@PathVariable("id") Long id) {
 
-		if (mealService.isUsed(meal)) {
-			meal.setDisabled(true);
-			mealService.save(meal);
-			return new ResponseEntity<String>("Meal disabled: " + id, HttpStatus.CREATED);
-		}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		mealService.delete(meal);
-		return new ResponseEntity<String>("Meal deleted: " + id, HttpStatus.OK);
-	}
+        Optional<Meal> mealWrapper = mealService.get(id);
+        if (!mealWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Meal meal = mealWrapper.get();
 
-	public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);
+        if (!meal.getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (mealService.isUsed(meal)) {
+            meal.setDisabled(true);
+            mealService.save(meal);
+            return new ResponseEntity<String>("Meal disabled: " + id, HttpStatus.CREATED);
+        }
+
+        mealService.delete(meal);
+        return new ResponseEntity<String>("Meal deleted: " + id, HttpStatus.OK);
+    }
+
+    public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);
 
 }

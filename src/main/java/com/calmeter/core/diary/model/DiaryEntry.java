@@ -37,112 +37,112 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonDeserialize(using = DiaryEntryDeserializer.class)
 public class DiaryEntry {
 
-	private Long id;
+    private Long id;
 
-	private User user;
+    private User user;
 
-	private List<Meal> meals;
+    private List<Meal> meals;
 
-	private List<FoodItemEntry> foodItemEntries;
+    private List<FoodItemEntry> foodItemEntries;
 
-	private LocalDateTime dateTime;
+    private LocalDateTime dateTime;
 
-	private boolean eatan;
+    private boolean eatan;
 
-	private String description;
+    private String description;
 
-	private NutritionalInformation totalNutrionalnformation;
+    private NutritionalInformation totalNutritionalInformation;
 
-	public DiaryEntry() {
-		this.totalNutrionalnformation = new NutritionalInformation(NutritionalInfoType.DIARY_RECORD);
-	}
+    public DiaryEntry() {
+        this.totalNutritionalInformation = new NutritionalInformation(NutritionalInfoType.DIARY_RECORD);
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@ManyToOne
-	public User getUser() {
-		return user;
-	}
+    @ManyToOne
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "diary_meal_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "meal_id"))
-	public List<Meal> getMeals() {
-		return this.meals;
-	}
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "diary_meal_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "meal_id"))
+    public List<Meal> getMeals() {
+        return this.meals;
+    }
 
-	public void setMeals(List<Meal> meal) {
-		this.meals = meal;
-	}
+    public void setMeals(List<Meal> meal) {
+        this.meals = meal;
+    }
 
-	@JsonSerialize(using = FoodItemEntryListLiteSerializer.class)
-	@OneToMany(mappedBy = "diaryEntry")
+    @JsonSerialize(using = FoodItemEntryListLiteSerializer.class)
+    @OneToMany(mappedBy = "diaryEntry")
 //	@JoinTable(name = "diary_food_item_entry_map", joinColumns = @JoinColumn(name = "diary_id"), inverseJoinColumns = @JoinColumn(name = "food_item_entry_id"))
-	public List<FoodItemEntry> getFoodItemEntries() {
-		return foodItemEntries;
-	}
+    public List<FoodItemEntry> getFoodItemEntries() {
+        return foodItemEntries;
+    }
 
-	public void setFoodItemEntries(List<FoodItemEntry> foodItemEntries) {
-		this.foodItemEntries = foodItemEntries;
-	}
+    public void setFoodItemEntries(List<FoodItemEntry> foodItemEntries) {
+        this.foodItemEntries = foodItemEntries;
+    }
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	public LocalDateTime getDateTime() {
-		return dateTime;
-	}
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
 
-	public void setDateTime(LocalDateTime dateTime) {
-		this.dateTime = dateTime;
-	}
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
-	public boolean isEatan() {
-		return eatan;
-	}
+    public boolean isEatan() {
+        return eatan;
+    }
 
-	public void setEatan(boolean eatan) {
-		this.eatan = eatan;
-	}
+    public void setEatan(boolean eatan) {
+        this.eatan = eatan;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "nutritional_info_id")
-	public NutritionalInformation getTotalNutrionalnformation() {
-		return totalNutrionalnformation;
-	}
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "nutritional_info_id")
+    public NutritionalInformation getTotalNutritionalInformation() {
+        return totalNutritionalInformation;
+    }
 
-	public void setTotalNutrionalnformation(NutritionalInformation totalNutrionalnformation) {
-		this.totalNutrionalnformation = totalNutrionalnformation;
-	}
+    public void setTotalNutritionalInformation(NutritionalInformation totalNutritionalInformation) {
+        this.totalNutritionalInformation = totalNutritionalInformation;
+    }
 
-	public void computeNutritionalInformation() {
-		this.setTotalNutrionalnformation(DiaryEntryHelper.computeNutritionalInformation(this));
-	}
+    public void computeNutritionalInformation() {
+        this.setTotalNutritionalInformation(DiaryEntryHelper.computeNutritionalInformation(this, NutritionalInfoType.DIARY_RECORD));
+    }
 
-	public void applyServingsModifiers() {
-		for (int i = 0; i < this.getFoodItemEntries().size(); i++) {
-			this.getFoodItemEntries().get(i).applyServingModifier();
-		}
-	}
+    public void applyServingsModifiers() {
+        for (int i = 0; i < this.getFoodItemEntries().size(); i++) {
+            this.getFoodItemEntries().get(i).applyServingModifier();
+        }
+    }
 
-	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(DiaryEntry.class);
+    @SuppressWarnings("unused")
+    private static Logger logger = LoggerFactory.getLogger(DiaryEntry.class);
 
 }

@@ -206,6 +206,9 @@ export class EditUserComponent implements OnInit {
             res => {
                 console.log(res);
                 this.successNotification();
+            }, err => {
+                this.errorNotification();
+                console.log(err);
             }
         );
     }
@@ -223,4 +226,16 @@ export class EditUserComponent implements OnInit {
         )
     }
 
+    errorNotification() {
+        this.notificationsService.error(
+            'Unable to save user settings',
+            'Time: ' + new Date().toLocaleTimeString(),
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
+    }
 }

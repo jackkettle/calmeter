@@ -6,6 +6,9 @@ import javax.persistence.*;
 
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.food.controller.MealDeserializer;
+import com.calmeter.core.food.model.nutrient.NutritionalInfoType;
+import com.calmeter.core.food.model.nutrient.NutritionalInformation;
+import com.calmeter.core.food.utils.MealHelper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
@@ -21,12 +24,15 @@ public class Meal implements IFood {
 
     private List<FoodItemEntry> foodItemEntries;
 
+    private NutritionalInformation nutritionalInformation;
+
     private User creator;
 
     private boolean disabled;
 
     public Meal() {
         this.setDisabled(false);
+        this.nutritionalInformation = new NutritionalInformation(NutritionalInfoType.MEAL);
     }
 
     @Id
@@ -83,4 +89,17 @@ public class Meal implements IFood {
         this.disabled = disabled;
     }
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "nutritional_info_id")
+    public NutritionalInformation getNutritionalInformation() {
+        return nutritionalInformation;
+    }
+
+    public void setNutritionalInformation(NutritionalInformation computedNutritionalInformation) {
+        this.nutritionalInformation = computedNutritionalInformation;
+    }
+
+    public void computeNutritionalInformation() {
+        this.setNutritionalInformation(MealHelper.computeNutritionalInformation(this));
+    }
 }

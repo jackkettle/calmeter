@@ -1,9 +1,9 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { SharedModule } from '../../../_directives/shared.module';
-import { FoodSelectionComponent } from './food-selection.component';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
+import {BrowserModule} from "@angular/platform-browser";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
+import {SharedModule} from '../../../_directives/shared.module';
+import {FoodSelectionComponent} from './food-selection.component';
 
 @NgModule({
     declarations: [
@@ -21,4 +21,5 @@ import { FoodSelectionComponent } from './food-selection.component';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class FoodSelectionModule { }
+export class FoodSelectionModule {
+}

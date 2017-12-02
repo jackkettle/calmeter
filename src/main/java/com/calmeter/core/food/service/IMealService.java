@@ -8,20 +8,22 @@ import com.calmeter.core.food.model.Meal;
 
 public interface IMealService {
 
-	Optional<Meal> get(Long id);
+    Optional<Meal> get(Long id);
 
-	Optional<Meal> get(String name);
+    Optional<Meal> get(String name);
 
-	List<Meal> getAll(User user);
+    List<Meal> getAll(User user);
 
-	List<Meal> search(String query, boolean showDisabled, User user);
+    List<Meal> search(String query, boolean showDisabled, User user);
 
-	void delete(Meal meal);
+    void delete(Meal meal);
 
-	void delete(Long id);
+    void delete(Long id);
 
-	Meal save(Meal meal);
+    Meal save(Meal meal);
 
-	boolean isUsed(Meal foodItem);
+    boolean isUsed(Meal foodItem);
+
+    boolean existsByName(String name);
 
 }

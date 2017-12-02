@@ -23,7 +23,8 @@
             </div>
             <hr class="m-t-none">
             <div class="m-t">
-                <a class="btn btn-sm btn-info" [routerLink]="['/diary/add/', activeDate | date: urlDateTimeFormat]">Add diary Entry
+                <a class="btn btn-sm btn-info" [routerLink]="['/diary/add/', activeDate | date: urlDateTimeFormat]">Add
+                    diary Entry
                     <i class="fa fa-plus-circle fa-2"></i>
                 </a>
             </div>
@@ -37,7 +38,8 @@
                     </h5>
 
                     <p class="col-md-7">
-                        You can update these targets to be unique to you by adding your user settings and nutrition goals
+                        You can update these targets to be unique to you by adding your user settings and nutrition
+                        goals
                     </p>
 
                     <div class="col-md-5">
@@ -54,7 +56,8 @@
                             {{ totalDiaryNutrition.calories || 0}} / {{goalProfile.nutritionalInformation.calories}}
                         </div>
                         <div class="progress progress-mini">
-                            <div [style.width]="(totalDiaryNutrition.calories || 0) / goalProfile.nutritionalInformation.calories * 100 + '%'" class="progress-bar"></div>
+                            <div [style.width]="(totalDiaryNutrition.calories || 0) / goalProfile.nutritionalInformation.calories * 100 + '%'"
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                 </div>
@@ -63,41 +66,45 @@
                     <li>
                         <!--<h2 class="no-margins ">4,422</h2>-->
                         <small>Total Fat</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.totalFat || 0}} / {{goalProfile.nutritionalInformation.consolidatedFats.totalFat}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.totalFat || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedFats.totalFat}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedFats.totalFat || 0) / goalProfile.nutritionalInformation.consolidatedFats.totalFat * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Saturated fat</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.saturatedFat || 0}} / {{goalProfile.nutritionalInformation.consolidatedFats.saturatedFat}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.saturatedFat || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedFats.saturatedFat}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedFats.saturatedFat || 0) / goalProfile.nutritionalInformation.consolidatedFats.saturatedFat * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Cholesterol</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.cholesterol || 0}} / {{goalProfile.nutritionalInformation.consolidatedFats.cholesterol}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedFats.cholesterol || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedFats.cholesterol}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedFats.cholesterol || 0) / goalProfile.nutritionalInformation.consolidatedFats.cholesterol * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Sodium</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.mineralMap.SODIUM || 0}} / {{goalProfile.nutritionalInformation.mineralMap.SODIUM}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.mineralMap.SODIUM || 0}} /
+                            {{goalProfile.nutritionalInformation.mineralMap.SODIUM}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.mineralMap.SODIUM || 0) / goalProfile.nutritionalInformation.mineralMap.SODIUM * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                 </div>
@@ -105,49 +112,54 @@
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Potassium</small>
-                        <div class="stat-percent">{{totalDiaryNutrition.mineralMap.POTASSIUM || 0}} / {{goalProfile.nutritionalInformation.mineralMap.POTASSIUM}}
+                        <div class="stat-percent">{{totalDiaryNutrition.mineralMap.POTASSIUM || 0}} /
+                            {{goalProfile.nutritionalInformation.mineralMap.POTASSIUM}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.mineralMap.POTASSIUM || 0) / goalProfile.nutritionalInformation.mineralMap.POTASSIUM * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Total Carbohydrate</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedCarbs.total || 0}} / {{goalProfile.nutritionalInformation.consolidatedCarbs.total}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedCarbs.total || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedCarbs.total}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedCarbs.total || 0) / goalProfile.nutritionalInformation.consolidatedCarbs.total * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Sugar</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedCarbs.sugar || 0}} / {{goalProfile.nutritionalInformation.consolidatedCarbs.sugar}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedCarbs.sugar || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedCarbs.sugar}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedCarbs.sugar || 0) / goalProfile.nutritionalInformation.consolidatedCarbs.sugar * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                     <li>
                         <!--<h2 class="no-margins ">9,180</h2>-->
                         <small>Protein</small>
-                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedProteins.protein || 0}} / {{goalProfile.nutritionalInformation.consolidatedProteins.protein}}
+                        <div class="stat-percent"> {{totalDiaryNutrition.consolidatedProteins.protein || 0}} /
+                            {{goalProfile.nutritionalInformation.consolidatedProteins.protein}}
                         </div>
                         <div class="progress progress-mini">
                             <div [style.width]="(totalDiaryNutrition.consolidatedProteins.protein || 0) / goalProfile.nutritionalInformation.consolidatedProteins.protein * 100 + '%'"
-                                class="progress-bar"></div>
+                                 class="progress-bar"></div>
                         </div>
                     </li>
                 </div>
             </ul>
         </div>
         <div class="col-md-5">
-            <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors" [options]="barChartOptions"
-                [legend]="barChartLegend" [chartType]="barChartType">
+            <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors"
+                    [options]="barChartOptions"
+                    [legend]="barChartLegend" [chartType]="barChartType">
             </canvas>
         </div>
     </div>
@@ -189,18 +201,18 @@
                                     <div class="col-md-3">
                                         <table class="table table-hover m-t-md">
                                             <thead>
-                                                <tr>
-                                                    <th>Food</th>
-                                                    <th>Serving
-                                                        <i>(g)</i>
-                                                    </th>
-                                                </tr>
+                                            <tr>
+                                                <th>Food</th>
+                                                <th>Serving
+                                                    <i>(g)</i>
+                                                </th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let foodItem of diaryEntry.foodItemEntries">
-                                                    <td>{{ foodItem.name }}</td>
-                                                    <td>{{ foodItem.weightInGrams }}</td>
-                                                </tr>
+                                            <tr *ngFor="let foodItem of diaryEntry.foodItemEntries">
+                                                <td>{{ foodItem.name }}</td>
+                                                <td>{{ foodItem.weightInGrams }}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -208,64 +220,93 @@
                                         <div>
                                             <table class="table table-hover m-t-md">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Nutrition</th>
-                                                        <th>Amount</th>
-                                                        <th>Daily %</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th>Nutrition</th>
+                                                    <th>Amount</th>
+                                                    <th>Daily %</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Calories</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.calories || 0}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{ diaryEntry.totalNutrionalnformation.calories || 0 / goalProfile.nutritionalInformation.calories
-                                                                * 100 | number : '1.0-2' }}%</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Fat</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedFats.totalFat || 0}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{ diaryEntry.totalNutrionalnformation.consolidatedFats.totalFat || 0
-                                                                / goalProfile.nutritionalInformation.consolidatedFats.totalFat
-                                                                * 100 | number : '1.0-2' }}%</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Saturates</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedFats.saturatedFat || 0}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{ diaryEntry.totalNutrionalnformation.consolidatedFats.saturatedFat || 0
-                                                                / goalProfile.nutritionalInformation.consolidatedFats.saturatedFat
-                                                                * 100 | number : '1.0-2' }}%</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Sugars</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedCarbs.sugar || 0}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{ diaryEntry.totalNutrionalnformation.consolidatedCarbs.sugar || 0
-                                                                / goalProfile.nutritionalInformation.consolidatedCarbs.sugar
-                                                                * 100 | number : '1.0-2' }}%</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Salt</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.mineralMap.SODIUM || 0}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{ diaryEntry.totalNutrionalnformation.mineralMap.SODIUM || 0 / goalProfile.nutritionalInformation.mineralMap.SODIUM
-                                                                * 100 | number : '1.0-2' }}%</div>
-                                                        </td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>Calories</td>
+                                                    <td>{{diaryEntry.totalNutritionalInformation.calories || 0}}</td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">{{
+                                                            (diaryEntry.totalNutritionalInformation.calories || 0) /
+                                                            goalProfile.nutritionalInformation.calories
+                                                            * 100 | number : '1.0-2' }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Fat</td>
+                                                    <td>{{diaryEntry.totalNutritionalInformation.consolidatedFats.totalFat
+                                                        || 0}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">
+                                                            {{
+                                                            (diaryEntry.totalNutritionalInformation.consolidatedFats.totalFat
+                                                            || 0)
+                                                            /
+                                                            goalProfile.nutritionalInformation.consolidatedFats.totalFat
+                                                            * 100 | number : '1.0-2' }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Saturates</td>
+                                                    <td>
+                                                        {{diaryEntry.totalNutritionalInformation.consolidatedFats.saturatedFat
+                                                        || 0}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">{{
+                                                            (diaryEntry.totalNutritionalInformation.consolidatedFats.saturatedFat
+                                                            || 0)
+                                                            /
+                                                            goalProfile.nutritionalInformation.consolidatedFats.saturatedFat
+                                                            * 100 | number : '1.0-2' }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sugars</td>
+                                                    <td>{{diaryEntry.totalNutritionalInformation.consolidatedCarbs.sugar ||
+                                                        0}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">{{
+                                                            (diaryEntry.totalNutritionalInformation.consolidatedCarbs.sugar
+                                                            || 0)
+                                                            / goalProfile.nutritionalInformation.consolidatedCarbs.sugar
+                                                            * 100 | number : '1.0-2' }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Salt</td>
+                                                    <td>{{diaryEntry.totalNutritionalInformation.mineralMap.SODIUM || 0}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">{{
+                                                            (diaryEntry.totalNutritionalInformation.mineralMap.SODIUM || 0)
+                                                            /
+                                                            goalProfile.nutritionalInformation.mineralMap.SODIUM
+                                                            * 100 | number : '1.0-2' }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="p-m" style="display: block">
-                                            <canvas baseChart [data]="chartMap.get(diaryEntry.id)" [labels]="pieChartLabels" [colors]="pieChartColors" [chartType]="pieChartType"
-                                                [legend]="pieChartLegend">
+                                            <canvas baseChart [data]="chartMap.get(diaryEntry.id)"
+                                                    [labels]="pieChartLabels" [colors]="pieChartColors"
+                                                    [chartType]="pieChartType"
+                                                    [legend]="pieChartLegend">
                                             </canvas>
                                         </div>
                                     </div>
@@ -273,50 +314,65 @@
                                         <div class="m-t-md">
                                             <table class="table table-hover m-t-md">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Legend</th>
-                                                        <th>Macro</th>
-                                                        <th>(g)</th>
-                                                        <th>%</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th>Legend</th>
+                                                    <th>Macro</th>
+                                                    <th>(g)</th>
+                                                    <th>%</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <i class="fa fa-pagelines text-navy" [style.color]="pieChartColors[0].backgroundColor[0]"></i>
-                                                        </td>
-                                                        <td>Carbs</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedCarbs.total}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{chartPercentageMap.get(diaryEntry.id)[0] | number : '1.0-2'
-                                                                }}%
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <i class="fa fa-tint" [style.color]="pieChartColors[0].backgroundColor[1]"></i>
-                                                        </td>
-                                                        <td>Fats</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedFats.totalFat}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{chartPercentageMap.get(diaryEntry.id)[1] | number : '1.0-2'
-                                                                }}%
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <i class="fa fa-fire" [style.color]="pieChartColors[0].backgroundColor[2]"></i>
-                                                        </td>
-                                                        <td>Protein</td>
-                                                        <td>{{diaryEntry.totalNutrionalnformation.consolidatedProteins.protein}}</td>
-                                                        <td>
-                                                            <div class="font-bold text-navy">{{chartPercentageMap.get(diaryEntry.id)[2] | number : '1.0-2'
-                                                                }}%
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>
+                                                        <i class="fa fa-pagelines text-navy"
+                                                           [style.color]="pieChartColors[0].backgroundColor[0]"></i>
+                                                    </td>
+                                                    <td>Carbs</td>
+                                                    <td>
+                                                        {{diaryEntry.totalNutritionalInformation.consolidatedCarbs.total}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">
+                                                            {{chartPercentageMap.get(diaryEntry.id)[0] | number :
+                                                            '1.0-2'
+                                                            }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <i class="fa fa-tint"
+                                                           [style.color]="pieChartColors[0].backgroundColor[1]"></i>
+                                                    </td>
+                                                    <td>Fats</td>
+                                                    <td>
+                                                        {{diaryEntry.totalNutritionalInformation.consolidatedFats.totalFat}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">
+                                                            {{chartPercentageMap.get(diaryEntry.id)[1] | number :
+                                                            '1.0-2'
+                                                            }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <i class="fa fa-fire"
+                                                           [style.color]="pieChartColors[0].backgroundColor[2]"></i>
+                                                    </td>
+                                                    <td>Protein</td>
+                                                    <td>
+                                                        {{diaryEntry.totalNutritionalInformation.consolidatedProteins.protein}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="font-bold text-navy">
+                                                            {{chartPercentageMap.get(diaryEntry.id)[2] | number :
+                                                            '1.0-2'
+                                                            }}%
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -326,7 +382,9 @@
                                             <div class="btn-group col-md-10 col-md-offset-2">
                                                 <button type="button" class="btn btn-xs btn-white">View</button>
                                                 <button type="button" class="btn btn-xs btn-white">Edit</button>
-                                                <a (click)="toDeleteID=diaryEntry.id" data-toggle="modal" data-target="#deleteModal" type="button" class="btn btn-xs btn-white">Delete</a>
+                                                <a (click)="toDeleteID=diaryEntry.id" data-toggle="modal"
+                                                   data-target="#deleteModal" type="button"
+                                                   class="btn btn-xs btn-white">Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -356,7 +414,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" (click)="delete(toDeleteID)" data-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-danger" (click)="delete(toDeleteID)" data-dismiss="modal">Delete
+                </button>
             </div>
         </div>
     </div>

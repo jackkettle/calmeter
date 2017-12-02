@@ -57,12 +57,6 @@ public class UserHelper {
         WeightLogEntry weightLogEntryToReturn = weightLogEntryList.get(0);
         for (int i = 1; i < weightLogEntryList.size(); i++) {
             WeightLogEntry weightLogEntry = weightLogEntryList.get(i);
-
-            logger.info("{}", weightLogEntryList.size());
-            logger.info("{}", weightLogEntry.getWeightInKgs());
-            logger.info("{}", weightLogEntry.getDateTime());
-            logger.info("{}", weightLogEntryToReturn.getDateTime());
-
             if (weightLogEntry.getDateTime().isAfter(weightLogEntryToReturn.getDateTime())) {
                 weightLogEntryToReturn = weightLogEntry;
             }

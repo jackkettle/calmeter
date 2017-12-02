@@ -11,8 +11,6 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.calmeter.core.account.model.*;
-import com.calmeter.core.goal.model.GoalProfile;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -92,7 +90,7 @@ public class TestValueLoader {
     }
 
     public void createFoodItems(User user) {
-        NutritionalInformation nutritionalInformation = new NutritionalInformation();
+        NutritionalInformation nutritionalInformation = new NutritionalInformation(NutritionalInfoType.FOOD_ITEM);
         nutritionalInformation.setServingSize(118.0);
         nutritionalInformation.setCalories(89.0);
         nutritionalInformation.getConsolidatedCarbs().setSugar(12.0);
@@ -112,7 +110,7 @@ public class TestValueLoader {
 
         createFoodItemIfNotFound(foodItem);
 
-        nutritionalInformation = new NutritionalInformation();
+        nutritionalInformation = new NutritionalInformation(NutritionalInfoType.FOOD_ITEM);
         nutritionalInformation.setServingSize(46.0);
         nutritionalInformation.setCalories(195.0);
         nutritionalInformation.getConsolidatedCarbs().setSugar(0.4);

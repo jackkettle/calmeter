@@ -13,13 +13,13 @@ export class FoodService {
 
     private apiUrl = this.config.apiEndpoint + 'food-item';
 
-    getAllFoodByUser(): Observable<Response[]> {
+    getAll(): Observable<Response[]> {
         return this.authHttpService.get(`${this.apiUrl}/getAll`)
             .map((res: Response) => res.json())
         //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    getAllFoodUsingQuery(query, foodSource): Observable<Response[]> {
+    getAllUsingQuery(query, foodSource): Observable<Response[]> {
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('query', query);
@@ -32,12 +32,12 @@ export class FoodService {
             .map((res: Response) => res.json())
     }
 
-    getFood(id: number): Observable<Response[]> {
+    get(id: number): Observable<Response[]> {
         return this.authHttpService.get(`${this.apiUrl}/${id}`)
             .map((res: Response) => res.json())
     }
 
-    deleteFoodItem(id: number): Observable<Response[]> {
+    delete(id: number): Observable<Response[]> {
 
         let params: URLSearchParams = new URLSearchParams();
         let requestOptions = new RequestOptions();
@@ -48,13 +48,13 @@ export class FoodService {
 
     }
 
-    createFoodItem(body: Object): Observable<Response[]> {
+    create(body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/createFoodItem`, bodyString)
             .map((res: Response) => res.json())
     }
 
-    updateFoodItem(id: number, body: Object): Observable<Response[]> {
+    update(id: number, body: Object): Observable<Response[]> {
         let bodyString = JSON.stringify(body);
         return this.authHttpService.post(`${this.apiUrl}/updateFoodItem/${id}`, bodyString)
             .map((res: Response) => res.json())

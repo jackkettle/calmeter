@@ -15,53 +15,57 @@ import com.calmeter.core.food.repositroy.IMealRepository;
 @Transactional
 public class MealServiceImpl implements IMealService {
 
-	@Autowired
-	IMealRepository mealRepository;
-	
-	@Autowired
-	IFoodItemEntryService foodItemEntryService;
-	
-	@Override
-	public Optional<Meal> get(Long id){
-		return mealRepository.findById(id);
-	}
+    @Autowired
+    IMealRepository mealRepository;
 
-	@Override
-	public Optional<Meal> get(String name){
-		return mealRepository.findByName(name);
-	}
-	
-	@Override
-	public List<Meal> getAll(User user) {
-		return mealRepository.findAllByCreator(user);
-	}
-	
-	@Override
-	public List<Meal> search(String query, boolean showDisabled, User user) {
-		return mealRepository.findByNameContainingIgnoreCaseAndDisabledAndCreator(query, showDisabled, user);
+    @Autowired
+    IFoodItemEntryService foodItemEntryService;
 
-	}
-	
-	@Override
-	public void delete(Meal meal) {
-		 mealRepository.delete(meal);
+    @Override
+    public Optional<Meal> get(Long id) {
+        return mealRepository.findById(id);
+    }
 
-	}
-	
-	@Override
-	public void delete(Long id) {
-		mealRepository.delete(id);
-	}
-	
-	@Override
-	public Meal save(Meal meal) {
-		return mealRepository.save(meal);
+    @Override
+    public Optional<Meal> get(String name) {
+        return mealRepository.findByName(name);
+    }
 
-	}
+    @Override
+    public List<Meal> getAll(User user) {
+        return mealRepository.findAllByCreator(user);
+    }
 
-	@Override
-	public boolean isUsed(Meal meal) {
-		return foodItemEntryService.isMealUsed(meal);
-	}
-	
+    @Override
+    public List<Meal> search(String query, boolean showDisabled, User user) {
+        return mealRepository.findByNameContainingIgnoreCaseAndDisabledAndCreator(query, showDisabled, user);
+
+    }
+
+    @Override
+    public void delete(Meal meal) {
+        mealRepository.delete(meal);
+
+    }
+
+    @Override
+    public void delete(Long id) {
+        mealRepository.delete(id);
+    }
+
+    @Override
+    public Meal save(Meal meal) {
+        return mealRepository.save(meal);
+    }
+
+    @Override
+    public boolean isUsed(Meal meal) {
+        return foodItemEntryService.isMealUsed(meal);
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return mealRepository.existsByName(name);
+    }
+
 }

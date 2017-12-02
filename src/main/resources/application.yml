@@ -22,3 +22,4 @@ demo.security.jwt:
 logging:
   level:
     com.calmeter.core: INFO
+    com.calmeter.core.food.source: DEBUG
