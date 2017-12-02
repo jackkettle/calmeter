@@ -1,0 +1,86 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.2.RELEASE'
+    }
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'application'
+
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+    baseName = 'calmeter'
+    version = '0.0.1'
+}
+
+sourceCompatibility = 1.8
+
+compileJava {
+    targetCompatibility = 1.8
+}
+
+mainClassName = "com.calmeter.core.Main"
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-release" }
+    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url "http://maven.springframework.org/milestone" }
+}
+
+test {
+    useTestNG()
+}
+
+dependencies {
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.4.2.RELEASE'
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.11.Final'
+    compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE') {
+        exclude(module: 'commons-logging')
+    }
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.2.4.Final'
+    compile group: 'org.hibernate', name: 'hibernate-java8', version: '5.0.11.Final'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '1.4.2.RELEASE'
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3') {
+        exclude(module: 'commons-logging')
+    }
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    compile group: 'com.h2database', name: 'h2', version: '1.3.156'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.testng', name: 'testng', version: '6.8'
+    compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.4.2.RELEASE'
+    compileOnly group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.6'
+}
+
+jar {
+    baseName = 'calmeter'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
