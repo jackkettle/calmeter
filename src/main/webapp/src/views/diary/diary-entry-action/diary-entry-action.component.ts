@@ -1,16 +1,12 @@
-import { Component, OnInit, Injectable, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs/Rx';
 import { NotificationsService } from 'angular2-notifications';
-import { APP_CONFIG, IAppConfig } from '../../../_app/app.config';
 import { SharedData } from '../../../_providers/shared-data.provider';
 import { DiaryService } from '../../../_services/diary.service';
 
-import * as $ from "jquery";
-import * as moment from "moment";
-
+declare var $ :any;
 
 @Component({
     selector: 'diaryEntryAction',

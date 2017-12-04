@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FoodService } from '../../../_services/food.service';
 
-import * as $ from "jquery";
+declare var $ :any;
 
 @Component({
     selector: 'food-selection',

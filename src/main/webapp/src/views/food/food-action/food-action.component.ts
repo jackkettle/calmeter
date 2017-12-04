@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup, FormArray, Validators} from '@angul
 import {Router, ActivatedRoute} from '@angular/router';
 import {FoodService} from '../../../_services/food.service';
 
-import * as $ from "jquery";
+declare var $ :any;
 
 @Component({
     selector: 'foodAction',

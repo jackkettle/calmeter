@@ -28,3 +28,9 @@
  * see https://github.com/typings/registry
  *
  */
+
+import '../node_modules/@types/jquery/';
+import '../node_modules/@types/ion.rangeslider/'
+import '../node_modules/@types/bootstrap.timepicker/'
+import '../node_modules/@types/bootstrap-touchspin/'
+import '../node_modules/@types/bootstrap-datepicker'
