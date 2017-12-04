@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.calmeter.core.tests.diary.utils.DiaryEntryHelperTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-12-02T22:12:44" hostname="JKettle-P51" time="0.057">
+  <properties/>
+  <testcase name="addObjectsTest" classname="com.calmeter.core.tests.diary.utils.DiaryEntryHelperTests" time="0.057"/>
+  <system-out><![CDATA[2017-12-02 22:12:44.302  INFO 14896 --- [    Test worker] c.c.core.food.utils.FoodItemHelper       : modifier: 1.5
+2017-12-02 22:12:44.309  INFO 14896 --- [    Test worker] c.c.core.food.utils.FoodItemHelper       : modifier: 0.5
+2017-12-02 22:12:44.340  INFO 14896 --- [    Test worker] c.c.c.t.d.utils.DiaryEntryHelperTests    : Food: Banana, cals: 133.5
+2017-12-02 22:12:44.341  INFO 14896 --- [    Test worker] c.c.c.t.d.utils.DiaryEntryHelperTests    : Food: Egg, fried, cals: 97.5
+2017-12-02 22:12:44.341  INFO 14896 --- [    Test worker] c.c.c.t.d.utils.DiaryEntryHelperTests    : totalCals: 231.0, totalNutritionCals: 231.0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

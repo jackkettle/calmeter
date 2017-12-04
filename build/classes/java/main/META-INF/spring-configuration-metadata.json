@@ -1,0 +1,46 @@
+{
+  "groups": [
+    {
+      "name": "demo.security.jwt",
+      "type": "com.calmeter.core.security.config.JwtSettings",
+      "sourceType": "com.calmeter.core.security.config.JwtSettings"
+    },
+    {
+      "name": "food.source",
+      "type": "com.calmeter.core.food.source.config.FoodSourceConfig",
+      "sourceType": "com.calmeter.core.food.source.config.FoodSourceConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "demo.security.jwt.refresh-token-exp-time",
+      "type": "java.lang.Integer",
+      "description": "{@link JwtToken} can be refreshed during this timeframe.",
+      "sourceType": "com.calmeter.core.security.config.JwtSettings"
+    },
+    {
+      "name": "demo.security.jwt.token-expiration-time",
+      "type": "java.lang.Integer",
+      "description": "{@link JwtToken} will expire after this time.",
+      "sourceType": "com.calmeter.core.security.config.JwtSettings"
+    },
+    {
+      "name": "demo.security.jwt.token-issuer",
+      "type": "java.lang.String",
+      "description": "Token issuer.",
+      "sourceType": "com.calmeter.core.security.config.JwtSettings"
+    },
+    {
+      "name": "demo.security.jwt.token-signing-key",
+      "type": "java.lang.String",
+      "description": "Key is used to sign {@link JwtToken}.",
+      "sourceType": "com.calmeter.core.security.config.JwtSettings"
+    },
+    {
+      "name": "food.source.tesco-subscription-key",
+      "type": "java.lang.String",
+      "sourceType": "com.calmeter.core.food.source.config.FoodSourceConfig"
+    }
+  ],
+  "hints": []
+}
