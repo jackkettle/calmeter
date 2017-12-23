@@ -1,5 +1,6 @@
 package com.calmeter.core;
 
+import com.calmeter.core.reader.BarCodeReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -19,6 +20,11 @@ public class ApplicationConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    public BarCodeReader barCodeReader() {
+        return new BarCodeReader();
     }
 
 }

@@ -53,6 +53,11 @@ public class FoodItemServiceImpl implements IFoodItemService {
 	}
 
 	@Override
+	public Optional<FoodItem> getByGtin(long gtin) {
+		return foodItemRepository.findByGtin(gtin);
+	}
+
+	@Override
 	public boolean existsExternal(long externalId, FoodItemType foodItemType) {
 		return foodItemRepository.existsByExternalIdAndFoodItemType(externalId, foodItemType);
 	}

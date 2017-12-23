@@ -1,7 +1,5 @@
-/target/
-/bin/
-/build/
-/.idea/
-/.gradle/
-.classpath
-.project
+target/
+bin/
+build/
+.gradle/
+.idea/

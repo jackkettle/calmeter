@@ -1,10 +1,10 @@
-import { Component, OnInit, Injectable, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { NotificationsService } from 'angular2-notifications';
-import { APP_CONFIG, IAppConfig } from '../../../_app/app.config';
-import { UserService } from "../../../_services/";
+import {Component, OnInit, Inject} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {NotificationsService} from 'angular2-notifications';
+import {APP_CONFIG, IAppConfig} from '../../../_app/app.config';
+import {UserService} from "../../../_services/";
 
-import * as $ from "jquery";
+declare var $: any;
 
 @Component({
     selector: 'editUserSelector',
@@ -17,20 +17,19 @@ export class EditUserComponent implements OnInit {
 
     public notificationOptions: any;
 
-    constructor(
-        @Inject(APP_CONFIG) private config: IAppConfig,        
-        private formBuilder: FormBuilder, 
-        private userService: UserService,
-        private notificationsService: NotificationsService
-    ) { }
+    constructor(@Inject(APP_CONFIG) private config: IAppConfig,
+                private formBuilder: FormBuilder,
+                private userService: UserService,
+                private notificationsService: NotificationsService) {
+    }
 
     ngOnInit() {
 
         this.notificationOptions = this.config.toastNotificationOptions;
-        
+
         this.formGroup = this.formBuilder.group({
-            username: new FormControl({ value: '', disabled: true }),
-            id: new FormControl({ value: '', disabled: true }),
+            username: new FormControl({value: '', disabled: true}),
+            id: new FormControl({value: '', disabled: true}),
             firstname: [''],
             lastname: [''],
             email: [''],
@@ -43,8 +42,7 @@ export class EditUserComponent implements OnInit {
             })
         });
 
-        var heightSelector = $(".height-slider");
-        heightSelector.ionRangeSlider({
+        $(".height-slider").ionRangeSlider({
             values: this.generateHeightValues(),
             onFinish: (function (data) {
                 var value = data.from_value;
@@ -54,8 +52,7 @@ export class EditUserComponent implements OnInit {
             }).bind(this)
         })
 
-        var weightSelector = $(".weight-slider");
-        weightSelector.ionRangeSlider({
+        $(".weight-slider").ionRangeSlider({
             values: this.generateWeightValues(),
             onFinish: (function (data) {
                 var value = data.from_value;
@@ -102,7 +99,7 @@ export class EditUserComponent implements OnInit {
             this.formGroup.controls["dateOfBirth"].setValue(this.getDateFormat(dob));
             var sex: string = data.userProfile.sex;
             sex = sex.toLocaleLowerCase();
-            sex = sex.charAt(0).toUpperCase() + sex.slice(1)   
+            sex = sex.charAt(0).toUpperCase() + sex.slice(1)
             this.formGroup.controls["sex"].setValue(sex);
 
             this.formGroup.controls["height"].setValue(data.userProfile.height);
@@ -184,17 +181,17 @@ export class EditUserComponent implements OnInit {
         });
     }
 
-    getCurrentWeight(weightList: Array<any>){
+    getCurrentWeight(weightList: Array<any>) {
 
-        if(weightList == null || weightList.length < 1)
+        if (weightList == null || weightList.length < 1)
             return 0;
 
         let mostRecentWeight: any = weightList[0];
-        for(var i = 1; i < weightList.length; i ++) {
-            let mostRecentDate: Date =  new Date(mostRecentWeight.dateTime);
-            let entryDate : Date =  new Date(weightList[i].dateTime);
+        for (var i = 1; i < weightList.length; i++) {
+            let mostRecentDate: Date = new Date(mostRecentWeight.dateTime);
+            let entryDate: Date = new Date(weightList[i].dateTime);
 
-            if(entryDate > mostRecentDate){
+            if (entryDate > mostRecentDate) {
                 mostRecentWeight = weightList[i];
             }
         }
@@ -212,7 +209,7 @@ export class EditUserComponent implements OnInit {
             }
         );
     }
-    
+
     successNotification() {
         this.notificationsService.success(
             'User settings saved',

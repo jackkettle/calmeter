@@ -1,5 +1,6 @@
 package com.calmeter.core.food.source.utils;
 
+import com.calmeter.core.food.source.handler.IExternalFoodSourceHandler;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
@@ -26,5 +27,5 @@ public class FoodSourceHelper {
 
 		return foodSourceHandler;
 	}
-	
+
 }

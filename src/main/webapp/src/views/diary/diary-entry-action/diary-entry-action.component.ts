@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { NotificationsService } from 'angular2-notifications';
 import { SharedData } from '../../../_providers/shared-data.provider';
 import { DiaryService } from '../../../_services/diary.service';
+import {APP_CONFIG, IAppConfig} from "../../../_app/app.config";
 
 declare var $ :any;
 
@@ -15,6 +16,7 @@ declare var $ :any;
 })
 export class DiaryEntryActionComponent implements OnInit {
 
+    public notificationOptions: any;
 
     public id: number;
     public date: string;
@@ -22,11 +24,10 @@ export class DiaryEntryActionComponent implements OnInit {
     public currentDate: Date;
     public activeDate: Date;
 
-    public notificationOptions: any;
-
     public formGroup: FormGroup;
 
     constructor(
+        @Inject(APP_CONFIG) private config: IAppConfig,
         private router: Router,
         private sharedData: SharedData,
         private formBuilder: FormBuilder,
@@ -44,6 +45,8 @@ export class DiaryEntryActionComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        this.notificationOptions = this.config.toastNotificationOptions;
 
         var editAction = false;
         if (this.router.url.includes('edit'))
@@ -126,8 +129,14 @@ export class DiaryEntryActionComponent implements OnInit {
         // });
     }
 
-    handleFoodUpdated(food: any) {
+    handleFormDataUpdated(food: any) {
         this.formGroup.setControl('foodItemFormArray', food);
+    }
+
+    handleReportDataUpdated(report: any) {
+        if (report && report.type === "error") {
+            this.errorNotification(report.title, report.content);
+        }
     }
 
     initTouchSpin(index: number) {
@@ -176,4 +185,24 @@ export class DiaryEntryActionComponent implements OnInit {
     backClicked() {
         this.location.back();
     }
+
+    errorNotification(title: string, content?: string) {
+
+        var contentTemp;
+        if (content == null)
+            contentTemp = 'Time: ' + new Date().toLocaleTimeString();
+        else
+            contentTemp = content;
+
+        this.notificationsService.error(
+            title,
+            contentTemp,
+            {
+                showProgressBar: true,
+                pauseOnHover: true,
+                clickToClose: false,
+            }
+        )
+    }
+
 }

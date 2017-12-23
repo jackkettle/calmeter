@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 @Component
@@ -28,54 +27,32 @@ public class BarCodeReader {
         this.hintsMap = hintsMap;
     }
 
-    public Optional<String> getCodeFromImage(File file, Boolean useHints) throws Exception {
-
-        BufferedImage bufferedImage = ImageIO.read(file);
-        if (bufferedImage.getHeight() > READER_HEIGHT || bufferedImage.getWidth() > READER_HEIGHT) {
+    public BufferedImage resize(BufferedImage tmpImage) {
+        if (tmpImage.getHeight() > READER_HEIGHT || tmpImage.getWidth() > READER_HEIGHT) {
             Dimension newMaxSize = new Dimension(READER_WIDTH, READER_HEIGHT);
-            bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.QUALITY, newMaxSize.width, newMaxSize.height);
+            return Scalr.resize(tmpImage, Scalr.Method.QUALITY, newMaxSize.width, newMaxSize.height);
         }
-
-        if (useHints)
-            return this.getCodeFromImage(bufferedImage, this.hintsMap);
-        else
-            return this.getCodeFromImage(bufferedImage, new HashMap<>());
+        return tmpImage;
     }
 
-    public Optional<String> getCodeFromImage(File file, Map<DecodeHintType, Object> hints) throws Exception {
-        if (file == null || file.getName().trim().isEmpty())
-            throw new IllegalArgumentException("File not found, or invalid file name.");
-
-        BufferedImage tmpImage;
-        try {
-            tmpImage = ImageIO.read(file);
-        } catch (IOException tmpIoe) {
-            throw new Exception(tmpIoe.getMessage());
-        }
-
-        if (tmpImage == null)
-            throw new IllegalArgumentException("Could not decode image.");
-
-        return getCodeFromImage(tmpImage, hints);
+    public Optional<String> getCodeFromImage(File tmpImage) throws IOException {
+        InputStream in = new FileInputStream(tmpImage);
+        BufferedImage bufferedImage = ImageIO.read(in);
+        return getCodeFromImage(bufferedImage);
     }
 
-    private Optional<String> getCodeFromImage(BufferedImage tmpImage, Map<DecodeHintType, Object> hints) throws Exception {
+    public Optional<String> getCodeFromImage(BufferedImage tmpImage) {
 
+        tmpImage = resize(tmpImage);
         LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpImage);
         BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
         MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
-
         for (int i = 0; i < 3; i++) {
             try {
-                Result tmpResult;
-                if (hints != null && !hints.isEmpty())
-                    tmpResult = tmpBarcodeReader.decode(tmpBitmap, hints);
-                else
-                    tmpResult = tmpBarcodeReader.decode(tmpBitmap);
-
+                Result tmpResult = tmpBarcodeReader.decode(tmpBitmap, this.hintsMap);
                 return Optional.of(String.valueOf(tmpResult.getText()));
             } catch (Exception exception) {
-                logger.info("Rotating...");
+                logger.info("Could not read barcode. Rotating...");
                 tmpBitmap = tmpBitmap.rotateCounterClockwise();
             }
         }

@@ -9,24 +9,26 @@ import com.calmeter.core.food.model.FoodItemType;
 
 public interface IFoodItemService {
 
-	Optional<FoodItem> get(long id);
+    Optional<FoodItem> get(long id);
 
-	Optional<FoodItem> get(String name);
+    Optional<FoodItem> get(String name);
 
-	List<FoodItem> getAll(User user);
+    Optional<FoodItem> getByGtin(long gtin);
 
-	FoodItem save(FoodItem foodItem);
+    List<FoodItem> getAll(User user);
 
-	void delete(Long id);
+    FoodItem save(FoodItem foodItem);
 
-	void delete(FoodItem foodItem);
+    void delete(Long id);
 
-	Optional<FoodItem> getExternal(long externalId, FoodItemType foodItemType);
+    void delete(FoodItem foodItem);
 
-	boolean existsExternal(long externalId, FoodItemType foodItemType);
+    Optional<FoodItem> getExternal(long externalId, FoodItemType foodItemType);
 
-	List<FoodItem> search(String query, boolean showDisabled, User user);
+    boolean existsExternal(long externalId, FoodItemType foodItemType);
 
-	boolean isUsed(FoodItem foodItem);
+    List<FoodItem> search(String query, boolean showDisabled, User user);
+
+    boolean isUsed(FoodItem foodItem);
 
 }

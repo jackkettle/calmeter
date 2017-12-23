@@ -46,8 +46,14 @@ export class MealActionComponent implements OnInit {
         });
     }
 
-    handleFoodUpdated(food: any) {
+    handleFormDataUpdated(food: any) {
         this.formGroup.setControl('foodItemFormArray', food);
+    }
+
+    handleReportDataUpdated(report: any) {
+        if (report && report.type === "error") {
+            this.errorNotification(report.title, report.content);
+        }
     }
 
     backClicked() {
@@ -59,25 +65,34 @@ export class MealActionComponent implements OnInit {
             res => {
                 this.successNotification();
             }, err => {
-                if(err.status == 409){
-                    this.errorNotification("A meal already exists with that name");
+                let content = "";
+                if (err.status == 409) {
+                    content = this.config.errorCodes.meals.mealAlreadyExistsError;
                 }
-                else{
-                    this.errorNotification("Unable to add meal");
+                else {
+                    content = this.config.errorCodes.meals.unknownError;
                 }
+                this.errorNotification(this.config.errorCodes.meals.errorTitle, content);
+
             }
         );
     }
 
-    errorNotification(title: string) {
+    errorNotification(title: string, content?: string) {
+
+        var contentTemp;
+        if (content == null)
+            contentTemp = 'Time: ' + new Date().toLocaleTimeString();
+        else
+            contentTemp = content;
+
         this.notificationsService.error(
             title,
-            'Time: ' + new Date().toLocaleTimeString(),
+            contentTemp,
             {
                 showProgressBar: true,
-                pauseOnHover: false,
-                clickToClose: true,
-                maxLength: 10
+                pauseOnHover: true,
+                clickToClose: false,
             }
         )
     }
@@ -90,7 +105,6 @@ export class MealActionComponent implements OnInit {
                 showProgressBar: true,
                 pauseOnHover: false,
                 clickToClose: true,
-                maxLength: 10
             }
         )
     }

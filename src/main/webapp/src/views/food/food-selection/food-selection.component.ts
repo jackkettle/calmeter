@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-import { FoodService } from '../../../_services/food.service';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, FormArray, Validators} from '@angular/forms';
+import {FoodService} from '../../../_services';
+import {APP_CONFIG, IAppConfig} from "../../../_app/app.config";
 
-declare var $ :any;
+declare var $: any;
 
 @Component({
     selector: 'food-selection',
@@ -11,8 +12,14 @@ declare var $ :any;
 })
 export class FoodSelectionComponent implements OnInit {
 
+    @ViewChild("fileInput") fileInput;
+    public file: File;
+
     @Output()
     public formData = new EventEmitter();
+
+    @Output()
+    public reportData = new EventEmitter();
 
     @Input()
     public hasError: boolean;
@@ -27,27 +34,29 @@ export class FoodSelectionComponent implements OnInit {
     public searchOptions: Array<any>;
     public cssClasses: any;
     public loadingIndicator: boolean;
+    public barcodeLoadingIndicator: boolean;
+    public fileLoaded: boolean;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private foodService: FoodService
-    ) {
-
+    constructor(@Inject(APP_CONFIG) private config: IAppConfig,
+                private formBuilder: FormBuilder,
+                private foodService: FoodService) {
+        this.fileLoaded = false;
         this.loadingIndicator = true;
+        this.barcodeLoadingIndicator = false;
         this.searchOption = "food";
-        this.selected = new Array();
+        this.selected = [];
 
         this.page = {
             pageNumber: 0,
             size: 20,
             totalElements: 0
-        }
+        };
 
         this.searchOptions = [
-            { name: 'food', label: 'My Food', sourceID: 1 },
-            { name: 'recipes', label: 'My Recipes', sourceID: 2 },
-            { name: 'tesco', label: 'Tesco', sourceID: 3 }
-        ]
+            {name: 'food', label: 'My Food', sourceID: 1},
+            {name: 'tesco', label: 'Tesco', sourceID: 3},
+            {name: 'open-food-facts', label: 'OpenFoodFacts', sourceID: 4}
+        ];
 
         this.cssClasses = {
             'sortAscending': 'fa fa-fw fa-sort-desc',
@@ -64,7 +73,7 @@ export class FoodSelectionComponent implements OnInit {
         this.formGroup = this.formBuilder.group({
             foodItemFormArray: this.formBuilder.array([], Validators.required),
         });
-        this.setPage({ offset: 0 });
+        this.setPage({offset: 0});
         this.searchField = new FormControl();
     }
 
@@ -90,20 +99,25 @@ export class FoodSelectionComponent implements OnInit {
     }
 
     transformData(data) {
-        let dataRows: Array<any> = []
+        let dataRows: Array<any> = [];
         for (let entry of data) {
             let rowData = {
                 'id': entry.externalId,
                 'name': entry.name,
                 'label': entry.name,
                 'servingSize': entry.nutritionalInformation.servingSize + ' g',
+                'calories': entry.nutritionalInformation.calories + ' kcal',
                 'source': this.searchOption
-            }
+            };
+
             if (this.searchOption === "food")
-                rowData.id = entry.id
+                rowData.id = entry.id;
 
             if (this.searchOption === "tesco")
-                rowData.id = entry.externalId
+                rowData.id = entry.gtin;
+
+            if (this.searchOption === "open-food-facts")
+                rowData.id = entry.gtin;
 
             dataRows.push(rowData);
         }
@@ -113,32 +127,39 @@ export class FoodSelectionComponent implements OnInit {
     onSelect(selected) { // either add or remove
         selected = selected.selected;
         let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
+        let updatedControls = this.formBuilder.array([]);
 
-        if (controls.length < selected.length) { // Add
-            let entry = selected[selected.length - 1];;
-            let row = this.formBuilder.group({
-                ngxIndex: [entry.$$index],
-                name: [entry.name],
-                id: [entry.id],
-                source: [entry.source],
-                servingSize: [entry.servingSize],
-                servings: [1.0],
-                weight: ['']
-            });
+        for (let i = 0; i < controls.length; i++) {
+            let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
+            let barcodeValue = myFormGroup.controls["barcodeItem"].value;
+
+            if (barcodeValue == false) {
+                updatedControls.push(myFormGroup);
+            }
+        }
+
+        if (updatedControls.length < selected.length) { // Add
+            let entry = selected[selected.length - 1];
+            let row = this.getRow(entry.$$index, entry.name, entry.id, entry.source, entry.servingSize, 1.0, '', false);
             controls.push(row);
             this.updateOutput();
 
         } else { // Remove
 
-            var foundNgxIds = Array();
+            let foundNgxIds = Array();
             for (let entry of selected) {
                 foundNgxIds.push(entry.$$index);
             }
 
-            for (var i = 0; i < controls.length; i++) {
+            for (let i = 0; i < controls.length; i++) {
                 let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
-                var ngxValue = myFormGroup.controls["ngxIndex"].value;
 
+                let barcodeValue = myFormGroup.controls["barcodeItem"].value;
+                if (barcodeValue == true) {
+                    continue;
+                }
+
+                let ngxValue = myFormGroup.controls["ngxIndex"].value;
                 if (!foundNgxIds.includes(ngxValue)) {
                     controls.removeAt(i);
                     this.updateOutput();
@@ -151,6 +172,7 @@ export class FoodSelectionComponent implements OnInit {
     updateOutput() {
         this.formData.emit(this.formGroup.controls["foodItemFormArray"]);
     }
+
 
     updateItems() {
         let term = this.searchField.value;
@@ -175,9 +197,83 @@ export class FoodSelectionComponent implements OnInit {
         this.loadingIndicator = true;
         this.foodService.getAll().subscribe(
             response => {
-                this.rows = this.transformData(response)
+                this.rows = this.transformData(response);
                 this.loadingIndicator = false;
             }
         );
+    }
+
+    fileChange(files: any) {
+
+        this.barcodeLoadingIndicator = true;
+        let file = this.fileInput.nativeElement.files[0];
+        let formData = new FormData();
+        formData.append('uploadFile', file, file.name);
+
+        this.foodService.getFoodItemFromBarcodeImage(formData).subscribe(
+            response => {
+                this.barcodeLoadingIndicator = false;
+                console.log("Success from barcode");
+                console.log(response);
+                this.handleBarcodeSuccess(response);
+            },
+            err => {
+                this.barcodeLoadingIndicator = false;
+                this.reportData.emit(this.getReportFromBarcodeResponse(err, "Barcode reader error"));
+            }
+        );
+
+        this.fileInput.nativeElement.value = "";
+    }
+
+    getReportFromBarcodeResponse(errorResponse: any, title: string) {
+        let report = {
+            "type": "error",
+            "title": title,
+            "content": ""
+        };
+        if (errorResponse.status == 400) {
+            report.content = this.config.errorCodes.foodSelection.failedToReadBarcodeError;
+        } else if (errorResponse.status == 404) {
+            report.content = this.config.errorCodes.foodSelection.failedToFindFoodItemFromBarcodeError;
+        }
+        return report;
+    }
+
+    handleBarcodeSuccess(response) {
+        let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
+        let row = this.getRow(null, response.name, response.gtin, response.foodItemType, response.nutritionalInformation.servingSize, 1.0, '', true);
+
+        for (let i = 0; i < controls.length; i++) {
+            let myFormGroup: FormGroup = <FormGroup>controls.controls[i];
+            let idValue = myFormGroup.controls["id"].value;
+            if (response.gtin === idValue) {
+                return;
+            }
+        }
+
+        controls.push(row);
+        this.updateOutput();
+    }
+
+    getRow(ngxIndex, name, id, source, servingSize, servings, weight, barcodeItem): FormGroup {
+        return this.formBuilder.group({
+            ngxIndex: [ngxIndex],
+            name: [name],
+            id: [id],
+            source: [source],
+            servingSize: [servingSize],
+            servings: [servings],
+            weight: [weight],
+            barcodeItem: [barcodeItem]
+        });
+    }
+
+    remove(index: number) {
+
+        let controls = <FormArray>this.formGroup.controls['foodItemFormArray'];
+        controls.removeAt(index);
+        this.updateOutput();
+
     }
 }

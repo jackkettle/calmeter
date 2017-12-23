@@ -1,0 +1,83 @@
+.custom-well {
+  min-height: 20px;
+  padding: 8px 20px;
+  border: 1px solid #e3e3e3;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.custom-slider-well {
+  min-height: 20px;
+  padding: 8px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e3e3e3;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.slider-input {
+  margin-top: 3px;
+}
+
+.datatable-checkbox input[type='checkbox'] {
+  margin: .25em;
+}
+
+.loading-spinner{
+  padding-top: 3px;
+  padding-left: 0px;
+}
+
+.text-very-muted{
+  color: #AAA;
+  font-weight: 600;
+}
+
+.center{
+  margin: 0 auto;
+}
+
+.h-110{
+  min-height: 110px;
+}
+
+.fat {
+  background-color: #84C3E8;
+}
+
+.protein {
+  background-color: #FCA2B4;
+}
+
+.carb {
+  background-color: #FEE19B;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.food-pie-chart {
+  display: block;
+  margin: 0 auto;
+  padding-top: 10px;
+}
+
+.micro-nutriant-input {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.contact-box.center-version>.contact-box-inner {
+  display: block;
+  background-color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+.contact-box.center-version>.contact-box-inner img {
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

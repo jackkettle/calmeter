@@ -61,7 +61,7 @@ export class AuthHttpService {
     }
   }
 
-  post(endpoint: string, body: string): Observable<any> {
+  post(endpoint: string, body: any, options?: RequestOptionsArgs): Observable<any> {
     if (this.authService.tokenRequiresRefresh()) {
       this.authService.tokenIsBeingRefreshed.next(true);
       return this.authService.refreshToken().switchMap(
@@ -69,7 +69,7 @@ export class AuthHttpService {
           this.authService.refreshTokenSuccessHandler(data);
           if (this.authService.loggedIn()) {
             this.authService.tokenIsBeingRefreshed.next(false);
-            return this.postInternal(endpoint, body);
+            return this.postInternal(endpoint, body, options);
           } else {
             this.authService.tokenIsBeingRefreshed.next(false);
             this.router.navigate(['/sessiontimeout']);
@@ -82,7 +82,7 @@ export class AuthHttpService {
       });
     }
     else {
-      return this.postInternal(endpoint, body);
+      return this.postInternal(endpoint, body, options);
     }
   }
 
@@ -90,8 +90,8 @@ export class AuthHttpService {
     return this.authHttp.get(endpoint, options);
   }
 
-  private postInternal(endpoint: string, body: string) {
-    return this.authHttp.post(endpoint, body);
+  private postInternal(endpoint: string, body: string, options?: RequestOptionsArgs) {
+    return this.authHttp.post(endpoint, body, options);
   }
 
   private deleteInternal(endpoint: string, options?: RequestOptionsArgs) {

@@ -1,9 +1,18 @@
 package com.calmeter.core.food.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.calmeter.core.food.source.handler.IExternalFoodSourceHandler;
+import com.calmeter.core.reader.BarCodeReader;
+import com.calmeter.core.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,144 +34,193 @@ import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 import com.calmeter.core.food.source.model.FoodSource;
 import com.calmeter.core.food.source.service.IFoodSourceService;
 import com.calmeter.core.food.source.utils.FoodSourceHelper;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 @RestController
 @RequestMapping("/api/food-item")
 public class FoodItemApiController {
 
-	@Autowired
-	UserHelper userHelper;
+    @Autowired
+    UserHelper userHelper;
 
-	@Autowired
-	IFoodItemService foodItemService;
+    @Autowired
+    IFoodItemService foodItemService;
 
-	@Autowired
-	IFoodSourceService foodSourceService;
+    @Autowired
+    IFoodSourceService foodSourceService;
 
-	@Autowired
-	IFoodItemEntryService foodItemEntryService;
+    @Autowired
+    IFoodItemEntryService foodItemEntryService;
 
-	@Autowired
-	FoodSourceHelper foodSourceHelper;
+    @Autowired
+    FoodSourceHelper foodSourceHelper;
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	ResponseEntity<FoodItem> getFoodItem(@PathVariable Integer id) {
+    @Autowired
+    BarCodeReader barCodeReader;
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @Autowired
+    FileUtils fileUtils;
 
-		Optional<FoodItem> foodItemWrapper = foodItemService.get(id);
-		if (!foodItemWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    ResponseEntity<FoodItem> getFoodItem(@PathVariable Integer id) {
 
-		FoodItem foodItem = foodItemWrapper.get();
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		if (!foodItem.getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<FoodItem> foodItemWrapper = foodItemService.get(id);
+        if (!foodItemWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-		return new ResponseEntity<>(foodItem, HttpStatus.OK);
-	}
+        FoodItem foodItem = foodItemWrapper.get();
 
-	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
-	ResponseEntity<Collection<FoodItem>> getUserFoodItems() {
+        if (!foodItem.getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        return new ResponseEntity<>(foodItem, HttpStatus.OK);
+    }
 
-		List<FoodItem> foodItems = foodItemService.getAll(userWrapper.get());
-		return new ResponseEntity<>(foodItems, HttpStatus.OK);
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    ResponseEntity<Collection<FoodItem>> getUserFoodItems() {
 
-	}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-	@RequestMapping(value = "/searchFood", method = RequestMethod.GET)
-	ResponseEntity<Collection<FoodItem>> searchFood(@RequestParam("query") String query,
-			@RequestParam("foodSource") String inputFoodSource) {
-		
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        List<FoodItem> foodItems = foodItemService.getAll(userWrapper.get());
+        return new ResponseEntity<>(foodItems, HttpStatus.OK);
 
-		Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName(inputFoodSource);
-		if (!foodSourceWrapper.isPresent())
-			return new ResponseEntity<Collection<FoodItem>>(HttpStatus.METHOD_NOT_ALLOWED);
+    }
 
-		IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSourceWrapper.get());
+    @RequestMapping(value = "/searchFood", method = RequestMethod.GET)
+    ResponseEntity<Collection<FoodItem>> searchFood(@RequestParam("query") String query,
+                                                    @RequestParam("foodSource") String inputFoodSource) {
 
-		List<FoodItem> foundFoodItems = foodSourceHandler.search(query, userWrapper.get());
-		return new ResponseEntity<Collection<FoodItem>>(foundFoodItems, HttpStatus.OK);
-	}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-	@RequestMapping(value = "/createFoodItem", method = RequestMethod.POST)
-	ResponseEntity<?> createFoodItem(@RequestBody FoodItem foodItem) {
+        Optional<FoodSource> foodSourceWrapper = foodSourceService.findByName(inputFoodSource);
+        if (!foodSourceWrapper.isPresent())
+            return new ResponseEntity<Collection<FoodItem>>(HttpStatus.METHOD_NOT_ALLOWED);
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSourceWrapper.get());
 
-		foodItem.setCreator(userWrapper.get());
-		foodItemService.save(foodItem);
-		return new ResponseEntity<String>(HttpStatus.CREATED);
-	}
+        List<FoodItem> foundFoodItems = foodSourceHandler.search(query, userWrapper.get());
+        return new ResponseEntity<Collection<FoodItem>>(foundFoodItems, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/updateFoodItem/{id}", method = RequestMethod.POST)
-	ResponseEntity<FoodItem> updateFoodItem(@PathVariable("id") Long id, @RequestBody FoodItem foodItem) {
+    @RequestMapping(value = "/processImage", method = RequestMethod.POST)
+    ResponseEntity<FoodItem> processImage(@RequestParam("uploadFile") MultipartFile multipartFile) {
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        Optional<String> barCodeWrapper = Optional.empty();
+        try {
+            InputStream in = new ByteArrayInputStream(multipartFile.getBytes());
+            BufferedImage bufferedImage = ImageIO.read(in);
+            barCodeWrapper = barCodeReader.getCodeFromImage(bufferedImage);
+            in.close();
 
-		Optional<FoodItem> originalFoodItemWrapper = foodItemService.get(id);
-		if (!originalFoodItemWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+        } catch (IOException e) {
+            new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
-		if (!originalFoodItemWrapper.get().getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        if (!barCodeWrapper.isPresent()) {
+            logger.info("Unable to get barcode from file");
+            new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
-		foodItem.setId(id);
-		foodItem.setCreator(userWrapper.get());
+        logger.info("Found barcode: {}", barCodeWrapper.get());
 
-		return new ResponseEntity<>(foodItemService.save(foodItem), HttpStatus.OK);
-	}
+        Optional<FoodItem> foodItemWrapper = Optional.empty();
+        for (FoodSource foodSource : foodSourceService.getExternalSources()) {
 
-	@RequestMapping(value = "/deleteFoodItem/{id}", method = RequestMethod.DELETE)
-	ResponseEntity<?> deleteFoodItem(@PathVariable("id") Long id) {
+            logger.info("Getting foodItem using source: {}", foodSource.getName());
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+            IFoodSourceHandler foodSourceHandler = foodSourceHelper.getFoodSourceHandler(foodSource);
+            IExternalFoodSourceHandler externalFoodSourceHandler = (IExternalFoodSourceHandler) foodSourceHandler;
 
-		Optional<FoodItem> originalFoodItemWrapper = foodItemService.get(id);
-		if (!originalFoodItemWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		FoodItem foodItem = originalFoodItemWrapper.get();
+            foodItemWrapper = externalFoodSourceHandler.getItemFromGtin(Long.valueOf(barCodeWrapper.get()));
+            if (foodItemWrapper.isPresent())
+                break;
 
-		if (!foodItem.getCreator().equals(userWrapper.get())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+        }
 
-		if (foodItemService.isUsed(foodItem)) {
-			foodItem.setDisabled(true);
-			foodItemService.save(foodItem);
-			return new ResponseEntity<String>("FoodItem disabled: " + id, HttpStatus.CREATED);
-		}
-		
-		foodItemService.delete(foodItem);
-		return new ResponseEntity<String>("FoodItem deleted: " + id, HttpStatus.OK);
-	}
+        if (!foodItemWrapper.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-	public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);
+        return new ResponseEntity<FoodItem>(foodItemWrapper.get(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/createFoodItem", method = RequestMethod.POST)
+    ResponseEntity<?> createFoodItem(@RequestBody FoodItem foodItem) {
+
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        foodItem.setCreator(userWrapper.get());
+        foodItemService.save(foodItem);
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/updateFoodItem/{id}", method = RequestMethod.POST)
+    ResponseEntity<FoodItem> updateFoodItem(@PathVariable("id") Long id, @RequestBody FoodItem foodItem) {
+
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<FoodItem> originalFoodItemWrapper = foodItemService.get(id);
+        if (!originalFoodItemWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!originalFoodItemWrapper.get().getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(foodItemService.save(foodItem), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/deleteFoodItem/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<?> deleteFoodItem(@PathVariable("id") Long id) {
+
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<FoodItem> originalFoodItemWrapper = foodItemService.get(id);
+        if (!originalFoodItemWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        FoodItem foodItem = originalFoodItemWrapper.get();
+
+        if (!foodItem.getCreator().equals(userWrapper.get())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (foodItemService.isUsed(foodItem)) {
+            foodItem.setDisabled(true);
+            foodItemService.save(foodItem);
+            return new ResponseEntity<String>("FoodItem disabled: " + id, HttpStatus.CREATED);
+        }
+
+        foodItemService.delete(foodItem);
+        return new ResponseEntity<String>("FoodItem deleted: " + id, HttpStatus.OK);
+    }
+
+    public static final Logger logger = LoggerFactory.getLogger(FoodItemApiController.class);
 
 }

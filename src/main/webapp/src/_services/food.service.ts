@@ -1,15 +1,16 @@
-import { Injectable, Inject } from '@angular/core';
-import { Response, RequestOptionsArgs, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { APP_CONFIG, IAppConfig } from '../_app/app.config';
-import { AuthHttpService } from './auth-http.service';
+import {Injectable, Inject} from '@angular/core';
+import {Response, RequestOptions, URLSearchParams, Headers} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
+import {APP_CONFIG, IAppConfig} from '../_app/app.config';
+import {AuthHttpService} from './auth-http.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class FoodService {
 
-    constructor( @Inject(APP_CONFIG) private config: IAppConfig, private authHttpService: AuthHttpService) { }
+    constructor(@Inject(APP_CONFIG) private config: IAppConfig, private authHttpService: AuthHttpService) {
+    }
 
     private apiUrl = this.config.apiEndpoint + 'food-item';
 
@@ -37,8 +38,18 @@ export class FoodService {
             .map((res: Response) => res.json())
     }
 
-    delete(id: number): Observable<Response[]> {
+    getFoodItemFromBarcodeImage(body: Object): Observable<Response[]> {
+        let headers = new Headers();
+        let params: URLSearchParams = new URLSearchParams();
+        //headers.append('Content-Type', 'multipart/form-data');
+        let options = new RequestOptions({ headers: headers });
+        options.params = params;
 
+        return this.authHttpService.post(`${this.apiUrl}/processImage`, body, options)
+            .map((res: Response) => res.json())
+    }
+
+    delete(id: number): Observable<Response[]> {
         let params: URLSearchParams = new URLSearchParams();
         let requestOptions = new RequestOptions();
         requestOptions.params = params;

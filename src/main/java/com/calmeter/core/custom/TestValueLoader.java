@@ -11,6 +11,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.calmeter.core.account.model.*;
+import com.calmeter.core.food.source.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -30,10 +31,6 @@ import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
 import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
 import com.calmeter.core.food.repositroy.IFoodItemRepository;
 import com.calmeter.core.food.repositroy.INutritionalInformationRepository;
-import com.calmeter.core.food.source.handler.FoodHandler;
-import com.calmeter.core.food.source.handler.IFoodSourceHandler;
-import com.calmeter.core.food.source.handler.RecipesHandler;
-import com.calmeter.core.food.source.handler.TescoHandler;
 import com.calmeter.core.food.source.model.FoodSource;
 import com.calmeter.core.food.source.repository.IFoodSourceRepository;
 import com.calmeter.core.goal.model.NutritionalRatio;
@@ -89,7 +86,7 @@ public class TestValueLoader {
 
     }
 
-    public void createFoodItems(User user) {
+    private void createFoodItems(User user) {
         NutritionalInformation nutritionalInformation = new NutritionalInformation(NutritionalInfoType.FOOD_ITEM);
         nutritionalInformation.setServingSize(118.0);
         nutritionalInformation.setCalories(89.0);
@@ -131,7 +128,8 @@ public class TestValueLoader {
         createFoodItemIfNotFound(foodItem);
     }
 
-    private User createAdminUserIfNotFound(List<UserRole> roles) {
+    @Transactional
+    public User createAdminUserIfNotFound(List<UserRole> roles) {
 
         Optional<User> userWrapper = userRepository.findByUsername("john.doe");
 
@@ -180,7 +178,7 @@ public class TestValueLoader {
     }
 
     @Transactional
-    private UserRole createRoleIfNotFound(Role role) {
+    public UserRole createRoleIfNotFound(Role role) {
 
         Optional<UserRole> userRoleWrapper = roleRepository.findByRole(role);
         UserRole userRole = null;
@@ -194,7 +192,7 @@ public class TestValueLoader {
     }
 
     @Transactional
-    private FoodItem createFoodItemIfNotFound(FoodItem foodItem) {
+    public FoodItem createFoodItemIfNotFound(FoodItem foodItem) {
 
         Optional<FoodItem> foodItemWrapper = foodItemRepository.findByName(foodItem.getName());
 
@@ -205,7 +203,7 @@ public class TestValueLoader {
     }
 
     @Transactional
-    private void createGoalNutritionalInformation() {
+    public void createGoalNutritionalInformation() {
 
         if (nutritionalRatioRepository.findByName("The Zone Diet").isPresent()) {
             return;
@@ -231,7 +229,7 @@ public class TestValueLoader {
     }
 
     @Transactional
-    private void createBaselineNutrionalTargets() {
+    public void createBaselineNutrionalTargets() {
 
         if (configOptionService.findByConfigKey(ConfigKey.NUTRIONAL_BASELINE_ID).isPresent()) {
             return;
@@ -300,10 +298,22 @@ public class TestValueLoader {
             IFoodSourceHandler foodHandler = new TescoHandler();
             FoodSource foodSource = new FoodSource();
             foodSource.setName("tesco");
+            foodSource.setExternalSource(true);
             foodSource.setSourceHandler((Class<IFoodSourceHandler>) foodHandler.getClass());
-
+            foodSource.setExternalPriority(1);
             foodSourceRepository.save(foodSource);
         }
+
+        if (!foodSourceRepository.findByName("open-food-facts").isPresent()) {
+            IFoodSourceHandler foodHandler = new OpenFoodFactsHandler();
+            FoodSource foodSource = new FoodSource();
+            foodSource.setName("open-food-facts");
+            foodSource.setExternalSource(true);
+            foodSource.setSourceHandler((Class<IFoodSourceHandler>) foodHandler.getClass());
+            foodSource.setExternalPriority(2);
+            foodSourceRepository.save(foodSource);
+        }
+
     }
 
 }

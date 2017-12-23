@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-4">
                             <div class="col-sm-12 input-group">
                                 <input class="form-control" type="text" placeholder="Please enter search term"
                                        [formControl]="searchField">
@@ -28,6 +28,27 @@
                                 </button>
                             </div>
                         </div>
+
+                        <div class="form-group col-sm-1">
+                            <div class="btn-group">
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <span class="btn btn-primary btn-file">
+                                        <span class="fileinput-new">
+                                            <i class="fa fa-barcode" aria-hidden="true"></i>
+                                        </span>
+                                    <span class="fileinput-exists"><i class="fa fa-barcode"
+                                                                      aria-hidden="true"></i></span>
+                                        <input type="file" #fileInput (change)="fileChange()"/>
+                                    </span>
+                                    <!--<span class="fileinput-filename"></span>-->
+                                    <!--<a href="#" class="close fileinput-exists" data-dismiss="fileinput"-->
+                                    <!--style="float: none">×</a>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 loading-spinner">
+                            <i *ngIf="barcodeLoadingIndicator" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                        </div>
                     </div>
                     <div class="form-group">
                         <ngx-datatable [rows]="rows" [columnMode]="'force'" [rowHeight]="'auto'" [externalPaging]="true"
@@ -35,11 +56,12 @@
                                        [offset]="page.pageNumber" [limit]="page.size" [cssClasses]="cssClasses"
                                        [selected]="selected" [selectionType]="'checkbox'"
                                        (page)='setPage($event)' (select)='onSelect($event)'>
-                            <ngx-datatable-column name="ID" [width]="80" [canAutoResize]="false" [draggable]="false"
+                            <ngx-datatable-column name="ID" [canAutoResize]="true" [draggable]="false"
                                                   [resizeable]="false">
                             </ngx-datatable-column>
                             <ngx-datatable-column name="Name"></ngx-datatable-column>
                             <ngx-datatable-column name="ServingSize"></ngx-datatable-column>
+                            <ngx-datatable-column name="Calories (per 100g)" prop="calories"></ngx-datatable-column>
                             <ngx-datatable-column [width]="60" [sortable]="false" [canAutoResize]="false"
                                                   [draggable]="false" [resizeable]="false" [headerCheckboxable]="false"
                                                   [checkboxable]="true">
@@ -49,9 +71,6 @@
                 </div>
 
                 <div class="col-md-4">
-                    <!-- <div class="ibox-title">
-                            <h5>Choosen food</h5>
-                        </div> -->
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Choosen food
@@ -62,19 +81,27 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Servings</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody formArrayName="foodItemFormArray">
                                 <tr *ngFor="let row of formGroup.controls.foodItemFormArray.controls; let i=index"
                                     [formGroupName]="i">
-                                    <td class="col-sm-7">
+                                    <td class="col-sm-6">
                                         <span>{{row.controls.name.value}} ({{row.controls.servingSize.value}})</span>
                                     </td>
                                     <td class="col-sm-5">
-                                            <span>
-                                                <input (onCreate)="initTouchSpin(i)" class="touchspin2Decimal"
-                                                       type="text" value="" formControlName="servings">
-                                            </span>
+                                        <span>
+                                            <input (onCreate)="initTouchSpin(i)" class="touchspin2Decimal"
+                                                   type="text" value="" formControlName="servings">
+                                        </span>
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <span>
+                                            <button (click)="remove(i)" class="btn btn-danger btn-circle">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </button>
+                                        </span>
                                     </td>
                                 </tr>
                                 </tbody>

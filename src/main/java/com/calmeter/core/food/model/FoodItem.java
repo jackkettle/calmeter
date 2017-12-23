@@ -29,106 +29,113 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(using = FoodItemDeserializer.class)
 public class FoodItem implements IFood, Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected Long id;
+    protected Long id;
 
-	private Long externalId;
+    private Long externalId;
 
-	private String name;
+    private Long gtin;
 
-	private String description;
+    private String name;
 
-	@JsonManagedReference
-	private NutritionalInformation nutritionalInformation;
+    private String description;
 
-	private User creator;
+    @JsonManagedReference
+    private NutritionalInformation nutritionalInformation;
 
-	private FoodItemType foodItemType;
-	
-	private boolean disabled;
+    private User creator;
 
-	public FoodItem() {
-		this.foodItemType = FoodItemType.USER_ITEM;
-		disabled = true;
-	}
+    private FoodItemType foodItemType;
 
-	public FoodItem(FoodItemType foodItemType) {
-		this();
-		this.foodItemType = foodItemType;
-	}
+    private boolean disabled;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    public FoodItem() {
+        this.foodItemType = FoodItemType.USER_ITEM;
+        disabled = true;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public FoodItem(FoodItemType foodItemType) {
+        this();
+        this.foodItemType = foodItemType;
+    }
 
-	@Column(name = "external_id", nullable = true, unique = true)
-	public Long getExternalId() {
-		return externalId;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setExternalId(Long externalId) {
-		this.externalId = externalId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "name", nullable = false, unique = true)
-	public String getName() {
-		return name;
-	}
+    @Column(name = "external_id", nullable = true, unique = true)
+    public Long getExternalId() {
+        return externalId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
 
-	@Column(name = "description", nullable = true, length = 2000)
-	public String getDescription() {
-		return description;
-	}
+    @Column(name = "gtin", nullable = true, unique = true)
+    public Long getGtin() { return gtin; }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setGtin(Long gtin) { this.gtin = gtin; }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "nutritional_info_id")
-	public NutritionalInformation getNutritionalInformation() {
-		return nutritionalInformation;
-	}
+    @Column(name = "name", nullable = false, unique = true)
+    public String getName() {
+        return name;
+    }
 
-	public void setNutritionalInformation(NutritionalInformation nutritionalInformation) {
-		this.nutritionalInformation = nutritionalInformation;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@ManyToOne
-	public User getCreator() {
-		return creator;
-	}
+    @Column(name = "description", nullable = true, length = 2000)
+    public String getDescription() {
+        return description;
+    }
 
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Enumerated(EnumType.STRING)
-	public FoodItemType getFoodItemType() {
-		return foodItemType;
-	}
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "nutritional_info_id")
+    public NutritionalInformation getNutritionalInformation() {
+        return nutritionalInformation;
+    }
 
-	public void setFoodItemType(FoodItemType foodItemType) {
-		this.foodItemType = foodItemType;
-	}
+    public void setNutritionalInformation(NutritionalInformation nutritionalInformation) {
+        this.nutritionalInformation = nutritionalInformation;
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    @ManyToOne
+    public User getCreator() {
+        return creator;
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public FoodItemType getFoodItemType() {
+        return foodItemType;
+    }
+
+    public void setFoodItemType(FoodItemType foodItemType) {
+        this.foodItemType = foodItemType;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
 }

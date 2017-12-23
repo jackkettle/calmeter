@@ -12,66 +12,72 @@ import com.calmeter.core.food.source.handler.IFoodSourceHandler;
 @Table(name = "food_source")
 public class FoodSource {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private boolean externalSource;
+    private boolean externalSource;
 
-	private String apiKey;
+    private String apiKey;
 
-	private String baseURI;
+    private String baseURI;
 
-	private Class<IFoodSourceHandler> sourceHandler;
+    private Class<IFoodSourceHandler> sourceHandler;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId () {
-		return id;
-	}
+    private Integer externalPriority;
 
-	public void setId (Long id) {
-		this.id = id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public String getName () {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName (String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public boolean isExternalSource () {
-		return externalSource;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setExternalSource (boolean externalSource) {
-		this.externalSource = externalSource;
-	}
+    public boolean isExternalSource() {
+        return externalSource;
+    }
 
-	public String getApiKey () {
-		return apiKey;
-	}
+    public void setExternalSource(boolean externalSource) {
+        this.externalSource = externalSource;
+    }
 
-	public void setApiKey (String apiKey) {
-		this.apiKey = apiKey;
-	}
+    public String getApiKey() {
+        return apiKey;
+    }
 
-	public String getBaseURI () {
-		return baseURI;
-	}
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
-	public void setBaseURI (String baseURI) {
-		this.baseURI = baseURI;
-	}
+    public String getBaseURI() {
+        return baseURI;
+    }
 
-	public Class<IFoodSourceHandler> getSourceHandler () {
-		return sourceHandler;
-	}
+    public void setBaseURI(String baseURI) {
+        this.baseURI = baseURI;
+    }
 
-	public void setSourceHandler (Class<IFoodSourceHandler> sourceHandler) {
-		this.sourceHandler = sourceHandler;
-	}
+    public Class<IFoodSourceHandler> getSourceHandler() {
+        return sourceHandler;
+    }
+
+    public void setSourceHandler(Class<IFoodSourceHandler> sourceHandler) {
+        this.sourceHandler = sourceHandler;
+    }
+
+    public Integer getExternalPriority() { return externalPriority; }
+
+    public void setExternalPriority(Integer externalPriority) { this.externalPriority = externalPriority; }
 
 }

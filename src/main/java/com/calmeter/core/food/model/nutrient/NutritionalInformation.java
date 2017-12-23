@@ -4,28 +4,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MapKeyEnumerated;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.calmeter.core.food.model.nutrient.macro.carb.ConsolidatedCarbs;
 import com.calmeter.core.food.model.nutrient.macro.fat.ConsolidatedFats;
 import com.calmeter.core.food.model.nutrient.macro.protein.ConsolidatedProteins;
 import com.calmeter.core.food.model.nutrient.micro.MineralLabel;
 import com.calmeter.core.food.model.nutrient.micro.VitaminLabel;
-
-import javax.persistence.JoinColumn;
+import com.calmeter.core.food.utils.NutritionalInformationHelper;
 
 @Entity
 @Table(name = "nutritional_info")
@@ -54,6 +40,20 @@ public class NutritionalInformation implements Serializable {
     private Integer caffeine;
 
     private NutritionalInfoType type;
+
+    public NutritionalInformation() {
+        this.calories = 0.0;
+        this.consolidatedCarbs = new ConsolidatedCarbs();
+        this.consolidatedFats = new ConsolidatedFats();
+        this.consolidatedProteins = new ConsolidatedProteins();
+        this.vitaminMap = new HashMap<VitaminLabel, Double>();
+        this.mineralMap = new HashMap<MineralLabel, Double>();
+    }
+
+    public NutritionalInformation(NutritionalInfoType nutrionalProfile) {
+        this();
+        this.setType(nutrionalProfile);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -152,17 +152,9 @@ public class NutritionalInformation implements Serializable {
         this.type = type;
     }
 
-    public NutritionalInformation() {
-        this.calories = 0.0;
-        this.consolidatedCarbs = new ConsolidatedCarbs();
-        this.consolidatedFats = new ConsolidatedFats();
-        this.consolidatedProteins = new ConsolidatedProteins();
-        this.vitaminMap = new HashMap<VitaminLabel, Double>();
-        this.mineralMap = new HashMap<MineralLabel, Double>();
+    @Transient
+    public boolean isValid() {
+        return NutritionalInformationHelper.isValid(this);
     }
 
-    public NutritionalInformation(NutritionalInfoType nutrionalProfile) {
-        this();
-        this.setType(nutrionalProfile);
-    }
 }

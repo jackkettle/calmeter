@@ -22,6 +22,9 @@
         "../node_modules/bootstrap/dist/css/bootstrap.css",
         "../node_modules/font-awesome/css/font-awesome.css",
         "../node_modules/animate.css/animate.min.css",
+        "../node_modules/ion-rangeslider/css/ion.rangeSlider.css",
+        "../node_modules/ion-rangeslider/css/ion.rangeSlider.skinFlat.css",
+        "../node_modules/jasny-bootstrap/dist/css/jasny-bootstrap.min.css",
         "styles.scss"
       ],
       "scripts": [
@@ -29,9 +32,11 @@
         "../node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",
         "../node_modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js",
         "../node_modules/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js",
+        "../node_modules/ion-rangeslider/js/ion.rangeSlider.min.js",
         "../node_modules/metismenu/dist/metisMenu.js",
         "../node_modules/jquery-sparkline/jquery.sparkline.js",
-        "../vendor/pace/pace.min.js"
+        "../vendor/pace/pace.min.js",
+        "../node_modules/jasny-bootstrap/dist/js/jasny-bootstrap.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

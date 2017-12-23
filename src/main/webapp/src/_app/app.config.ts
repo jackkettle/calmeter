@@ -9,6 +9,7 @@ export interface IAppConfig {
     urlDateTimeFormat: string;
     urlDateFormat: string;
     toastNotificationOptions: any;
+    errorCodes: any;
 }
 
 export const AppConfig: IAppConfig = {
@@ -21,5 +22,17 @@ export const AppConfig: IAppConfig = {
         position: ["top", "right"],
         lastOnBottom: false,
         timeOut: 2000
+    },
+    errorCodes: {
+        meals: {
+            errorTitle: "Meal update error",
+            mealAlreadyExistsError: "A meal already exists with that name",
+            unknownError: "Unable to add meal for unknown reason"
+        },
+        foodSelection: {
+            barcodeErrorTitle: "Barcode reader error",
+            failedToReadBarcodeError: "Failed to read barcode from file",
+            failedToFindFoodItemFromBarcodeError: "Failed to find foodItem from valid barcode"
+        }
     }
 };

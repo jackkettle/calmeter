@@ -56,8 +56,8 @@ export function getAuthHttp(http) {
         headerPrefix: 'Bearer',
         tokenName: 'id_token',
         globalHeaders: [
-            { 'Accept': 'application/json' },
-            { 'Content-Type': 'application/json' }],
+            { 'Accept': 'application/json' }],
+            // { 'Content-Type': 'application/json' }],
         tokenGetter: (() => localStorage.getItem('id_token')),
     }), http);
 }

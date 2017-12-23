@@ -1,6 +1,7 @@
 <simple-notifications [options]="notificationOptions"></simple-notifications>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form novalidate [formGroup]="formGroup" (ngSubmit)="save(formGroup)" (keydown.enter)="$event.preventDefault(); updateItems()">
+    <form novalidate [formGroup]="formGroup" (ngSubmit)="save(formGroup)"
+          (keydown.enter)="$event.preventDefault(); updateItems()">
         <div class="row">
             <div class="col-md-8">
                 <div class="">
@@ -9,10 +10,11 @@
                             <h5>Meal details</h5>
                         </div>
                         <div class="ibox-content">
-                            <div class="form-group row" [class.has-error]="(formGroup.controls.name.dirty || formGroup.controls.name.touched) && formGroup.controls.name.invalid" >
+                            <div class="form-group row"
+                                 [class.has-error]="(formGroup.controls.name.dirty || formGroup.controls.name.touched) && formGroup.controls.name.invalid">
                                 <label class="col-sm-2 control-label">
                                     Name
-                                    <control-messages [control]="formGroup.controls.name"></control-messages>                              
+                                    <control-messages [control]="formGroup.controls.name"></control-messages>
                                 </label>
                                 <div class="date col-sm-10">
                                     <div class="input-group date">
@@ -29,7 +31,8 @@
                                     <small class="text-very-muted">(Optional)</small>
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" placeholder="Description" formControlName="description">
+                                    <input type="text" class="form-control" name="name" placeholder="Description"
+                                           formControlName="description">
                                 </div>
                             </div>
                         </div>
@@ -47,9 +50,11 @@
                             <p>
                                 <i class="fa fa-bar-chart fa-3x"></i>
 
-                                imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor id eu nisl nunc mi ipsum
-                                faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget felis eget nunc lobortis
-                                mattis aliquam faucibus purus in massa tempor nec feugiat nisl
+                                imperdiet sed euismod nisi porta lorem mollis aliquam ut porttitor leo a diam
+                                sollicitudin tempor id eu nisl nunc mi ipsum
+                                faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget felis eget nunc
+                                lobortis
+
                             </p>
                         </div>
                     </div>
@@ -62,7 +67,11 @@
                         <h5>Food Selection</h5>
                     </div>
                     <div class="ibox-content">
-                        <food-selection [hasError]="formGroup.controls.foodItemFormArray.invalid" (formData)="handleFoodUpdated($event)"></food-selection>
+                        <food-selection
+                                [hasError]="formGroup.controls.foodItemFormArray.invalid"
+                                (formData)="handleFormDataUpdated($event)"
+                                (reportData)="handleReportDataUpdated($event)">
+                        </food-selection>
                     </div>
                     <div class="ibox-footer">
                         <div class="pull-right">
