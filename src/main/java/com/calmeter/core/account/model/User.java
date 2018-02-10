@@ -3,10 +3,13 @@ package com.calmeter.core.account.model;
 import javax.persistence.*;
 
 import com.calmeter.core.account.controller.UserDeserializer;
+import com.calmeter.core.json.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,132 +18,175 @@ import java.util.Set;
 @JsonDeserialize(using = UserDeserializer.class)
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Long id;
+    private Long id;
 
-	private String username;
+    private String username;
 
-	private String firstname;
+    private String firstname;
 
-	private String lastname;
+    private String lastname;
 
-	private String password;
+    private String password;
 
-	private String passwordConfirm;
+    private String passwordConfirm;
 
-	private String email;
+    private String email;
 
-	private Boolean enabled;
+    private Boolean enabled;
 
-	private Set<UserRole> roles;
+    private Set<UserRole> roles;
 
-	private Boolean isUserProfileSet;
+    private Boolean userProfileSet;
 
-	private UserProfile UserProfile;
+    private UserProfile UserProfile;
 
-	public User() {
-		isUserProfileSet = false;
-		roles = new HashSet<>();
-	}
+    private LocalDateTime creationDateTime;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getId() {
-		return id;
-	}
+    private LocalDateTime modificationDateTime;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private LocalDateTime verificationDateTime;
 
-	@Column(unique = true, nullable = false)
-	public String getUsername() {
-		return username;
-	}
+    private LocalDateTime lastLoginDateTime;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public User() {
+        userProfileSet = false;
+        roles = new HashSet<>();
+    }
 
-	public String getFirstname() {
-		return firstname;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getLastname() {
-		return lastname;
-	}
+    @Column(unique = true, nullable = false)
+    public String getUsername() {
+        return username;
+    }
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	@JsonIgnore
-	public String getPassword() {
-		return password;
-	}
+    public String getFirstname() {
+        return firstname;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	@JsonIgnore
-	@Transient
-	public String getPasswordConfirm() {
-		return passwordConfirm;
-	}
+    public String getLastname() {
+        return lastname;
+    }
 
-	public void setPasswordConfirm(String passwordConfirm) {
-		this.passwordConfirm = passwordConfirm;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	@Column(name = "email", nullable = false, unique = true)
-	public String getEmail() {
-		return email;
-	}
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
+    @JsonIgnore
+    @Transient
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
 
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role_map", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	public Set<UserRole> getRoles() {
-		return roles;
-	}
+    @Column(name = "email", nullable = false, unique = true)
+    public String getEmail() {
+        return email;
+    }
 
-	public void setRoles(Set<UserRole> roles) {
-		this.roles = roles;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Boolean getIsUserProfileSet() {
-		return isUserProfileSet;
-	}
+    public Boolean getEnabled() {
+        return enabled;
+    }
 
-	public void setIsUserProfileSet(Boolean isUserProfileSet) {
-		this.isUserProfileSet = isUserProfileSet;
-	}
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_profile_id")
-	public UserProfile getUserProfile() {
-		return UserProfile;
-	}
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role_map", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
 
-	public void setUserProfile(UserProfile userProfile) {
-		UserProfile = userProfile;
-	}
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
+    }
 
+    public Boolean getUserProfileSet() {
+        return userProfileSet;
+    }
+
+    public void setUserProfileSet(Boolean userProfileSet) {
+        this.userProfileSet = userProfileSet;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_profile_id")
+    public UserProfile getUserProfile() {
+        return UserProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        UserProfile = userProfile;
+    }
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
+    }
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime getModificationDateTime() {
+        return modificationDateTime;
+    }
+
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
+        this.modificationDateTime = modificationDateTime;
+    }
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime getVerificationDateTime() {
+        return verificationDateTime;
+    }
+
+    public void setVerificationDateTime(LocalDateTime verificationDateTime) {
+        this.verificationDateTime = verificationDateTime;
+    }
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime getLastLoginDateTime() {
+        return lastLoginDateTime;
+    }
+
+    public void setLastLoginDateTime(LocalDateTime lastLoginDateTime) {
+        this.lastLoginDateTime = lastLoginDateTime;
+    }
 }

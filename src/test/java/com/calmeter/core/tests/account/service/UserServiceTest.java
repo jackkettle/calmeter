@@ -4,6 +4,7 @@ import com.calmeter.core.ApplicationConfig;
 import com.calmeter.core.Main;
 import com.calmeter.core.account.model.User;
 import com.calmeter.core.account.service.IUserService;
+import com.calmeter.core.account.service.IUserTaskService;
 import com.calmeter.core.custom.TestValueLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,9 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     private IUserService userService;
 
     @Autowired
+    private IUserTaskService userTaskService;
+
+    @Autowired
     TestValueLoader testValueLoader;
 
     @BeforeClass
@@ -35,7 +39,7 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testSaveDoesNotModifyPassword() throws Exception {
+    public void saveDoesNotModifyPasswordTest() throws Exception {
 
         Optional<User> userWrapper = userService.findByUsername("john.doe");
         if(!userWrapper.isPresent())
@@ -44,6 +48,16 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         String passwordBefore = userWrapper.get().getPassword();
         User updatedUser = this.userService.save(userWrapper.get());
         Assert.assertEquals(passwordBefore, updatedUser.getPassword());
+    }
+
+    @Test
+    public void creationTasksCreatedTest() throws Exception {
+
+        Optional<User> userWrapper = userService.findByUsername("john.doe");
+        if(!userWrapper.isPresent())
+            throw new Exception("Could not find user");
+
+        Assert.assertEquals(2, userTaskService.getAllByUser(userWrapper.get()).size());
     }
 
     private static Logger logger = LoggerFactory.getLogger(UserServiceTest.class);

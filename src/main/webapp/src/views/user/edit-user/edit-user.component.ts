@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NotificationsService} from 'angular2-notifications';
 import {APP_CONFIG, IAppConfig} from '../../../_app/app.config';
 import {UserService} from "../../../_services/";
@@ -33,8 +33,8 @@ export class EditUserComponent implements OnInit {
             firstname: [''],
             lastname: [''],
             email: [''],
-            dateOfBirth: [''],
-            sex: [''],
+            dateOfBirth: ['', Validators.required],
+            sex: ['', Validators.required],
             height: [''],
             weight: this.formBuilder.group({
                 weightInKgs: [''],
@@ -201,8 +201,8 @@ export class EditUserComponent implements OnInit {
     save(data) {
         this.userService.edit(data.value).subscribe(
             res => {
-                console.log(res);
                 this.successNotification();
+                console.log(res);
             }, err => {
                 this.errorNotification();
                 console.log(err);

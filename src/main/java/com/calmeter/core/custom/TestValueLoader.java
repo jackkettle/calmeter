@@ -11,12 +11,12 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.calmeter.core.account.model.*;
+import com.calmeter.core.account.service.IUserService;
 import com.calmeter.core.food.source.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.calmeter.core.account.repository.IUserRepository;
 import com.calmeter.core.account.repository.IUserRoleRepository;
 import com.calmeter.core.config.model.ConfigKey;
 import com.calmeter.core.config.service.IConfigOptionService;
@@ -43,7 +43,7 @@ public class TestValueLoader {
     private IFoodItemRepository foodItemRepository;
 
     @Autowired
-    private IUserRepository userRepository;
+    private IUserService userService;
 
     @Autowired
     private IUserRoleRepository roleRepository;
@@ -80,7 +80,7 @@ public class TestValueLoader {
 
         createGoalNutritionalInformation();
 
-        createBaselineNutrionalTargets();
+        createBaselineNutritionalTargets();
 
         loadFoodSources();
 
@@ -131,7 +131,7 @@ public class TestValueLoader {
     @Transactional
     public User createAdminUserIfNotFound(List<UserRole> roles) {
 
-        Optional<User> userWrapper = userRepository.findByUsername("john.doe");
+        Optional<User> userWrapper = userService.findByUsername("john.doe");
 
         if (userWrapper.isPresent()) {
             return userWrapper.get();
@@ -145,10 +145,10 @@ public class TestValueLoader {
         user.setFirstname("John");
         user.setLastname("Doe");
         user.setEnabled(true);
-        user.setIsUserProfileSet(true);
+        user.setUserProfileSet(true);
         user.setUserProfile(createUserProfile());
 
-        return userRepository.save(user);
+        return userService.save(user);
     }
 
     private UserProfile createUserProfile() {
@@ -229,7 +229,7 @@ public class TestValueLoader {
     }
 
     @Transactional
-    public void createBaselineNutrionalTargets() {
+    public void createBaselineNutritionalTargets() {
 
         if (configOptionService.findByConfigKey(ConfigKey.NUTRIONAL_BASELINE_ID).isPresent()) {
             return;

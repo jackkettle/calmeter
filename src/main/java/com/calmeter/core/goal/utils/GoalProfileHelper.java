@@ -35,7 +35,7 @@ public class GoalProfileHelper {
 
     public int getUserBMR(User user) {
 
-        if (!user.getIsUserProfileSet()) {
+        if (!user.getUserProfileSet()) {
             return 0;
         }
 
@@ -58,7 +58,7 @@ public class GoalProfileHelper {
 
     public int getDailyCalories(User user) {
 
-        if (!user.getIsUserProfileSet()) {
+        if (!user.getUserProfileSet()) {
             return 0;
         }
 
@@ -73,7 +73,7 @@ public class GoalProfileHelper {
 
     public int getDailyCalories(User user, ActivityLevel activityLevel) {
 
-        if (!user.getIsUserProfileSet()) {
+        if (!user.getUserProfileSet()) {
             return 0;
         }
 

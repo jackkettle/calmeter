@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { GoalsService } from '../../_services';
+import {Component, Inject, OnInit} from '@angular/core';
+import {GoalsService} from '../../_services';
+import {NotificationsService} from "angular2-notifications/index";
+import {APP_CONFIG, IAppConfig} from "../../_app/app.config";
 
 
 @Component({
@@ -10,25 +12,25 @@ import { GoalsService } from '../../_services';
 export class GoalsComponent implements OnInit {
 
     private activityLevels: Array<any>;
-
     private weightGoals: Array<any>;
-
     private userBMR: any;
-
     private activityLevel: any;
-
     private weightGoal: any;
-
     private ratios: Array<any>;
-
     private chosenRatio: any;
-
     private goalProfile: any;
 
+    public notificationOptions: any;
 
-    constructor(private goalsService: GoalsService) { }
+
+    constructor(@Inject(APP_CONFIG) private config: IAppConfig,
+                private goalsService: GoalsService,
+                private notificationsService: NotificationsService) {
+    }
 
     ngOnInit() {
+
+        this.notificationOptions = this.config.toastNotificationOptions;
 
         this.activityLevel = {
             id: '',
@@ -42,11 +44,11 @@ export class GoalsComponent implements OnInit {
 
         this.chosenRatio = {
             id: 0
-        }
+        };
 
         this.chosenRatio = {
             id: 0
-        }
+        };
 
         this.getUserBMR();
         this.getActivityLevels();
@@ -69,8 +71,11 @@ export class GoalsComponent implements OnInit {
         };
 
         this.goalsService.setGoalProfile(payload).subscribe(
-            data => {
-                console.log("success");
+            () => {
+                this.successNotification();
+            },
+            () => {
+                this.errorNotification();
             }
         );
     }
@@ -155,5 +160,31 @@ export class GoalsComponent implements OnInit {
 
     onWeightSelected(data) {
         this.weightGoal = data;
+    }
+
+    successNotification() {
+        this.notificationsService.success(
+            'Goal settings saved',
+            'Time: ' + new Date().toLocaleTimeString(),
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
+    }
+
+    errorNotification() {
+        this.notificationsService.error(
+            'Unable to save goal settings',
+            'Time: ' + new Date().toLocaleTimeString(),
+            {
+                showProgressBar: true,
+                pauseOnHover: false,
+                clickToClose: true,
+                maxLength: 10
+            }
+        )
     }
 }

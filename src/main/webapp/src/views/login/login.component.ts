@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
             result => {
                 console.log(result);
                 this.authService.addTokens(result.token, result.refreshToken);
-                this.router.navigate(['/']);
+                this.router.navigate(['/dashboard']);
             },
             (error) => {
                 this.error = 'Username or password is incorrect';

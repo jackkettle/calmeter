@@ -46,19 +46,15 @@ public class UserDeserializer extends JsonDeserializer<User> {
 
         UserProfile userProfile = new UserProfile();
         JsonNode dateOfBirthNode = rootNode.get("dateOfBirth");
-        if (dateOfBirthNode != null) {
-
-            String dobString = dateOfBirthNode.asText();
-            if (!Strings.isNullOrEmpty(dobString)) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                formatter = formatter.withLocale(Locale.UK);
-                LocalDate date = LocalDate.parse(dateOfBirthNode.asText(), formatter);
-                userProfile.setDateOfBirth(date);
-            }
+        if (dateOfBirthNode != null && !Strings.isNullOrEmpty(dateOfBirthNode.asText())) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            formatter = formatter.withLocale(Locale.UK);
+            LocalDate date = LocalDate.parse(dateOfBirthNode.asText(), formatter);
+            userProfile.setDateOfBirth(date);
         }
 
         JsonNode sexNode = rootNode.get("sex");
-        if (sexNode != null) {
+        if (sexNode != null && !Strings.isNullOrEmpty(sexNode.asText())) {
             userProfile.setSex(Sex.valueOf(sexNode.asText().toUpperCase()));
         }
 

@@ -39,7 +39,7 @@ public class TescoHandlerTests extends AbstractTestNGSpringContextTests {
         }
 
         Assert.assertTrue(foodItems.size() > 1);
-        Assert.assertEquals(4, foodItems.size());
+        Assert.assertEquals(5, foodItems.size());
     }
 
     @Test

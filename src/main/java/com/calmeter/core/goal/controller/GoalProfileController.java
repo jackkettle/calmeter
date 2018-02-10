@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.calmeter.core.Constants;
+import com.calmeter.core.account.model.TaskStatus;
+import com.calmeter.core.account.model.UserTask;
+import com.calmeter.core.account.service.IUserTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,101 +36,112 @@ import com.calmeter.core.goal.utils.GoalProfileHelper;
 @RequestMapping("/api/goals")
 public class GoalProfileController {
 
-	@Autowired
-	UserHelper userHelper;
+    @Autowired
+    UserHelper userHelper;
 
-	@Autowired
-	GoalProfileHelper goalProfileHelper;
+    @Autowired
+    GoalProfileHelper goalProfileHelper;
 
-	@Autowired
-	IConfigOptionService configService;
+    @Autowired
+    IConfigOptionService configService;
 
-	@Autowired
-	IGoalProfileService goalProfileService;
+    @Autowired
+    IGoalProfileService goalProfileService;
 
-	@Autowired
-	INutritionalRatioService nutritionalRationService;
+    @Autowired
+    INutritionalRatioService nutritionalRationService;
 
-	@Autowired
-	INutritionalInformationService nutritionalInformationService;
+    @Autowired
+    INutritionalInformationService nutritionalInformationService;
 
-	@RequestMapping(value = "/getUserBMR", method = RequestMethod.GET)
-	public ResponseEntity<Integer> getUserBMR() {
+    @Autowired
+    IUserTaskService userTaskService;
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/getUserBMR", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getUserBMR() {
 
-		int bmr = goalProfileHelper.getUserBMR(userWrapper.get());
-		return new ResponseEntity<>(bmr, HttpStatus.ACCEPTED);
-	}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-	@RequestMapping(value = "/getActivityLevels", method = RequestMethod.GET)
-	public ResponseEntity<List<String>> getActivityLevels() {
+        int bmr = goalProfileHelper.getUserBMR(userWrapper.get());
+        return new ResponseEntity<>(bmr, HttpStatus.ACCEPTED);
+    }
 
-		List<String> activities = Arrays.stream(ActivityLevel.values()).map(ActivityLevel::toString)
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(activities, HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(value = "/getActivityLevels", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getActivityLevels() {
 
-	@RequestMapping(value = "/getWeightGoals", method = RequestMethod.GET)
-	public ResponseEntity<List<String>> getWeightGoals() {
+        List<String> activities = Arrays.stream(ActivityLevel.values()).map(ActivityLevel::toString)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(activities, HttpStatus.ACCEPTED);
+    }
 
-		List<String> weightGoals = Arrays.stream(WeightGoal.values()).map(WeightGoal::toString)
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(weightGoals, HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(value = "/getWeightGoals", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getWeightGoals() {
 
-	@RequestMapping(value = "/getRatios", method = RequestMethod.GET)
-	public ResponseEntity<List<NutritionalRatio>> getRatios() {
+        List<String> weightGoals = Arrays.stream(WeightGoal.values()).map(WeightGoal::toString)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(weightGoals, HttpStatus.ACCEPTED);
+    }
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/getRatios", method = RequestMethod.GET)
+    public ResponseEntity<List<NutritionalRatio>> getRatios() {
 
-		List<NutritionalRatio> rations = new ArrayList<>();
-		rations.addAll(nutritionalRationService.getGlobalRatios());
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-		rations.addAll(nutritionalRationService.getUserRatios(userWrapper.get()));
-		return new ResponseEntity<>(rations, HttpStatus.OK);
-	}
+        List<NutritionalRatio> rations = new ArrayList<>();
+        rations.addAll(nutritionalRationService.getGlobalRatios());
 
-	@RequestMapping(value = "/getGoalProfile", method = RequestMethod.GET)
-	public ResponseEntity<GoalProfile> getGoalProfile() {
+        rations.addAll(nutritionalRationService.getUserRatios(userWrapper.get()));
+        return new ResponseEntity<>(rations, HttpStatus.OK);
+    }
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
+    @RequestMapping(value = "/getGoalProfile", method = RequestMethod.GET)
+    public ResponseEntity<GoalProfile> getGoalProfile() {
 
-		Optional<GoalProfile> goalProfileWrapper = goalProfileService.get(userWrapper.get());
-		if (!goalProfileWrapper.isPresent()) {
-			logger.info("Unalbe to get GoalProfile");
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-			GoalProfile goalProfile = new GoalProfile();
-			goalProfile.setNutritionalInformation(nutritionalInformationService.getBaseline());
-			return new ResponseEntity<>(goalProfile, HttpStatus.OK);
-		}
+        Optional<GoalProfile> goalProfileWrapper = goalProfileService.get(userWrapper.get());
+        if (!goalProfileWrapper.isPresent()) {
+            logger.info("Unalbe to get GoalProfile");
 
-		return new ResponseEntity<>(goalProfileWrapper.get(), HttpStatus.OK);
-	}
+            GoalProfile goalProfile = new GoalProfile();
+            goalProfile.setNutritionalInformation(nutritionalInformationService.getBaseline());
+            return new ResponseEntity<>(goalProfile, HttpStatus.OK);
+        }
 
-	@RequestMapping(value = "/setGoalProfile", method = RequestMethod.POST)
-	public ResponseEntity<GoalProfile> setGoalProfile(@RequestBody GoalProfile goalProfile) {
+        return new ResponseEntity<>(goalProfileWrapper.get(), HttpStatus.OK);
+    }
 
-		Optional<User> userWrapper = userHelper.getLoggedInUser();
-		if (!userWrapper.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
-		goalProfile.setUser(userWrapper.get());
-		goalProfile.setNutritionalInformation(goalProfileHelper.getModifiedNutritionalInfo(goalProfile));
-		
-		return new ResponseEntity<>(goalProfileService.save(goalProfile), HttpStatus.OK);
+    @RequestMapping(value = "/setGoalProfile", method = RequestMethod.POST)
+    public ResponseEntity<GoalProfile> setGoalProfile(@RequestBody GoalProfile goalProfile) {
 
-	}
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        if (!userWrapper.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        goalProfile.setUser(userWrapper.get());
+        goalProfile.setNutritionalInformation(goalProfileHelper.getModifiedNutritionalInfo(goalProfile));
 
-	public static final Logger logger = LoggerFactory.getLogger(GoalProfileController.class);
+        Optional<UserTask> goalTaskWrapper = userTaskService.getAllByUserAndTaskStatusAndLocation(userWrapper.get(),
+                TaskStatus.OPEN, Constants.USER_TASK_SET_GOALS_LOCATION);
+
+        goalTaskWrapper.ifPresent(goalTask -> {
+            goalTask.setTaskStatus(TaskStatus.COMPLETE);
+            userTaskService.save(goalTask);
+        });
+
+        return new ResponseEntity<>(goalProfileService.save(goalProfile), HttpStatus.OK);
+
+    }
+
+    public static final Logger logger = LoggerFactory.getLogger(GoalProfileController.class);
 
 }

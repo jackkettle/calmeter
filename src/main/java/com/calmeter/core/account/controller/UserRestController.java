@@ -3,61 +3,53 @@ package com.calmeter.core.account.controller;
 import java.util.List;
 import java.util.Optional;
 
-import com.calmeter.core.account.model.WeightLogEntry;
+import com.calmeter.core.Constants;
+import com.calmeter.core.account.model.TaskStatus;
+import com.calmeter.core.account.model.UserTask;
 import com.calmeter.core.account.service.IUserService;
-import com.calmeter.core.account.service.IWeightLogEntryService;
+import com.calmeter.core.account.service.IUserTaskService;
 import com.calmeter.core.account.utils.UserHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.calmeter.core.account.model.User;
-import com.calmeter.core.account.repository.IUserRepository;
-import com.calmeter.core.security.model.UserContext;
-import com.google.common.base.Strings;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserRestController {
 
-    @Autowired
     private UserHelper userHelper;
     private IUserService userService;
-    private BCryptPasswordEncoder encoder;
+    private IUserTaskService userTaskService;
 
     @Autowired
-    public UserRestController(IUserService userService, UserHelper userHelper, BCryptPasswordEncoder encoder) {
+    public UserRestController(IUserService userService, UserHelper userHelper, IUserTaskService userTaskService) {
         this.userService = userService;
+        this.userTaskService = userTaskService;
         this.userHelper = userHelper;
-        this.encoder = encoder;
     }
 
-    @RequestMapping(value = "/getThisUser", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     ResponseEntity<User> getThisUser() {
 
-        UserContext loggedInUserContext = (UserContext) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        if (loggedInUserContext == null) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-        }
+        Optional<User> userOptional = this.userHelper.getLoggedInUser();
+        return userOptional
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
 
-        Optional<User> userWrapper = userService.findByUsername(loggedInUserContext.getUsername());
-        if (!userWrapper.isPresent()) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-        }
-        return new ResponseEntity<User>(userWrapper.get(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     ResponseEntity<String> update(@RequestBody User user) {
+
+        this.getThisUser();
 
         Optional<User> userWrapper = userHelper.getLoggedInUser();
         if (!userWrapper.isPresent()) {
@@ -69,17 +61,37 @@ public class UserRestController {
         loggedInUser.setFirstname(user.getFirstname());
         loggedInUser.setLastname(user.getLastname());
 
-        if (loggedInUser.getIsUserProfileSet()) {
+        if (loggedInUser.getUserProfileSet()) {
             user.getUserProfile().setId(loggedInUser.getUserProfile().getId());
             user.getUserProfile().getWeightLog().addAll(loggedInUser.getUserProfile().getWeightLog());
         }
 
-        loggedInUser.setIsUserProfileSet(true);
+        loggedInUser.setUserProfileSet(true);
         loggedInUser.setUserProfile(user.getUserProfile());
         User updatedUser = userService.save(loggedInUser);
         logger.info("Updated user: {}", updatedUser.getId());
+
+        Optional<UserTask> goalTaskWrapper = userTaskService.getAllByUserAndTaskStatusAndLocation(userWrapper.get(),
+                TaskStatus.OPEN, Constants.USER_TASK_SET_PROFILE_LOCATION);
+
+        goalTaskWrapper.ifPresent(goalTask -> {
+            goalTask.setTaskStatus(TaskStatus.COMPLETE);
+            userTaskService.save(goalTask);
+        });
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/taskList", method = RequestMethod.GET)
+    ResponseEntity<List<UserTask>> getTaskList() {
+
+        Optional<User> userWrapper = userHelper.getLoggedInUser();
+        return userWrapper
+                .map(user -> new ResponseEntity<>(this.userTaskService.getAllByUser(user), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+
+    }
+
 
     public static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
 

@@ -1,9 +1,9 @@
 <div class="middle-box text-center loginscreen animated fadeInDown">
     <div class="row">
         <div>
-            <h1 class="logo-name">IN+</h1>
+            <h1 class="logo-name">CAL+</h1>
         </div>
-        <h3>Welcome to IN+</h3>
+        <h3>Welcome to Calmeter</h3>
         <p>Please login</p>
         <div class="m-t">
             <form role="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
@@ -24,7 +24,7 @@
                 </div>
                 <div *ngIf="error" class="alert alert-danger">{{error}}</div>
             </form>
-            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 © 2014</small> </p>
+            <p class="m-t"> <small></small> </p>
             <p class="m-t"> <a  [routerLink]="['/registration']" class="">Sign up</a> </p>
         </div>
     </div>
